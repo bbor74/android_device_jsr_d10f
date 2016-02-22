@@ -47,6 +47,8 @@ static void *gUserCameraDevice = NULL;
 
 static char **fixed_set_params = NULL;
 
+const char KEY_QC_HDR_NEED_1X[] = "hdr-need-1x";
+
 static int camera_device_open(const hw_module_t *module, const char *name,
         hw_device_t **device);
 static int camera_get_number_of_cameras(void);
@@ -182,6 +184,13 @@ static char *camera_fixup_setparams(int id, const char *settings)
         params.set(KEY_QC_AE_BRACKET_HDR, "Off");
         params.set(KEY_QC_CAPTURE_BURST_EXPOSURE, "0,0,0");
     }*/
+
+    const char *sceneMode = params.get(android::CameraParameters::KEY_SCENE_MODE);
+    if (sceneMode != NULL) {
+        if (!strcmp(sceneMode, android::CameraParameters::SCENE_MODE_HDR)) {
+            params.set(KEY_QC_HDR_NEED_1X, "false");
+        }
+    }
 
 #if !LOG_NDEBUG
     ALOGV("%s: fixed parameters:", __FUNCTION__);
