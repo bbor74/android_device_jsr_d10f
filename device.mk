@@ -92,6 +92,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     libcnefeatureconfig
 
+# Component overrides
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/component-overrides.xml:$(TARGET_COPY_OUT_VENDOR)/etc/sysconfig/component-overrides.xml
+
 # Display
 PRODUCT_PACKAGES += \
     copybit.msm8226 \
