@@ -32,6 +32,9 @@ ro.bluetooth.sap=true
 ro.bluetooth.hfp.ver=1.6
 ro.qualcomm.bt.hci_transport=smd
 
+# BPF
+ro.kernel.ebpf.supported=false
+
 # Charger
 ro.charger.enable_suspend=true
 
