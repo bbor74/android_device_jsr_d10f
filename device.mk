@@ -283,6 +283,7 @@ PRODUCT_COPY_FILES += \
 
 # Shims
 PRODUCT_PACKAGES += \
+    idev0_shim \
     libshims_thermal \
     libshims_atomic \
     libaudioclient_shim
