@@ -24,6 +24,11 @@ LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
 
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := idiv0.cpp
+LOCAL_MODULE := idev0_shim
+LOCAL_MODULE_TAGS := optional
+include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 

@@ -238,6 +238,7 @@ BOARD_SEPOLICY_DIRS += device/jsr/d10f/sepolicy/vendor
 
 # Shims    /system/vendor/lib/hw/camera.msm8226.so|libboringssl-compat.so
 TARGET_LD_SHIM_LIBS := \
+    /system/vendor/lib/libmmcamera_hdr_gb_lib.so|idev0_shim.so \
     /system/vendor/bin/thermal-engine|libshims_thermal.so \
     /system/vendor/bin/mpdecision|libshims_atomic.so
 
