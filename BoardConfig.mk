@@ -144,6 +144,9 @@ BOARD_KERNEL_SEPARATED_DT := true
 BOARD_DTBTOOL_ARGS := --force-v2
 KERNEL_HAS_FINIT_MODULE := false
 
+TARGET_KERNEL_ADDITIONAL_FLAGS := \
+   HOSTCFLAGS="-fuse-ld=lld -Wno-unused-command-line-argument"
+
 # Keymaster
 TARGET_KEYMASTER_WAIT_FOR_QSEE := false
 # TARGET_KEYMASTER_SKIP_WAITING_FOR_QSEE := true
