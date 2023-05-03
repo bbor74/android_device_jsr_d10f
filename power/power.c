@@ -129,8 +129,6 @@ static void set_power_profile(int profile)
 
     ALOGD("%s: setting profile %d", __func__, profile);
 
-    sysfs_write_str(INTERACTIVE_PATH "above_hispeed_delay",
-                    profiles[profile].above_hispeed_delay);
     sysfs_write_int(INTERACTIVE_PATH "boost",
                     profiles[profile].boost);
     sysfs_write_int(INTERACTIVE_PATH "boostpulse_duration",
@@ -143,14 +141,10 @@ static void set_power_profile(int profile)
                     profiles[profile].io_is_busy);
     sysfs_write_int(INTERACTIVE_PATH "min_sample_time",
                     profiles[profile].min_sample_time);
-    sysfs_write_int(INTERACTIVE_PATH "max_freq_hysteresis",
-                    profiles[profile].max_freq_hysteresis);
+    sysfs_write_int(INTERACTIVE_PATH "sampling_down_factor",
+                    profiles[profile].sampling_down_factor);
     sysfs_write_str(INTERACTIVE_PATH "target_loads",
                     profiles[profile].target_loads);
-    sysfs_write_int(INTERACTIVE_PATH "timer_rate",
-                    profiles[profile].timer_rate);
-    sysfs_write_int(INTERACTIVE_PATH "timer_slack",
-                    profiles[profile].timer_slack);
     sysfs_write_int(CPUFREQ_PATH "scaling_max_freq",
                     profiles[profile].scaling_max_freq);
     sysfs_write_int(CPUFREQ_PATH "scaling_min_freq",
@@ -162,6 +156,9 @@ static void set_power_profile(int profile)
 static void power_hint(__attribute__((unused)) struct power_module *module,
                        power_hint_t hint, void *data)
 {
+    char buf[80];
+    int len;
+
     switch (hint) {
     case POWER_HINT_INTERACTION:
         if (!is_profile_valid(current_power_profile)) {
@@ -173,9 +170,11 @@ static void power_hint(__attribute__((unused)) struct power_module *module,
             return;
 
         if (boostpulse_open() >= 0) {
-            int len = write(boostpulse_fd, "1", 2);
+            snprintf(buf, sizeof(buf), "%d", 1);
+            len = write(boostpulse_fd, &buf, sizeof(buf));
             if (len < 0) {
-                ALOGE("Error writing to boostpulse: %s\n", strerror(errno));
+                strerror_r(errno, buf, sizeof(buf));
+                ALOGE("Error writing to boostpulse: %s\n", buf);
 
                 pthread_mutex_lock(&lock);
                 close(boostpulse_fd);

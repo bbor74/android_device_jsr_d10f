@@ -1,3 +1,4 @@
+
 # Audio
 ro.qc.sdk.audio.ssr=false
 ro.qc.sdk.audio.fluencetype=fluence
@@ -35,6 +36,17 @@ ro.qc.sdk.izat.service_mask=0x5
 persist.gps.qc_nlp_in_use=1
 persist.loc.nlp_name=com.qualcomm.services.location
 
+# Sensors
+ro.qc.sensors.step_detector=true
+ro.qc.sensors.step_counter=true
+ro.qc.sdk.sensors.gestures=true
+ro.qualcomm.sensors.georv=true
+ro.qualcomm.sensors.qmd=true
+ro.qualcomm.sensors.pedometer=true
+ro.qualcomm.sensors.pam=true
+ro.qualcomm.sensors.scrn_ortn=true
+ro.qualcomm.sensors.cmc=true
+
 # Telephony
 rild.libpath=/vendor/lib/libril-qc-qmi-1.so
 rild.libargs=-d /dev/smd0
@@ -51,8 +63,8 @@ ro.telephony.ril.config=simactivation
 
 # Hardware info
 ro.device.chipset=Qualcomm Snapdragon 400 MSM8228
-ro.device.cpu=1.6GHz quad-core Cortex-A7
+ro.device.cpu=1.4GHz quad-core Cortex-A7
 ro.device.gpu=Qualcomm Adreno 305
-ro.device.rear_cam=8 MP
+ro.device.rear_cam=13 MP
 ro.device.front_cam=2 MP
 ro.device.screen_res=720x1280

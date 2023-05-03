@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">高級設置</string>
+    <string name="main_storage_title">主存儲</string>
+    <string name="reboot_needed">請重啟使設置生效。</string>
+    <string name="storages_category">存儲</string>
+    <string name="storage_datamedia">內置存儲</string>
+    <string name="storage_usbmsc">內置SD</string>
+    <string name="storage_sdcard">SD卡存儲</string>
+</resources>

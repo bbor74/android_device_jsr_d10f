@@ -202,6 +202,24 @@
     </integer-array>
 
     <!--<integer name="config_buttonBrightnessSettingDefault">0</integer-->
+    <!-- Array of output values for LCD backlight corresponding to the LUX values
+         in the config_autoBrightnessLevels array.  This array should have size one greater
+         than the size of the config_autoBrightnessLevels array.
+         The brightness values must be between 0 and 255 and be non-decreasing.
+         This must be overridden in platform specific overlays -->
+    <integer-array name="config_autoBrightnessButtonBacklightValues">
+        <item>255</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+    </integer-array>
 
     <!-- Control the behavior when the user long presses the home button.
             0 - Nothing
@@ -213,7 +231,7 @@
          This needs to match the constants in
          policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
     -->
-    <integer name="config_longPressOnHomeBehavior">3</integer>
+    <!-- <integer name="config_longPressOnHomeBehavior">3</integer> -->
 
     <!-- Control the behavior when the user long presses the app switch button.
             0 - Nothing
@@ -237,8 +255,9 @@
             32 - Camera
             64 - Volume rocker
          For example, a device with Home, Back and Menu keys would set this
-         config to 7.
-    <integer name="config_deviceHardwareKeys">83</integer> -->
+         config to 7. 
+    <integer name="config_deviceHardwareKeys">71</integer> -->
+    <add-resource type="integer" name="config_deviceHardwareKeys">71</add-resource>
 
     <!-- Hardware keys present on the device with the ability to wake, stored as a bit field.
          This integer should equal the sum of the corresponding value for each
@@ -330,11 +349,16 @@
          Empty is viewed as "all".  Only used on devices which
          don't support RIL_REQUEST_GET_RADIO_CAPABILITY
          format is UMTS|LTE|... -->
-    <string translatable="false" name="config_radio_access_family">GSM | WCDMA | CDMA</string>
+    <string translatable="false" name="config_radio_access_family">GSM | WCDMA</string>
 
     <!-- Support in Surfaceflinger for blur layers.
          NOTE: This requires additional hardware-specific code.
     <bool name="config_uiBlurEnabled">true</bool> -->
+    <add-resource type="bool" name="config_uiBlurEnabled">true</add-resource>
+
+    <!-- Whether to enable HumanInteractionController by default 
+    <bool name="config_HICEnabledDefault">false</bool> -->
+    <add-resource type="bool" name="config_HICEnabledDefault">false</add-resource>
 
     <!-- Configuration to support SIM contact batch operation
     <bool name="config_sim_phonebook_batch_operation">false</bool> -->

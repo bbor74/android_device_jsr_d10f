@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Додатково</string>
+    <string name="main_storage_title">Основна пам’ять</string>
+    <string name="reboot_needed">Перезавантажте телефон для зміни налаштувань</string>
+    <string name="storages_category">Пам’ять</string>
+    <string name="storage_datamedia">Внутрішня пам’ять</string>
+    <string name="storage_usbmsc">Внутрішня SD</string>
+    <string name="storage_sdcard">SD карта</string>
+</resources>

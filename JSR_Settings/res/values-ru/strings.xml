@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Дополнительно</string>
+    <string name="reboot_needed">Перезагрузите телефон для применения настроек.</string>
+
+    <!-- Gesture shortcuts -->
+
+    <!-- Implemented -->
+    <string name="storages_category">Память</string>
+    <string name="main_storage_title">Основная память</string>
+    
+    <string name="btn_func_category">Дополнительная кнопка</string>
+    <string name="btn_func_app">Действие на быстрое нажатие</string>
+    <string name="btn_func_hint">без действия</string>
+    <string name="btn_func_app2">Действие на длительное нажатие</string>
+    <string name="btn_func_hint2">без действия</string>
+    
+    <string name="cal_category">Калибровка</string>
+    <string name="btn_g_cal">Калибровка G-сенсора</string>
+    <string name="btn_g_cal_hint">Нажмите для открытия окна калибровки</string>
+    <string name="btn_g_cal_failure">Невозоможно запустить калибровку G-сенсора</string>
+    
+    <string name="noise_category">Шумоподавление</string>
+    <string name="swt_spkr">В режиме громкоговорителя</string>
+    <string name="swt_call">Во время звонка</string>
+    <string name="swt_voice_rec">Во время записи голоса</string>
+    <string name="swt_audio_rec">Во время звукозаписи</string>
+
+    <string name="storage_datamedia">Внутреннее хранилище</string>
+    <string name="storage_usbmsc">Внутренняя SD</string>
+    <string name="storage_sdcard">SD карта</string>
+</resources>

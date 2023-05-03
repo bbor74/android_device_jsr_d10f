@@ -25,25 +25,27 @@ TARGET_SCREEN_WIDTH := 720
 
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 
+# Dexpreopt
+PRODUCT_DEXPREOPT_SPEED_APPS += SystemUI
+
+# HIDL HALs
+$(call inherit-product, $(LOCAL_PATH)/hidl-hals.mk)
+
 # ANT+
-#PRODUCT_PACKAGES += \
-#    AntHalService \
-#    com.dsi.ant.antradio_library \
-#    libantradio
+PRODUCT_PACKAGES += \
+    AntHalService \
+    com.dsi.ant.antradio_library \
+    libantradio
 
 # Art
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dex2oat-flags=--no-watch-dog \
     dalvik.vm.dex2oat-swap=false \
-    dalvik.vm.dex2oat-filter=speed
-
-#ADDITIONAL_DEFAULT_PROPERTIES += \
-#    ro.sys.fw.dex2oat_thread_count=4
+    dalvik.vm.dex2oat-filter=speed \
+    ro.sys.fw.dex2oat_thread_count=4
 
 # Audio
 PRODUCT_PACKAGES += \
-    android.hardware.audio@2.0-impl \
-    android.hardware.audio.effect@2.0-impl \
     audiod \
     audio.a2dp.default \
     audio.primary.msm8226 \
@@ -65,14 +67,19 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf \
     $(LOCAL_PATH)/configs/mixer_paths.xml:system/etc/mixer_paths.xml
 
+PRODUCT_COPY_FILES += \
+    frameworks/av/services/audiopolicy/config/a2dp_audio_policy_configuration.xml:system/vendor/etc/a2dp_audio_policy_configuration.xml \
+    frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:system/vendor/etc/audio_policy_volumes.xml \
+    frameworks/av/services/audiopolicy/config/default_volume_tables.xml:system/vendor/etc/default_volume_tables.xml \
+    frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:system/vendor/etc/r_submix_audio_policy_configuration.xml \
+    frameworks/av/services/audiopolicy/config/usb_audio_policy_configuration.xml:system/vendor/etc/usb_audio_policy_configuration.xml
+
 # Bluetooth
 PRODUCT_PACKAGES += \
-    android.hardware.bluetooth@1.0-impl \
-    libbt-vendor \
-    bdaddr_xiaomi
+    bdaddr_jsr
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/init.armani.bt.sh:system/bin/init.armani.bt.sh
+    $(LOCAL_PATH)/configs/init.d10f.bt.sh:system/bin/init.d10f.bt.sh
 
 # CABL
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -81,6 +88,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Camera
 PRODUCT_PACKAGES += \
     camera.msm8226 \
+    libboringssl-compat \
     libxml2 \
     Snap
 
@@ -90,9 +98,6 @@ PRODUCT_PACKAGES += \
 
 # Display
 PRODUCT_PACKAGES += \
-    android.hardware.graphics.allocator@2.0-impl \
-    android.hardware.graphics.mapper@2.0-impl \
-    android.hardware.graphics.composer@2.1-impl \
     copybit.msm8226 \
     gralloc.msm8226 \
     hwcomposer.msm8226 \
@@ -108,6 +113,10 @@ PRODUCT_PACKAGES += \
     ethertypes \
     libebtc
 
+# fstab
+PRODUCT_PACKAGES += \
+    fstab
+
 # FM
 PRODUCT_PACKAGES += \
     FMRadio \
@@ -118,8 +127,8 @@ PRODUCT_PACKAGES += \
     gps.msm8226
 
 # HIDL
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/manifest.xml:system/vendor/manifest.xml
+# PRODUCT_COPY_FILES += \
+#    $(LOCAL_PATH)/manifest.xml:system/vendor/manifest.xml
 
 # IPC router
 PRODUCT_COPY_FILES += \
@@ -133,13 +142,10 @@ PRODUCT_PACKAGES += \
 
 # Keylayouts
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/keylayout/ft5x06.kl:system/usr/keylayout/ft5x06.kl \
+    $(LOCAL_PATH)/keylayout/ft5x06_ts.kl:system/usr/keylayout/ft5x06_ts.kl \
     $(LOCAL_PATH)/keylayout/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl \
-    $(LOCAL_PATH)/keylayout/msm8226-tapan-snd-card_Button_Jack.kl:system/usr/keylayout/msm8226-tapan-snd-card_Button_Jack.kl
-
-# Keymaster
-PRODUCT_PACKAGES += \
-    android.hardware.keymaster@3.0-impl
+    $(LOCAL_PATH)/keylayout/msm8226-tapan-snd-card_Button_Jack.kl:system/usr/keylayout/msm8226-tapan-snd-card_Button_Jack.kl \
+    $(LOCAL_PATH)/keylayout/synaptics_rmi4_i2c.kl:system/usr/keylayout/synaptics_rmi4_i2c.kl
 
 # Keystore
 PRODUCT_PACKAGES += \
@@ -147,7 +153,6 @@ PRODUCT_PACKAGES += \
 
 # Lights
 PRODUCT_PACKAGES += \
-    android.hardware.light@2.0-impl \
     lights.msm8226
 
 # Media
@@ -170,8 +175,19 @@ PRODUCT_PROPERTY_OVERRIDES += \
     media.stagefright.legacyencoder=true \
     media.stagefright.less-secure=true
 
+# Custom Settings page
+PRODUCT_PACKAGES += \
+    JSR_Settings
+
+# This build information
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/buildinfo/build-manifest.xml:system/etc/build-manifest.xml \
+    $(LOCAL_PATH)/buildinfo/CHANGES.txt:system/etc/CHANGES.txt \
+    $(LOCAL_PATH)/buildinfo/repo_state.txt:system/etc/repo_state.txt
+
 # Permissions
 PRODUCT_COPY_FILES += \
+    external/ant-wireless/antradio-library/com.dsi.ant.antradio_library.xml:system/etc/permissions/com.dsi.ant.antradio_library.xml \
     frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
@@ -189,34 +205,40 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
     frameworks/native/data/etc/android.software.midi.xml:system/etc/permissions/android.software.midi.xml \
     frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
-    frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml
+    frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
+    $(LOCAL_PATH)/configs/privapp-permissions-d10f.xml:system/etc/permissions/privapp-permissions-d10f.xml
 
 # Power
-PRODUCT_PACKAGES += \
-    android.hardware.power@1.0-impl \
-    power.msm8226
+#PRODUCT_PACKAGES += \
+#    power.msm8226
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
 
 # Rootdir
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/rootdir/fstab.armani:root/fstab.armani \
-    $(LOCAL_PATH)/rootdir/init.armani.rc:root/init.armani.rc \
-    $(LOCAL_PATH)/rootdir/init.armani.usb.rc:root/init.armani.usb.rc \
-    $(LOCAL_PATH)/rootdir/ueventd.armani.rc:root/ueventd.armani.rc
+    $(LOCAL_PATH)/rootdir/fstab.d10f:root/fstab.d10f \
+    $(LOCAL_PATH)/rootdir/init.d10f.rc:root/init.d10f.rc \
+    $(LOCAL_PATH)/rootdir/init.d10f.usb.rc:root/init.d10f.usb.rc \
+    $(LOCAL_PATH)/rootdir/init.recovery.d10f.rc:root/init.recovery.d10f.rc \
+    $(LOCAL_PATH)/rootdir/ueventd.d10f.rc:root/ueventd.d10f.rc
 
 # Sensors
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/sensors/_hals.conf:system/vendor/etc/sensors/_hals.conf \
     $(LOCAL_PATH)/configs/sensor_def_qcomdev.conf:system/etc/sensor_def_qcomdev.conf
 
 PRODUCT_PACKAGES += \
-    android.hardware.sensors@1.0-impl
+    sensors.d10f
 
 # Storage
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sys.sdcardfs=true
 
+# TCP fix
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/etc/init.d/80tcpfix:system/etc/init.d/80tcpfix
+    
 # Thermal
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermal-engine-8226.conf:system/etc/thermal-engine-8226.conf
@@ -228,9 +250,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.timed.enable=true
 
-# Vibrator
-PRODUCT_PACKAGES += \
-    android.hardware.vibrator@1.0-impl
 
 # Wifi
 PRODUCT_PACKAGES += \
@@ -242,7 +261,6 @@ PRODUCT_PACKAGES += \
     WCNSS_qcom_wlan_nv.bin
 
 PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service \
     wificond \
     wifilogd \
     hostapd \
@@ -264,3 +282,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.debug.wfd.enable=1 \
     persist.sys.wfd.virtual=0
+
+# Enforce privapp-permissions whitelist
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.control_privapp_permissions=log
+
+# Debug
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    persist.logd.logpersistd=logcatd \
+    persist.sys.usb.config=mtp,adb
+

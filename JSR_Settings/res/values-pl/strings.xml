@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="app_name">Ustawienia zaawansowane</string>
+    <string name="main_storage_title">Pamięć główna</string>
+    <string name="reboot_needed">Proszę uruchomić ponownie aby zastosować zmiany.</string>
+    <string name="storages_category">Magazyny</string>
+    <string name="storage_datamedia">Pamięć wewnętrzna</string>
+    <string name="storage_usbmsc">Wewnętrzna SD</string>
+    <string name="storage_sdcard">Karta SD</string>
+</resources>

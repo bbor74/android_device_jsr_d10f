@@ -24,7 +24,6 @@ enum {
 
 typedef struct governor_settings {
     int is_interactive;
-    char *above_hispeed_delay;
     int boost;
     int boostpulse_duration;
     int go_hispeed_load;
@@ -33,11 +32,9 @@ typedef struct governor_settings {
     int hispeed_freq_off;
     int io_is_busy;
     int min_sample_time;
-    int max_freq_hysteresis;
+    int sampling_down_factor;
     char *target_loads;
     char *target_loads_off;
-    int timer_rate;
-    int timer_slack;
     int scaling_max_freq;
     int scaling_min_freq;
     int scaling_min_freq_off;
@@ -45,7 +42,6 @@ typedef struct governor_settings {
 
 static power_profile profiles[PROFILE_MAX] = {
     [PROFILE_POWER_SAVE] = {
-        .above_hispeed_delay = "20000",
         .boost = 0,
         .boostpulse_duration = 0,
         .go_hispeed_load = 90,
@@ -54,57 +50,48 @@ static power_profile profiles[PROFILE_MAX] = {
         .hispeed_freq_off = 787200,
         .io_is_busy = 0,
         .min_sample_time = 60000,
-        .max_freq_hysteresis = 99000,
+        .sampling_down_factor = 100000,
         .target_loads = "95",
         .target_loads_off = "95",
-        .timer_rate = 30000,
-        .timer_slack = 30000,
         .scaling_max_freq = 787200,
         .scaling_min_freq = 300000,
         .scaling_min_freq_off = 300000,
     },
     [PROFILE_BALANCED] = {
-        .above_hispeed_delay = "20000",
         .boost = 0,
         .boostpulse_duration = 60000,
-        .go_hispeed_load = 60,
+        .go_hispeed_load = 50,
         .go_hispeed_load_off = 90,
         .hispeed_freq = 998400,
         .hispeed_freq_off = 787200,
         .io_is_busy = 1,
         .min_sample_time = 60000,
-        .max_freq_hysteresis = 0,
-        .target_loads = "85 1190400:90 1401600:95",
+        .sampling_down_factor = 100000,
+        .target_loads = "80 998400:90 1401600:99",
         .target_loads_off = "95 1401600:99",
-        .timer_rate = 30000,
-        .timer_slack = 30000,
         .scaling_max_freq = 1401600,
         .scaling_min_freq = 787200,
         .scaling_min_freq_off = 300000,
     },
     [PROFILE_HIGH_PERFORMANCE] = {
-        .above_hispeed_delay = "20000",
         .boost = 1,
         /* The CPU is already boosted, set duration to zero
          * to avoid unneccessary writes to boostpulse */
         .boostpulse_duration = 0,
         .go_hispeed_load = 50,
         .go_hispeed_load_off = 50,
-        .hispeed_freq = 1190400,
+        .hispeed_freq = 998400,
         .hispeed_freq_off = 998400,
         .io_is_busy = 1,
-        .min_sample_time = 59000,
-        .max_freq_hysteresis = 99000,
+        .min_sample_time = 60000,
+        .sampling_down_factor = 100000,
         .target_loads = "80",
         .target_loads_off = "80",
-        .timer_rate = 30000,
-        .timer_slack = 30000,
         .scaling_max_freq = 1593600,
         .scaling_min_freq = 787200,
         .scaling_min_freq_off = 300000,
     },
     [PROFILE_BIAS_POWER_SAVE] = {
-        .above_hispeed_delay = "20000",
         .boost = 0,
         .boostpulse_duration = 60000,
         .go_hispeed_load = 90,
@@ -113,11 +100,9 @@ static power_profile profiles[PROFILE_MAX] = {
         .hispeed_freq_off = 787200,
         .io_is_busy = 0,
         .min_sample_time = 60000,
-        .max_freq_hysteresis = 100000,
+        .sampling_down_factor = 100000,
         .target_loads = "90",
         .target_loads_off = "95",
-        .timer_rate = 30000,
-        .timer_slack = 30000,
         .scaling_max_freq = 1190400,
         .scaling_min_freq = 300000,
         .scaling_min_freq_off = 300000,

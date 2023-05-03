@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/storages_category"
+        android:key="main_storage_category"
+        >
+        <ListPreference
+            android:defaultValue="int"
+            android:entries="@array/main_storage_names"
+            android:entryValues="@array/main_storage_values"
+            android:key="main_storage"
+            android:summary="%s"
+            android:title="@string/main_storage_title" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="btn_func_cat"
+        android:title="@string/btn_func_category">
+        <com.cyanogenmod.settings.device.EditTextPreferenceEx
+            android:defaultValue=""
+            android:dialogTitle="@string/btn_func_app"
+            android:hint="@string/btn_func_hint"
+            android:inputType="text"
+            android:key="btn_func_app"
+            android:singleLine="true"
+            android:summary="%s"
+            android:title="@string/btn_func_app" />
+        <com.cyanogenmod.settings.device.EditTextPreferenceEx
+            android:defaultValue=""
+            android:dialogTitle="@string/btn_func_app2"
+            android:hint="@string/btn_func_hint2"
+            android:inputType="text"
+            android:key="btn_func_app2"
+            android:singleLine="true"
+            android:summary="%s"
+            android:title="@string/btn_func_app2" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/cal_category">
+        <Preference
+            android:key="button_g_sensor_calibration"
+            android:summary="@string/btn_g_cal_hint"
+            android:title="@string/btn_g_cal" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/noise_category">
+        <SwitchPreference
+            android:key="switch_anc_speaker"
+            android:title="@string/swt_spkr" />
+        <SwitchPreference
+            android:key="switch_anc_call"
+            android:title="@string/swt_call" />
+        <SwitchPreference
+            android:key="switch_anc_voice_record"
+            android:title="@string/swt_voice_rec" />
+        <SwitchPreference
+            android:key="switch_anc_audio_record"
+            android:title="@string/swt_audio_rec" />
+    </PreferenceCategory>
+</PreferenceScreen>
