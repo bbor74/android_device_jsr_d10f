@@ -24,7 +24,7 @@
 static void init_klog_vwrite(int level, const char* fmt, va_list ap) {
     const char* tag = basename(getprogname());
 
-    //if (level > klog_get_level()) return;
+    if (level > klog_get_level()) return;
 
     // The kernel's printk buffer is only 1024 bytes.
     // TODO: should we automatically break up long lines into multiple lines?
@@ -32,7 +32,7 @@ static void init_klog_vwrite(int level, const char* fmt, va_list ap) {
     char buf[1024];
     size_t prefix_size = snprintf(buf, sizeof(buf), "<%d>%s: ", level, tag);
     size_t msg_size = vsnprintf(buf + prefix_size, sizeof(buf) - prefix_size, fmt, ap);
-    if (msg_size + prefix_size >= sizeof(buf)) {
+    if (msg_size >= sizeof(buf) - prefix_size) {
         msg_size = snprintf(buf + prefix_size, sizeof(buf) - prefix_size,
                             "(%zu-byte message too long for printk)\n", msg_size);
     }

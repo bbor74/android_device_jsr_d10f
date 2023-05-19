@@ -30,9 +30,6 @@
 #include "fstab.h"
 #include "configuration.h"
 
-// Do not write anything to the fstab file
-static int dry_run = FALSE;
-
 /* Load STORAGE_CONFIG_PROP from PERSISTENT_PROPERTY_DIR
  * We need to get it earlier than vendor init to make working fstab */
 static void load_storage_config_prop() {
@@ -45,7 +42,7 @@ static void load_storage_config_prop() {
 
     struct dirent* entry;
     while ((entry = readdir(dir)) != NULL) {
-        if (strncmp(STORAGE_CONFIG_PROP, entry->d_name, strlen(STORAGE_CONFIG_PROP)) != 0) {
+        if (strncmp(STORAGE_CONFIG_PROP, entry->d_name, strlen(STORAGE_CONFIG_PROP))) {
             continue;
         }
         if (entry->d_type != DT_REG) {
@@ -71,7 +68,7 @@ static void load_storage_config_prop() {
         // not be a hard link to any other file.
         if (((sb.st_mode & (S_IRWXG | S_IRWXO)) != 0) || (sb.st_uid != 0) || (sb.st_gid != 0) ||
                 (sb.st_nlink != 1)) {
-            WARNING("skipping insecure property file %s (uid=%u gid=%u nlink=%u mode=%o)\n",
+            ERROR("skipping insecure property file %s (uid=%u gid=%u nlink=%u mode=%o)\n",
                   entry->d_name, (unsigned int)sb.st_uid, (unsigned int)sb.st_gid,
                   (unsigned int)sb.st_nlink, sb.st_mode);
             close(fd);
@@ -82,7 +79,7 @@ static void load_storage_config_prop() {
         int length = read(fd, value, sizeof(value) - 1);
         if (length >= 0) {
             value[length] = 0;
-            INFO("%s: property_set(%s, %s)\n", __func__, entry->d_name, value);
+            ERROR("%s: property_set(%s, %s)\n", __func__, entry->d_name, value);
             property_set(entry->d_name, value);
         } else {
             ERROR("Unable to read persistent property file %s: %s\n",
@@ -101,12 +98,11 @@ static int check_for_partition(int sdcc, const char *part_name)
         snprintf(full_part_name, PROP_VALUE_MAX, "/dev/block/%s", part_name);
     else
         snprintf(full_part_name, PROP_VALUE_MAX, "/dev/block/platform/msm_sdcc.%d/by-name/%s", sdcc, part_name);
+    ERROR("%s: INFO: Checking for partition '%s'\n", __func__, full_part_name);
 
-    if (access(full_part_name, F_OK) == 0) {
-        INFO("%s: INFO: Checking for partition '%s': TRUE\n", __func__, full_part_name);
+    if (access(full_part_name, F_OK) == 0)
         return TRUE;
-    }
-    INFO("%s: INFO: Checking for partition '%s': FALSE\n", __func__, full_part_name);
+
     return FALSE;
 }
 
@@ -169,7 +165,7 @@ static char *lookup_for_partition(const char *part_name, int search_order) {
     }
 
     if (!partition_is_found) {
-        WARNING("%s: WARNING: partition for '%s' NOT FOUND!", __func__, part_name);
+        ERROR("%s: WARNING: partition for '%s' NOT FOUND!", __func__, part_name);
         return NULL;
     }
 
@@ -191,7 +187,7 @@ static char *lookup_for_partition(const char *part_name, int search_order) {
             break;
     }
 
-    INFO("%s: INFO: using partition '%s'", __func__, full_part_name);
+    ERROR("%s: INFO: using partition '%s'", __func__, full_part_name);
     return full_part_name;
 }
 
@@ -201,20 +197,15 @@ static int get_partition_number(const char *part_name)
 {
     int part_number = -1;
     char raw_blockdev_name[PROP_VALUE_MAX] = {0};
-    char partition[PROP_VALUE_MAX + 1] = {0};
+    char partition[PROP_VALUE_MAX] = {0};
     int sdcc = -1;
-    INFO("%s: entered, part_name=%s", __func__, part_name);
     if (sscanf(part_name, "/devices/msm_sdcc.%d/mmc_host*", &sdcc) == 1) {
-        INFO("%s: recursively detecting partition usbmsc on sdcc%d\n", __func__, sdcc);
+        ERROR("%s: recursively detecting partition usbmsc on sdcc%d\n", __func__, sdcc);
         snprintf(raw_blockdev_name, PROP_VALUE_MAX, "/dev/block/platform/msm_sdcc.%d/by-name/usbmsc", sdcc);
         return get_partition_number(raw_blockdev_name);
     }
 
-    // to prevent buffer overflow
-    const char fmt_str1[] = "/dev/block/platform/msm_sdcc.%%d/by-name/%%%ds";
-    char fmt_str2[sizeof(fmt_str1) + 30] = {0};
-    snprintf(fmt_str2, sizeof(fmt_str2), fmt_str1, PROP_VALUE_MAX);
-    if (sscanf(part_name, fmt_str2, &sdcc, partition) == 2) {
+    if (sscanf(part_name, "/dev/block/platform/msm_sdcc.%d/by-name/%s", &sdcc, partition) == 2) {
       char *full_part_name = lookup_for_partition(partition, sdcc);
       if (full_part_name){
         if (readlink(full_part_name, raw_blockdev_name, PROP_VALUE_MAX) == -1) {
@@ -222,11 +213,11 @@ static int get_partition_number(const char *part_name)
           return -2;
         }
       } else {
-        WARNING("%s: lookup_for_partition() returned NULL for %s on sdcc %d\n", __func__, partition, sdcc);
+        ERROR("%s: lookup_for_partition() returned NULL for %s on sdcc %d\n", __func__, partition, sdcc);
         return -3;
       }
 
-      INFO("%s: sdcc=%d (%s): %s\n", __func__, sdcc, full_part_name, raw_blockdev_name);
+      ERROR("%s: sdcc=%d (%s): %s\n", __func__, sdcc, full_part_name, raw_blockdev_name);
 
       if (strlen(raw_blockdev_name)) {
         if (sscanf(raw_blockdev_name, "/dev/block/mmcblk%dp%d", &sdcc, &part_number) != 2) {
@@ -234,29 +225,14 @@ static int get_partition_number(const char *part_name)
           return -1;
         }
         sdcc += 1;
-        INFO("%s: part_number for %s on sdcc%d is %d\n", __func__, full_part_name, sdcc, part_number);
+        ERROR("%s: part_number for %s on sdcc%d is %d\n", __func__, full_part_name, sdcc, part_number);
       }
 
       free(full_part_name);
       return part_number;
     }
-
-    if (!strncmp(part_name, "/devices/platform/msm_hsusb_host/usb", sizeof("/devices/platform/msm_hsusb_host/usb"))) {
-        WARNING("%s: %s is the USB host device, so returning 0\n", __func__, part_name);
-        return 0;
-    }
-
-    if (!strcmp(part_name, "/dev/block/mmcblk1p1 /dev/block/mmcblk1")) {
-        WARNING("%s: %s is the TWRP plain SD card device, so returning 0\n", __func__, part_name);
-        return 0;
-    }
-
-    if (!strcmp(part_name, "/dev/block/mmcblk0rpmb") || !strcmp(part_name, "/dev/block/mmcblk0")) {
-        WARNING("%s: %s is the TWRP raw eMMC device, so returning 0\n", __func__, part_name);
-        return 0;
-    }
-
-    WARNING("%s: Should not reach here (part_name=%s)!\n", __func__, part_name);
+    
+    ERROR("%s: Should not reach here!\n", __func__);
     return -4;
 }
 
@@ -272,9 +248,6 @@ static int add_fstab_entry(
     const char *mnt_flags,
     const char *fs_mgr_flags)
 {
-    if (dry_run)
-        return TRUE;
-
     int ret = FALSE;
     char *full_part_name = lookup_for_partition(part_name, search_order);
 
@@ -304,224 +277,159 @@ static int add_fstab_entry(
     return (ret < 0 ? ret : 0);
 }
 
-static void emmc_has_usbmsc(void) {
-  INFO(__func__);
-  property_set(EMMC_HAS_USBMSC_PROP, "true");
+static int generate_regular_fstab(int fd, int type, int sdcc_config)
+{
+    int ret = 0;
+    (void)sdcc_config;
+    dprintf(fd, FSTAB_HEADER);
+    ret += add_fstab_entry(fd, type, SDCC_1, "system",   "/system",   "ext4", "ro,barrier=1", "wait");
+    ret += add_fstab_entry(fd, type, SDCC_1, "cache",    "/cache",    "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check");
+    ret += add_fstab_entry(fd, type, SDCC_1, "cache",    "/cache",    "ext4", "noatime,nosuid,nodev,barrier=1", "wait,check,formattable");
+    ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check,encryptable=footer");
+    ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "ext4", "noatime,nosuid,nodev,barrier=1,noauto_da_alloc", "wait,check,formattable,encryptable=footer");
+    ret += add_fstab_entry(fd, type, SDCC_1, "persist",  "/persist",  "ext4", "nosuid,nodev,barrier=1", "wait");
+    ret += add_fstab_entry(fd, type, SDCC_1, "modem",    "/firmware", "vfat", "ro,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337,context=u:object_r:firmware_file:s0", "wait");
+    ret += add_fstab_entry(fd, type, SDCC_1, "boot",     "/boot",     "emmc", "defaults", "defaults");
+    ret += add_fstab_entry(fd, type, SDCC_1, "recovery", "/recovery", "emmc", "defaults", "defaults");
+    ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/platform/msm_hsusb_host/usb*", "auto", "auto", "defaults", "voldmanaged=usb:auto");
+    return (ret == 0 ? TRUE : FALSE);
 }
 
-static void emmc_has_no_usbmsc(void) {
-  INFO(__func__);
-  property_set(EMMC_HAS_USBMSC_PROP, "false");
+static int generate_recovery_fstab(int fd, int type, int sdcc_config)
+{
+    int ret = 0;
+    (void)sdcc_config;
+    dprintf(fd, FSTAB_HEADER);
+    ret += add_fstab_entry(fd, type, SDCC_1, "system",   "/system",   "ext4", "rw,barrier=1", "wait"); // rw here is requied to avoid issues with TWRP!
+    ret += add_fstab_entry(fd, type, SDCC_1, "cache",    "/cache",    "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check");
+    ret += add_fstab_entry(fd, type, SDCC_1, "cache",    "/cache",    "ext4", "noatime,nosuid,nodev,barrier=1", "wait,check,formattable");
+    ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check,encryptable=footer");
+    ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "ext4", "noatime,nosuid,nodev,barrier=1,noauto_da_alloc", "wait,check,formattable,encryptable=footer");
+    ret += add_fstab_entry(fd, type, SDCC_1, "persist",  "/persist",  "ext4", "nosuid,nodev,barrier=1", "wait");
+    ret += add_fstab_entry(fd, type, SDCC_1, "modem",    "/firmware", "vfat", "rw,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337,context=u:object_r:firmware_file:s0", "wait"); // rw here is requied to avoid issues with TWRP!
+    ret += add_fstab_entry(fd, type, SDCC_1, "boot",     "/boot",     "emmc", "defaults", "defaults");
+    ret += add_fstab_entry(fd, type, SDCC_1, "recovery", "/recovery", "emmc", "defaults", "defaults");
+    ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/platform/msm_hsusb_host/usb*", "auto", "auto", "defaults", "voldmanaged=usb:auto");
+    return (ret == 0 ? TRUE : FALSE);
 }
 
-static void sd_has_usbmsc(void) {
-  INFO(__func__);
-  property_set(SD_HAS_USBMSC_PROP, "true");
-}
-
-static void sd_has_no_usbmsc(void) {
-  INFO(__func__);
-  property_set(SD_HAS_USBMSC_PROP, "false");
-}
-
-static void sd_has_plain_part(void) {
-  INFO(__func__);
-  property_set(SD_HAS_PLAIN_PART_PROP, "true");
-}
-
-static void sd_has_no_plain_part(void) {
-  INFO(__func__);
-  property_set(SD_HAS_PLAIN_PART_PROP, "false");
-}
-
-// Flags:
-// encryptable=userdata - Makes storage adoptable.
-//                        Should not be used on bootable SD (because Android will repartition and reformat it)
-// nonremovable - do not show notifications on volume status changes
-// noemulatedsd - marks primary storage
-
-static int update_regular_classic(int fd, int type, int sdcc_config) {
-  int ret = 0;
-  INFO(__func__);
-  switch (sdcc_config) {
-    case REGULAR:
-      if (check_for_partition(SDCC_1, "usbmsc")) {
-        emmc_has_usbmsc();
-        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
-        if (check_for_partition(SDCC_2, "usbmsc")) {
-          sd_has_usbmsc();
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d");
-        } else if (check_for_partition(SDCC_2, "shared")) {
-          // SD was partitioned with sm partition disk:179,64 mixed command
-          sd_has_usbmsc();
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d");
-        } else {
-          if ( !check_for_partition(SDCC_2, "system") && (check_for_partition(SDCC_2, "shared") || !check_for_partition(SDCC_2, "android_expand")) ) {
-            // SD is not bootable, have "shared" partition (have "mixed" semi-adopted state) or not adopted, so it should be considered as having plain partition
-            sd_has_plain_part();
-            ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:auto,encryptable=userdata");
-          }
-        }
-      } else {
-        if (check_for_partition(SDCC_2, "usbmsc")) {
-          sd_has_usbmsc();
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd");
-        } else {
-          if ( !check_for_partition(SDCC_2, "system") && (check_for_partition(SDCC_2, "shared") || !check_for_partition(SDCC_2, "android_expand")) ) {
-            // SD is not bootable, have "shared" partition (have "mixed" semi-adopted state) or not adopted, so it should be considered as having plain partition
-            sd_has_plain_part();
-            ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:auto,encryptable=userdata");
-          }
-        }
-      }
-      break;
-    case INVERTED:
-      if (check_for_partition(SDCC_1, "usbmsc")) {
-        sd_has_usbmsc();
-        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
-        if (check_for_partition(SDCC_2, "usbmsc")) {
-          emmc_has_usbmsc();
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable");
-        }
-      } else {
-        if (check_for_partition(SDCC_2, "usbmsc")) { // usbmsc on eMMC may be only numbered partition, not "auto"
-          emmc_has_usbmsc();
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
-        }
-      }
-      break;
-    case ISOLATED:
-      if (check_for_partition(SDCC_1, "usbmsc")) {
-        sd_has_usbmsc();
-        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
-      }
-      break;
-    default:
-      break;
-  }
-  return ret;
-}
-
-static int update_regular_inverted(int fd, int type, int sdcc_config) {
-  int ret = 0;
-  INFO(__func__);
-  switch (sdcc_config) {
-    case REGULAR:
-      if (check_for_partition(SDCC_2, "usbmsc")) {
-        sd_has_usbmsc();
-        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd");
-      } else {
-        if ( !check_for_partition(SDCC_2, "system") && (check_for_partition(SDCC_2, "shared") || !check_for_partition(SDCC_2, "android_expand")) ) {
-          // SD is not bootable, have "shared" partition (have "mixed" semi-adopted state) or not adopted, so it should be considered as having plain partition
-          sd_has_plain_part();
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:auto,noemulatedsd,encryptable=userdata");
-        }
-      }
-      if (check_for_partition(SDCC_1, "usbmsc")) {
-        emmc_has_usbmsc();
-        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable");
-      }
-      break;
-    case INVERTED:
-      if (check_for_partition(SDCC_1, "usbmsc")) {
-        sd_has_usbmsc();
-        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
-        if (check_for_partition(SDCC_2, "usbmsc")) {
-          emmc_has_usbmsc();
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable");
-        }
-      } else {
-        if (check_for_partition(SDCC_2, "usbmsc")) {
-          emmc_has_usbmsc();
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
-        }
-      }
-      break;
-    case ISOLATED:
-      if (check_for_partition(SDCC_1, "usbmsc")) {
-        sd_has_usbmsc();
-        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
-      } else
-      break;
-    default:
-      break;
-  }
-  return ret;
-}
-
-static int update_regular_datamedia(int fd, int type, int sdcc_config) {
-  int ret = 0;
-  INFO(__func__);
+static int generate_twrp_fstab(int fd, int type, int sdcc_config)
+{
+    int ret = 0;
+    dprintf(fd, FSTAB_HEADER);
+    ret += add_fstab_entry(fd, type, SDCC_1, "cache",    "/cache",    "ext4", "", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "system",   "/system",   "ext4", "", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "f2fs", "length=-16384;canencryptbackup=1;userdataencryptbackup=1", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "boot",     "/boot",     "emmc", "", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "recovery", "/recovery", "emmc", "flags=display=\"Recovery\";backup=1", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "modem",    "/modem",    "emmc", "flags=display=\"Modem\";backup=1", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "persist",  "/persist",  "emmc", "flags=display=\"Persist\";backup=1", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "splash",   "/splash",   "emmc", "flags=display=\"Splash\";backup=1", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "modemst1", "/efs1",     "emmc", "flags=backup=1;display=\"EFS\"", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "modemst2", "/efs2",     "emmc", "flags=backup=1;subpartitionof=/efs1", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "fsg",      "/fsg",      "emmc", "flags=backup=1;subpartitionof=/efs1", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "fsc",      "/fsc",      "emmc", "flags=backup=1;subpartitionof=/efs1", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "sdi",      "/sdi",      "emmc", "flags=backup=1;display=\"SDI\"", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "misc",     "/misc",     "emmc", "", "");
+    ERROR("%s: sdcc_config = %d\n", __func__, sdcc_config);
     switch (sdcc_config) {
-    case REGULAR:
-      if (check_for_partition(SDCC_1, "usbmsc")) {
-        emmc_has_usbmsc();
-        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable");
-        if (check_for_partition(SDCC_2, "usbmsc")) {
-          sd_has_usbmsc();
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard2:%d");
-        } else {
-          if ( check_for_partition(RAWDEV, "mmcblk1") && !check_for_partition(SDCC_2, "system") && (check_for_partition(SDCC_2, "shared") || !check_for_partition(SDCC_2, "android_expand")) ) {
-            // SD is not bootable, have "shared" partition (have "mixed" semi-adopted state) or not adopted, so it should be considered as having plain partition
-            sd_has_plain_part();
-            ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard2:auto,encryptable=userdata");
-          }
-        }
-      } else {
-        if (check_for_partition(SDCC_2, "usbmsc")) {
-          sd_has_usbmsc();
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d");
-        } else {
-          if ( check_for_partition(RAWDEV, "mmcblk1") && !check_for_partition(SDCC_2, "system") && (check_for_partition(SDCC_2, "shared") || !check_for_partition(SDCC_2, "android_expand")) ) {
-            // SD is not bootable, have "shared" partition (have "mixed" semi-adopted state) or not adopted, so it should be considered as having plain partition
-            sd_has_plain_part();
-            ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:auto,encryptable=userdata");
-          }
-        }
-      }
-      break;
-    case INVERTED:
-      if (check_for_partition(SDCC_1, "usbmsc")) {
-        sd_has_usbmsc();
-        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable");
-        if (check_for_partition(SDCC_2, "usbmsc")) {
-          emmc_has_usbmsc();
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard2:%d,nonremovable");
-        }
-      } else {
-        if (check_for_partition(SDCC_2, "usbmsc")) {
-          emmc_has_usbmsc();
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable");
-        }
-      }
-      break;
-    case ISOLATED:
-      if (check_for_partition(SDCC_1, "usbmsc")) {
-        sd_has_usbmsc();
-        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable");
-      }
-      break;
-    default:
-      break;
-  }
-  return ret;
+        case REGULAR:
+            ERROR("%s: sdcc_config = regular, adding mmcblk0\n", __func__);
+            ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk0",     "/full", "emmc", "flags=backup=1;display=\"eMMC\"", "");
+            ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk0rpmb", "/rpmb", "emmc", "flags=backup=1;subpartitionof=/full", "");
+            break;
+        case INVERTED:
+            ERROR("%s: sdcc_config = inverted, adding mmcblk1\n", __func__);
+            ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk1",     "/full", "emmc", "flags=backup=1;display=\"eMMC\"", "");
+            ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk1rpmb", "/rpmb", "emmc", "flags=backup=1;subpartitionof=/full", "");
+            break;
+        case ISOLATED:
+            ERROR("%s: sdcc_config = isolated, not ading eMMC backup partition record\n", __func__);
+            break;
+
+        default:
+            ERROR("%s: sdcc_config = default!!\n", __func__);
+            break;
+    }
+    return (ret < 0 ? 1 : 0);
 }
 
 static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_config)
 {
     int ret = 0;
-    INFO(__func__);
-    INFO("%s: storage_config=%d, sdcc_config=%d\n", __func__, storage_config, sdcc_config);
-
+    (void)sdcc_config;
+    ERROR("%s: storage_config=%d, sdcc_config=%d\n", __func__, storage_config, sdcc_config);
     switch (storage_config) {
         case STORAGE_CONFIGURATION_CLASSIC:
-            update_regular_classic(fd, type, sdcc_config);
+            switch (sdcc_config) {
+                case REGULAR:
+                    if (check_for_partition(SDCC_1, "usbmsc"))
+			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
+                    if (check_for_partition(SDCC_2, "usbmsc"))
+                        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,encryptable=userdata");
+                    else
+                        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:auto,encryptable=userdata");
+                   break;
+                case INVERTED:
+                    if (check_for_partition(SDCC_2, "usbmsc"))
+			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
+                    if (check_for_partition(SDCC_1, "usbmsc"))
+			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable,encryptable=userdata");
+                    break;
+                case ISOLATED:
+		    if (check_for_partition(SDCC_1, "usbmsc"))
+			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
+                    break;
+                default:
+                    break;
+            }
             break;
         case STORAGE_CONFIGURATION_INVERTED:
-            update_regular_inverted(fd, type, sdcc_config);
+            switch (sdcc_config) {
+                case REGULAR:
+                    if (check_for_partition(SDCC_2, "usbmsc"))
+                        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd");
+                    else
+                        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:auto,noemulatedsd");
+                    if (check_for_partition(SDCC_1, "usbmsc"))
+			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable,encryptable=userdata");
+                   break;
+                case INVERTED:
+                    if (check_for_partition(SDCC_1, "usbmsc"))
+			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
+                    if (check_for_partition(SDCC_2, "usbmsc"))
+			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable,encryptable=userdata");
+                    break;
+                case ISOLATED:
+                    if (check_for_partition(SDCC_1, "usbmsc"))
+			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
+                    break;
+                default:
+                    break;
+            }
             break;
         case STORAGE_CONFIGURATION_DATAMEDIA:
-            update_regular_datamedia(fd, type, sdcc_config);
+            switch (sdcc_config) {
+                case REGULAR:
+                    ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable,noemulatedsd,encryptable=userdata");
+                    if (check_for_partition(SDCC_2, "usbmsc"))
+                        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard2:%d,encryptable=userdata");
+                    else
+                        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard2:auto,encryptable=userdata");
+                   break;
+                case INVERTED:
+                    if (check_for_partition(SDCC_1, "usbmsc"))
+			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable,noemulatedsd,encryptable=userdata");
+                    if (check_for_partition(SDCC_2, "usbmsc"))
+			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard2:%d,nonremovable,encryptable=userdata");
+                    break;
+                case ISOLATED:
+                    if (check_for_partition(SDCC_1, "usbmsc"))
+			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,noemulatedsd,nonremovable,encryptable=userdata");
+                    break;
+                default:
+                    break;
+            }
             break;
         default:
             break;
@@ -531,138 +439,59 @@ static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_c
 
 static int update_recovery_fstab(int fd, int type, int storage_config, int sdcc_config)
 {
-    INFO(__func__);
     return (update_regular_fstab(fd, type, storage_config, sdcc_config)); // STUB for now
-}
-
-static int update_twrp_regular(int fd, int type, int sdcc_config) {
-  int ret = 0;
-  INFO(__func__);
-  switch (sdcc_config) {
-    case REGULAR:
-      if (check_for_partition(SDCC_1, "usbmsc")) {
-        emmc_has_usbmsc();
-        ret += add_fstab_entry(fd, type, SDCC_1,     "usbmsc",    "/internal_sd", "vfat", "flags=display=\"Internal SD\";storagename=\"Internal SD\";storage;settingsstorage;wipeingui;fsflags=utf8", "");
-        if (check_for_partition(SDCC_2, "usbmsc")) {
-          sd_has_usbmsc();
-          ret += add_fstab_entry(fd, type, SDCC_2, "usbmsc",    "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
-        } else {
-          if (check_for_partition(RAWDEV, "mmcblk1")) {
-            sd_has_plain_part();
-            ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/dev/block/mmcblk1p1 /dev/block/mmcblk1", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
-          }
-        }
-      } else {
-        if (check_for_partition(SDCC_2, "usbmsc")) {
-          sd_has_usbmsc();
-          ret += add_fstab_entry(fd, type, SDCC_2, "usbmsc",    "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;settingsstorage;wipeingui;removable;fsflags=utf8", "");
-        } else {
-          if (check_for_partition(RAWDEV, "mmcblk1")) {
-            sd_has_plain_part();
-            ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/dev/block/mmcblk1p1 /dev/block/mmcblk1", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;settingsstorage;wipeingui;removable;fsflags=utf8", "");
-          }
-        }
-      }
-      break;
-    case INVERTED:
-      if (check_for_partition(SDCC_2, "usbmsc")) {
-        emmc_has_usbmsc();
-        ret += add_fstab_entry(fd, type, SDCC_2,     "usbmsc"   , "/internal_sd", "vfat", "flags=display=\"Internal SD\";storagename=\"Internal SD\";storage;settingsstorage;wipeingui;fsflags=utf8", "");
-        if (check_for_partition(SDCC_1, "usbmsc")) {
-          sd_has_usbmsc();
-          ret += add_fstab_entry(fd, type, SDCC_1, "usbmsc",    "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
-        } else {
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/dev/block/mmcblk1p1 /dev/block/mmcblk1", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
-        }
-      } else {
-        if (check_for_partition(SDCC_1, "usbmsc")) {
-          sd_has_usbmsc();
-          ret += add_fstab_entry(fd, type, SDCC_1, "usbmsc",    "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;settingsstorage;wipeingui;removable;fsflags=utf8", "");
-        } else {
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/dev/block/mmcblk1p1 /dev/block/mmcblk1", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;settingsstorage;wipeingui;removable;fsflags=utf8", "");
-        }
-      }
-      break;
-    case ISOLATED:
-      if (check_for_partition(SDCC_1, "usbmsc")) {
-        sd_has_usbmsc();
-        ret += add_fstab_entry(fd, type, SDCC_1, "usbmsc", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;settingsstorage;wipeingui;removable;fsflags=utf8", "");
-      }
-      break;
-  }
-  return ret;
-}
-
-static int update_twrp_datamedia(int fd, int type, int sdcc_config) {
-  int ret = 0;
-  INFO(__func__);
-  switch (sdcc_config) {
-    case REGULAR:
-      if (check_for_partition(SDCC_2, "usbmsc")) {
-        sd_has_usbmsc();
-        ret += add_fstab_entry(fd, type, SDCC_1, "usbmsc", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
-      } else {
-        if (check_for_partition(RAWDEV, "usbmsc")) {
-          ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/dev/block/mmcblk1p1 /dev/block/mmcblk1", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
-        }
-      }
-      break;
-    case INVERTED:
-      if (check_for_partition(SDCC_2, "usbmsc")) {
-        emmc_has_usbmsc();
-        ret += add_fstab_entry(fd, type, SDCC_2, "usbmsc", "/internal_sd", "vfat", "flags=display=\"Internal SD\";storagename=\"Internal SD\";storage;settingsstorage;wipeingui;fsflags=utf8", "");
-      }
-      if (check_for_partition(SDCC_1, "usbmsc")) {
-        sd_has_usbmsc();
-        ret += add_fstab_entry(fd, type, SDCC_1, "usbmsc", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
-      }
-      break;
-    case ISOLATED:
-      if (check_for_partition(SDCC_1, "usbmsc")) {
-        sd_has_usbmsc();
-        ret += add_fstab_entry(fd, type, SDCC_1, "usbmsc", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
-      }
-      break;
-    default:
-      break;
-  }
-  return ret;
 }
 
 static int update_twrp_fstab(int fd, int type, int storage_config, int sdcc_config)
 {
     int ret = 0;
-    INFO("%s: sdcc_config = %d\n", __func__, sdcc_config);
-    switch (sdcc_config) {
-      case REGULAR:
-        INFO("%s: sdcc_config = regular, adding mmcblk0\n", __func__);
-        ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk0",     "/full", "emmc", "flags=backup=1;display=\"eMMC\"", "");
-        ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk0rpmb", "/rpmb", "emmc", "flags=backup=1;subpartitionof=/full", "");
-        break;
-      case INVERTED:
-        INFO("%s: sdcc_config = inverted, adding mmcblk1\n", __func__);
-        ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk1",     "/full", "emmc", "flags=backup=1;display=\"eMMC\"", "");
-        ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk1rpmb", "/rpmb", "emmc", "flags=backup=1;subpartitionof=/full", "");
-        break;
-      case ISOLATED:
-        INFO("%s: sdcc_config = isolated, not ading eMMC backup partition record\n", __func__);
-        break;
-      default:
-        INFO("%s: sdcc_config = default!!\n", __func__);
-        break;
-    }
-
+    (void)sdcc_config;
     switch (storage_config) {
         case STORAGE_CONFIGURATION_CLASSIC:
         case STORAGE_CONFIGURATION_INVERTED:
-            update_twrp_regular(fd, type, sdcc_config);
+            switch (sdcc_config) {
+                case REGULAR:
+                    ret += add_fstab_entry(fd, type, SDCC_1,     "usbmsc",    "/internal_sd", "vfat", "flags=display=\"Internal SD\";storagename=\"Internal SD\";storage;settingsstorage;wipeingui;fsflags=utf8", "");
+                    if (check_for_partition(SDCC_2, "usbmsc"))
+                        ret += add_fstab_entry(fd, type, SDCC_2, "usbmsc",    "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
+                    else
+                        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/dev/block/mmcblk1p1 /dev/block/mmcblk1", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
+                    break;
+                case INVERTED:
+                    ret += add_fstab_entry(fd, type, SDCC_2,     "usbmsc"   , "/internal_sd", "vfat", "flags=display=\"Internal SD\";storagename=\"Internal SD\";storage;settingsstorage;wipeingui;fsflags=utf8", "");
+                    if (check_for_partition(SDCC_1, "usbmsc"))
+                        ret += add_fstab_entry(fd, type, SDCC_1, "usbmsc",    "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
+                    else
+                        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/dev/block/mmcblk1p1 /dev/block/mmcblk1", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
+                    break;
+                case ISOLATED:
+                    ret += add_fstab_entry(fd, type, SDCC_1, "usbmsc", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8,settingsstorage", "");
+                    break;
+            }
             break;
         case STORAGE_CONFIGURATION_DATAMEDIA:
-            update_twrp_datamedia(fd, type, sdcc_config);
+            switch (sdcc_config) {
+                case REGULAR:
+                    if (check_for_partition(SDCC_2, "usbmsc"))
+                        ret += add_fstab_entry(fd, type, SDCC_1, "usbmsc", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
+                    else
+                        ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/dev/block/mmcblk1p1 /dev/block/mmcblk1", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
+                    break;
+                case INVERTED:
+                    ret += add_fstab_entry(fd, type, SDCC_2, "usbmsc", "/internal_sd", "vfat", "flags=display=\"Internal SD\";storagename=\"Internal SD\";storage;settingsstorage;wipeingui;fsflags=utf8", "");
+                    ret += add_fstab_entry(fd, type, SDCC_1, "usbmsc", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
+                    break;
+                case ISOLATED:
+                    ret += add_fstab_entry(fd, type, SDCC_1, "usbmsc", "/external_sd", "vfat", "flags=display=\"SD card\";storagename=\"SD card\";storage;wipeingui;removable;fsflags=utf8", "");
+                    break;
+                default:
+                    break;
+            }
             break;
         default:
             break;
     }
+    ret += add_fstab_entry(fd, type, JUST_ADD_IT,  "/dev/block/sda1 /dev/block/sda", "/usb-otg", "vfat", "flags=display=\"USB OTG\";storagename=\"USB OTG\";storage;wipeingui;removable;fsflags=utf8", "");
     return ret;
 }
 
@@ -676,11 +505,11 @@ static void remount_rootfs(unsigned long *flags)
         ERROR("statvfs() failed, errno: %d (%s)\n", errno, strerror(errno));
     else
         mount_flags=statvfs_buf.f_flag;
-    INFO("Remounting / with flags=%lu\n", *flags);
+    ERROR("Remounting / with flags=%lu\n", *flags);
     errno = 0;
     error = mount("rootfs", "/", "rootfs", MS_REMOUNT|*flags, NULL);
     if (error)
-        WARNING("WARNING: Remounting / with flags=%lu FAILED (%s), mount returned %d\n", *flags, strerror(errno), error);
+        ERROR("WARNING: Remounting / with flags=%lu FAILED (%s), mount returned %d\n", *flags, strerror(errno), error);
     *flags=mount_flags;
     return;
 }
@@ -700,7 +529,7 @@ static void print_fstab(const char *fstab_name)
       {
          if ( feof (mf) != 0)
          {
-            INFO("INFO: End of fstab\n");
+            ERROR("INFO: End of fstab\n");
             break;
          }
          else
@@ -709,33 +538,12 @@ static void print_fstab(const char *fstab_name)
             break;
          }
       }
-      if (str[strlen(str)-1] == '\n') {
-          str[strlen(str)-1] = '\0';
-      }
-      INFO("%s\n", str);
+      ERROR("%s\n", str);
    }
    fclose(mf);
 }
 
-int process_fstab_real(const int fd, const int fstab_type, const int storage_config, const int sdcc_config) {
-  int ret = EXIT_FAILURE;
-  switch (fstab_type) {
-    case FSTAB_TYPE_REGULAR:
-      ret = update_regular_fstab(fd, fstab_type, storage_config, sdcc_config);
-      break;
-    case FSTAB_TYPE_RECOVERY:
-      ret = update_recovery_fstab(fd, fstab_type, storage_config, sdcc_config);
-      break;
-    case FSTAB_TYPE_TWRP:
-      ret = update_twrp_fstab(fd, fstab_type, storage_config, sdcc_config);
-      break;
-    default:
-      ERROR("Error: Unknown fstab type (%d)\n", fstab_type);
-  }
-  return ret;
-}
-
-int process_fstab(const char *fstab_name, const int fstab_type)
+int process_fstab(const char *fstab_name, const int fstab_type, const int fstab_action)
 {
     int counter = 0;
     char config[PROP_VALUE_MAX] = {0};
@@ -743,7 +551,7 @@ int process_fstab(const char *fstab_name, const int fstab_type)
     int fd = -1, ret = 0;
     int storage_config = STORAGE_CONFIGURATION_CLASSIC;
     int sdcc_config    = REGULAR;
-    INFO("%s: entered with name=%s type=%d\n", __func__, fstab_name, fstab_type);
+    ERROR("%s: entered with name=%s type=%d action=%d\n", __func__, fstab_name, fstab_type, fstab_action);
 
     remount_rootfs(&flags);
 
@@ -754,106 +562,59 @@ int process_fstab(const char *fstab_name, const int fstab_type)
         counter++;
     }
 
-    INFO("%s: Loading storages configuration", __func__);
     load_storage_config_prop();
     property_get("ro.boot.swap_sdcc", config, "");
     sdcc_config = atoi(config);
     property_get("persist.storages.configuration", config, "");
     storage_config = atoi(config);
-    INFO("storage_config=%d, sdcc_config=%d, '%s'\n", storage_config, sdcc_config, config);
+    ERROR("storage_config=%d, sdcc_config=%d, '%s'\n", storage_config, sdcc_config, config);
 
-    INFO("Updating fstab '%s', type %d\n", fstab_name, fstab_type);
-    fd = open(fstab_name, O_WRONLY|O_CLOEXEC, 0600);
-    lseek(fd, 0l, SEEK_END);
+    errno = 0;
+    if (fstab_action == FSTAB_ACTION_GENERATE) {
+        ERROR("Generating fstab '%s', type %d\n", fstab_name, fstab_type);
+        fd = open(fstab_name, O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0600);
+    }
+    else
+    {
+        ERROR("Updating fstab '%s', type %d\n", fstab_name, fstab_type);
+        fd = open(fstab_name, O_WRONLY|O_CLOEXEC, 0600);
+        lseek(fd, 0l, SEEK_END);
+    }
 
-    if (fd < 0) {
+    if (fd >= 0) {
+        ERROR("opened '%s' (fd=%d)\n", fstab_name, fd);
+        ERROR("FSTAB before processing:\n");
+        print_fstab(fstab_name);
+        switch (fstab_type) {
+            case FSTAB_TYPE_REGULAR:
+                if (fstab_action == FSTAB_ACTION_GENERATE)
+                    ret = generate_regular_fstab(fd, fstab_type, sdcc_config);
+                if (fstab_action == FSTAB_ACTION_UPDATE)
+                    ret = update_regular_fstab(fd, fstab_type, storage_config, sdcc_config);
+                break;
+            case FSTAB_TYPE_RECOVERY:
+                if (fstab_action == FSTAB_ACTION_GENERATE)
+                    ret = generate_recovery_fstab(fd, fstab_type, sdcc_config);
+                if (fstab_action == FSTAB_ACTION_UPDATE)
+                    ret = update_recovery_fstab(fd, fstab_type, storage_config, sdcc_config);
+                break;
+            case FSTAB_TYPE_TWRP:
+                if (fstab_action == FSTAB_ACTION_GENERATE)
+                    ret = generate_twrp_fstab(fd, fstab_type, sdcc_config);
+                if (fstab_action == FSTAB_ACTION_UPDATE)
+                    ret = update_twrp_fstab(fd, fstab_type, storage_config, sdcc_config);
+                break;
+            default:
+                ERROR("Error: Unknown fstab type (%d)\n", fstab_type);
+
+        }
+        ERROR("FSTAB after processing:\n");
+        print_fstab(fstab_name);
+        close(fd);
+    } else {
         ERROR("could not open '%s' (%s)\n", fstab_name, strerror(errno));
         goto failure;
     }
-
-    INFO("opened '%s' (fd=%d)\n", fstab_name, fd);
-    INFO("FSTAB before processing:\n");
-    print_fstab(fstab_name);
-
-    if (sdcc_config == REGULAR) {
-      if (!check_for_partition(RAWDEV, "mmcblk1")) {
-        WARNING("%s: SD card not found", __func__);
-        sd_has_no_usbmsc();
-        sd_has_no_plain_part();
-      }
-    }
-
-    // SD have no plain partition if it is bootable
-    if (sdcc_config == INVERTED || sdcc_config == ISOLATED) {
-      sd_has_no_plain_part();
-    }
-
-    // We have no access to eMMC usbmsc partition in ISOLATED sdcc configuration
-    if (sdcc_config == ISOLATED) {
-      emmc_has_no_usbmsc();
-    }
-
-    // Perform dry-run pass to set up properties
-    dry_run = TRUE;
-    INFO("%s: Dry_run pass started", __func__);
-    process_fstab_real(fd, fstab_type, storage_config, sdcc_config);
-    INFO("%s: Dry_run pass finished", __func__);
-
-    // this will fail if props was set already - ro.* props can be set only once
-    emmc_has_no_usbmsc();
-    sd_has_no_usbmsc();
-    sd_has_no_plain_part();
-
-    char tmp[PROP_VALUE_MAX] = {0};
-    property_get(EMMC_HAS_USBMSC_PROP, tmp, "false");
-    int emmc_usbmsc = strcmp(tmp, "false");
-    property_get(SD_HAS_USBMSC_PROP, tmp, "false");
-    int sd_usbmsc = strcmp(tmp, "false");
-    property_get(SD_HAS_PLAIN_PART_PROP, tmp, "false");
-    int sd_plain_part= strcmp(tmp, "false");
-
-    if (storage_config == STORAGE_CONFIGURATION_CLASSIC && !emmc_usbmsc) {
-      INFO("%s: storage_config=%d is invalid - no usbmsc partition on eMMC found, fixing\n", __func__, storage_config);
-      if (sd_usbmsc || sd_plain_part) {
-        INFO("%s: SD card can become primary storage, using it\n", __func__);
-        storage_config = STORAGE_CONFIGURATION_INVERTED;
-        sprintf(tmp, "%d", STORAGE_CONFIGURATION_INVERTED);
-        property_set(STORAGE_CONFIG_PROP, tmp);
-      } else {
-        INFO("%s: SD card can't become primary storage, using datamedia\n", __func__);
-        storage_config = STORAGE_CONFIGURATION_DATAMEDIA;
-        sprintf(tmp, "%d", STORAGE_CONFIGURATION_DATAMEDIA);
-        property_set(STORAGE_CONFIG_PROP, tmp);
-      }
-      INFO("%s: now storage_config=%d\n", __func__, storage_config);
-    }
-
-    if (storage_config == STORAGE_CONFIGURATION_INVERTED && !sd_usbmsc && !sd_plain_part) {
-      WARNING("%s: storage_config=%d is invalid - no usbmsc or plain data partition on SD found, fixing\n", __func__, storage_config);
-      if (emmc_usbmsc) {
-        INFO("%s: eMMC usbmsc can become primary storage, using it\n", __func__);
-        storage_config = STORAGE_CONFIGURATION_CLASSIC;
-        sprintf(tmp, "%d", STORAGE_CONFIGURATION_CLASSIC);
-        property_set(STORAGE_CONFIG_PROP, tmp);
-      } else {
-        INFO("%s: eMMC usbmsc can't become primary storage, using datamedia\n", __func__);
-        storage_config = STORAGE_CONFIGURATION_DATAMEDIA;
-        sprintf(tmp, "%d", STORAGE_CONFIGURATION_DATAMEDIA);
-        property_set(STORAGE_CONFIG_PROP, tmp);
-      }
-      INFO("%s: now storage_config=%d\n", __func__, storage_config);
-    }
-
-    // Perform real update pass
-    dry_run = FALSE;
-    INFO("%s: Real update pass started", __func__);
-    ret = process_fstab_real(fd, fstab_type, storage_config, sdcc_config);
-    INFO("%s: Real update finished", __func__);
-
-    INFO("FSTAB after processing:\n");
-    print_fstab(fstab_name);
-    close(fd);
-
     remount_rootfs(&flags);
     return(ret);
 
@@ -865,20 +626,26 @@ int process_fstab(const char *fstab_name, const int fstab_type)
 
 int main(int nargs, char **args)
 {
-    int fstab_type = FSTAB_TYPE_REGULAR;
-    if (!(nargs == 3 && args[1] && args[2])) {
-        ERROR("%s: invalid arguments (nargs=%d, args[0]=%s, args[1]=%s, args[2]=%s\n", __func__, nargs, args[0], args[1], args[2]);
-        return FALSE;
+    int fstab_type     = FSTAB_TYPE_REGULAR;
+    int fstab_action   = FSTAB_ACTION_GENERATE;
+    int ret = FALSE;
+    ERROR("%s: entered with name=%s type=%s action=%s\n", __func__, args[1], args[2], args[3]);
+    if (nargs == 4 && args[1] && args[2] && args[3]) {
+        const char *fstab_name = args[1];
+        if (!strncmp(args[2],"regular", sizeof("regular")))
+            fstab_type = FSTAB_TYPE_REGULAR;
+        if (!strncmp(args[2],"recovery", sizeof("recovery")))
+            fstab_type = FSTAB_TYPE_RECOVERY;
+        if (!strncmp(args[2],"twrp", sizeof("twrp")))
+            fstab_type = FSTAB_TYPE_TWRP;
+        if (!strncmp(args[3],"generate", sizeof("generate")))
+            fstab_action = FSTAB_ACTION_GENERATE;
+        if (!strncmp(args[3],"update", sizeof("update")))
+            fstab_action = FSTAB_ACTION_UPDATE;
+        ret = process_fstab(fstab_name, fstab_type, fstab_action);
+    } else {
+        ERROR("%s: invalid arguments (nargs=%d, args[0]=%s, args[1]=%s, args[2]=%s, args[3]=%s\n", __func__, nargs, args[0], args[1], args[2], args[3]);
     }
-    INFO("%s: entered with name=%s type=%s\n", __func__, args[1], args[2]);
-    const char *fstab_name = args[1];
-    if (!strncmp(args[2],"regular", sizeof("regular")))
-        fstab_type = FSTAB_TYPE_REGULAR;
-    if (!strncmp(args[2],"recovery", sizeof("recovery")))
-        fstab_type = FSTAB_TYPE_RECOVERY;
-    if (!strncmp(args[2],"twrp", sizeof("twrp")))
-        fstab_type = FSTAB_TYPE_TWRP;
-    int ret = process_fstab(fstab_name, fstab_type);
     set_storage_props();
     return ret;
 }
