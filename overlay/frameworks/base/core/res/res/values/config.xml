@@ -123,9 +123,6 @@
     <!-- Is the notification LED intrusive? Used to decide if there should be a disable option -->
     <bool name="config_intrusiveNotificationLed">true</bool>
 
-    <!-- Is the battery LED intrusive? Used to decide if there should be a disable option
-    <bool name="config_intrusiveBatteryLed">true</bool> -->
-
     <!-- Minimum screen brightness setting allowed by the power manager.
          The user is forbidden from setting the brightness below this level. -->
     <integer name="config_screenBrightnessSettingMinimum">2</integer>
@@ -231,50 +228,7 @@
          This needs to match the constants in
          policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
     -->
-    <!-- <integer name="config_longPressOnHomeBehavior">3</integer> -->
-
-    <!-- Control the behavior when the user long presses the app switch button.
-            0 - Nothing
-            1 - Menu key
-            2 - Recent apps view in SystemUI
-            3 - Launch assist intent
-            4 - Voice Search
-            5 - In-app Search
-         This needs to match the constants in
-         services/core/java/com/android/server/policy/policy/impl/PhoneWindowManager.java>
-    <integer name="config_longPressOnAppSwitchBehavior">1</integer-->
-
-    <!-- Hardware keys present on the device, stored as a bit field.
-         This integer should equal the sum of the corresponding value for each
-         of the following keys present:
-             1 - Home
-             2 - Back
-             4 - Menu
-             8 - Assistant (search)
-            16 - App switch
-            32 - Camera
-            64 - Volume rocker
-         For example, a device with Home, Back and Menu keys would set this
-         config to 7. 
-    <integer name="config_deviceHardwareKeys">71</integer> -->
-    <add-resource type="integer" name="config_deviceHardwareKeys">71</add-resource>
-
-    <!-- Hardware keys present on the device with the ability to wake, stored as a bit field.
-         This integer should equal the sum of the corresponding value for each
-         of the following keys present:
-             1 - Home
-             2 - Back
-             4 - Menu
-             8 - Assistant (search)
-            16 - App switch
-            32 - Camera
-            64 - Volume rocker
-         For example, a device with Home, Back and Menu keys would set this
-         config to 7.
-    <integer name="config_deviceHardwareWakeKeys">64</integer> -->
-
-    <!-- Component name of the combo network location provider. >
-    <string name="config_comboNetworkLocationProvider" translatable="false">com.qualcomm.location</string-->
+    <integer name="config_longPressOnHomeBehavior">3</integer>
 
     <!-- Boolean indicating if restoring network selection should be skipped -->
     <!-- The restoring is handled by modem if it is true-->
@@ -351,17 +305,12 @@
          format is UMTS|LTE|... -->
     <string translatable="false" name="config_radio_access_family">GSM | WCDMA</string>
 
-    <!-- Support in Surfaceflinger for blur layers.
-         NOTE: This requires additional hardware-specific code.
-    <bool name="config_uiBlurEnabled">true</bool> -->
-    <add-resource type="bool" name="config_uiBlurEnabled">true</add-resource>
+	<!-- Night Mode -->
+    <bool name="config_nightDisplayAvailable">true</bool>
 
     <!-- Whether to enable HumanInteractionController by default 
     <bool name="config_HICEnabledDefault">false</bool> -->
     <add-resource type="bool" name="config_HICEnabledDefault">false</add-resource>
-
-    <!-- Configuration to support SIM contact batch operation
-    <bool name="config_sim_phonebook_batch_operation">false</bool> -->
 
     <bool name="config_showNavigationBar">true</bool>
 </resources>

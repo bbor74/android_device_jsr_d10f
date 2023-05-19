@@ -28,16 +28,28 @@ TARGET_CPU_ABI2 := armeabi
 TARGET_CPU_VARIANT := cortex-a7
 
 # Audio
+#BOARD_USES_ALSA_AUDIO := true
+#AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
+#AUDIO_FEATURE_ENABLED_NEW_SAMPLE_RATE := true
+#USE_CUSTOM_AUDIO_POLICY := 1
+
+# Audio
 BOARD_USES_ALSA_AUDIO := true
 AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
 AUDIO_FEATURE_ENABLED_NEW_SAMPLE_RATE := true
+BOARD_USES_GENERIC_AUDIO := true
+TARGET_USES_QCOM_MM_AUDIO := true
 USE_CUSTOM_AUDIO_POLICY := 1
+USE_XML_AUDIO_POLICY_CONF := 1
+
+# Binder API version
+TARGET_USES_64_BIT_BINDER := true
 
 # Bionic
 MALLOC_SVELTE := true
 
 # Bluetooth
-TARGET_BT_VENDOR_VARIANT := caf
+#TARGET_BT_VENDOR_VARIANT := caf
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_QCOM := true
@@ -51,9 +63,14 @@ TARGET_NO_RADIOIMAGE := true
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true
 BOARD_CHARGER_DISABLE_INIT_BLANK := true
+WITH_LINEAGE_CHARGER := false
+
+# Dexpreopt
+WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := true
 
 # Encryption
 TARGET_HW_DISK_ENCRYPTION := true
+TARGET_LEGACY_HW_DISK_ENCRYPTION := true
 
 # Filesystem
 BOARD_BOOTIMAGE_PARTITION_SIZE     := 16777216
@@ -67,23 +84,15 @@ BOARD_PERSISTIMAGE_PARTITION_SIZE  := 33554432
 BOARD_FLASH_BLOCK_SIZE             := 131072
 
 # FM
-BOARD_HAVE_QCOM_FM := true
 TARGET_QCOM_NO_FM_FIRMWARE := true
-
-# Dexpreopt
-ifeq ($(HOST_OS),linux)
-  ifneq ($(TARGET_BUILD_VARIANT),eng)
-    ifeq ($(WITH_DEXPREOPT),)
-      WITH_DEXPREOPT := true
-      WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := true
-    endif
-  endif
-endif
+BOARD_HAVE_QCOM_FM := true
 
 # Graphics
 TARGET_USES_C2D_COMPOSITION := true
 TARGET_USES_ION := true
+USE_OPENGL_RENDERER := true
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
+OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 
 # Shader cache config options
 # Maximum size of the GLES Shaders that can be cached for reuse.
@@ -112,7 +121,7 @@ TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 # Kernel
 TARGET_KERNEL_SOURCE := kernel/jsr/msm8226
 TARGET_KERNEL_CONFIG := jsr_d10f_defconfig
-BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.bootdevice=msm_sdcc.1 androidboot.hardware=d10f zcache.enabled=1 androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.bootdevice=msm_sdcc.1 androidboot.hardware=d10f zcache.enabled=1 androidboot.selinux=permissive androidboot.android_dt_dir=/dtrd/
 BOARD_KERNEL_IMAGE_NAME := zImage
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 2048
@@ -122,6 +131,7 @@ KERNEL_HAS_FINIT_MODULE := false
 
 # Keymaster
 TARGET_KEYMASTER_WAIT_FOR_QSEE := true
+#TARGET_PROVIDES_KEYMASTER := true
 
 # Camera
 #USE_CAMERA_STUB := true
@@ -145,24 +155,21 @@ QCOM_BOARD_PLATFORMS += msm8226
 TARGET_HAS_LEGACY_POWER_STATS := true
 TARGET_HAS_NO_WIFI_STATS := true
 TARGET_USES_INTERACTION_BOOST := true
+#TARGET_POWERHAL_VARIANT := qcom
 
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE := true
 
 # Radio
-TARGET_RIL_VARIANT := caf
+#TARGET_RIL_VARIANT := caf
 
 # Recovery
-TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/fstab.d10f
+TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/fstab.full
 TARGET_RECOVERY_DENSITY := hdpi
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 BOARD_NO_SECURE_DISCARD := true
-
-# Render
-OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
-USE_OPENGL_RENDERER := true
 
 # Uncomment next line to build TWRP
 # RECOVERY_VARIANT := twrp
@@ -191,15 +198,15 @@ endif
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk
 include device/qcom/sepolicy/legacy-sepolicy.mk
-#include device/lineage/sepolicy/qcom/sepolicy.mk
 
 BOARD_SEPOLICY_DIRS += $(LOCAL_PATH)/sepolicy
 
 # Shims
 TARGET_LD_SHIM_LIBS := \
-    /system/lib/hw/camera.vendor.msm8226.so|libboringssl-compat.so \
+    /system/vendor/lib/hw/camera.msm8226.so|libboringssl-compat.so \
     /system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so \
-    /system/lib/libcrypto.so|libboringssl-compat.so 
+    /system/lib/libcrypto.so|libboringssl-compat.so \
+    /system/bin/thermal-engine|libshims_thermal.so
 
 # Snapdragon LLVM
 TARGET_USE_SDCLANG := true
@@ -208,13 +215,13 @@ TARGET_USE_SDCLANG := true
 BOARD_USES_QC_TIME_SERVICES := true
 
 # Wifi
-#TARGET_WLAN_VARIANT := caf
 BOARD_HAS_QCOM_WLAN := true
 BOARD_WLAN_DEVICE := qcwcn
 BOARD_HOSTAPD_DRIVER := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_qcwcn
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_qcwcn
+PRODUCT_VENDOR_MOVE_ENABLED := true
 WIFI_DRIVER_FW_PATH_AP := "ap"
 WIFI_DRIVER_FW_PATH_STA := "sta"
 WPA_SUPPLICANT_VERSION := VER_0_8_X

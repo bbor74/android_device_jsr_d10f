@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 S-trace <S-trace@list.ru> and The CyanogenMod Project
+ * Copyright (C) 2016 S-trace <S-trace@list.ru> and The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

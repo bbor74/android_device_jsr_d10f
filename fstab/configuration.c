@@ -64,7 +64,7 @@ void update_xml_configuration(char *xml_config, off_t config_size, int isDatamed
 	version = strstr(xml_config, STORAGE_XML_HEADER);
 	volumes = strstr(xml_config, STORAGE_XML_VOLUMES_TOKEN);
 	if (version == NULL || volumes == NULL) {
-		ERROR("Storage config xml \"%s\" looks werid - erasing it\n", STORAGE_XML_PATH);
+		WARNING("Storage config xml \"%s\" looks werid - erasing it\n", STORAGE_XML_PATH);
 		unlink(STORAGE_XML_PATH);
 		return;
 	}
@@ -76,7 +76,7 @@ void update_xml_configuration(char *xml_config, off_t config_size, int isDatamed
 	buffer_size=config_size + strlen(STORAGE_XML_PRIMARY_PHYSICAL_UUID_TOKEN); // needed if migrating from datamedia to classic
 	data = (char *) calloc(1, buffer_size);
 	if (data == NULL) {
-		ERROR("Out of memory while allocating %d bytes\n", buffer_size);
+		WARNING("Out of memory while allocating %d bytes\n", buffer_size);
 		return;
 	}
 
@@ -92,12 +92,12 @@ void update_xml_configuration(char *xml_config, off_t config_size, int isDatamed
 			return; // nothing to do here!
 		}
 
-		ERROR("Storage config xml \"%s\" needs updating (looks like classic)!\n", STORAGE_XML_PATH);
+		WARNING("Storage config xml \"%s\" needs updating (looks like classic)!\n", STORAGE_XML_PATH);
 		fields = sscanf(volumes,
 		                "<volumes version=\"%d\" primaryStorageUuid=\"%64[^\"]\" forceAdoptable=\"%64[^\"]\">\n%n",
 		                &iversion, primaryStorageUuid, forceAdoptable, &scanned_size);
 		if (fields != 3) {
-			ERROR("Storage config xml \"%s\" is werid - got %d fields (want 3)!\n", STORAGE_XML_PATH, fields);
+			WARNING("Storage config xml \"%s\" is werid - got %d fields (want 3)!\n", STORAGE_XML_PATH, fields);
 			free (data);
 			return;
 		}
@@ -113,12 +113,12 @@ void update_xml_configuration(char *xml_config, off_t config_size, int isDatamed
 			return; // nothing to do here!
 		}
 
-		ERROR("Storage config xml \"%s\" needs updating (looks like datamedia)!\n", STORAGE_XML_PATH);
+		WARNING("Storage config xml \"%s\" needs updating (looks like datamedia)!\n", STORAGE_XML_PATH);
 		fields = sscanf(volumes,
 		                "<volumes version=\"%d\" forceAdoptable=\"%64[^\"]\">\n%n",
 		                &iversion, forceAdoptable, &scanned_size);
 		if (fields != 2) {
-			ERROR("Storage config xml \"%s\" is werid - got %d fields (want 2)!\n", STORAGE_XML_PATH, fields);
+			WARNING("Storage config xml \"%s\" is werid - got %d fields (want 2)!\n", STORAGE_XML_PATH, fields);
 			free (data);
 			return; // nothing to do here!
 		}
@@ -130,8 +130,8 @@ void update_xml_configuration(char *xml_config, off_t config_size, int isDatamed
 	// just copy rest of config data
 	rest_of_config=xml_config + strlen(STORAGE_XML_HEADER) + scanned_size;
 	strncpy(data, rest_of_config, buffer_free_bytes);
-	ERROR("Going to write '%s' into config %s\n", data, STORAGE_XML_PATH);
-	ERROR("Updating %s\n", STORAGE_XML_PATH);
+	INFO("Going to write '%s' into config %s\n", data, STORAGE_XML_PATH);
+	INFO("Updating %s\n", STORAGE_XML_PATH);
 	munmap(xml_config, config_size);
 	FILE *storage_config = fopen(STORAGE_XML_PATH, "w");
 	if (storage_config == NULL) {
@@ -150,7 +150,7 @@ void set_storage_props(void)
 	int isDatamedia = FALSE;
 	int rc = property_get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, value, "");
 	if (rc == 0) { // If the storages configuration property is unspecified
-		ERROR("Storages configuration is undefined (" PERSISTENT_PROPERTY_CONFIGURATION_NAME
+		WARNING("Storages configuration is undefined (" PERSISTENT_PROPERTY_CONFIGURATION_NAME
 		      " == %s), trying to guess best default value\n", value);
 		if (access(USBMSC_PATH, F_OK) == 0) { // Check for usbmsc partition in primary storage
 			rc = property_get(BOOT_PROPERTY_SDCC_CONFIGURATION_NAME, value, "");
@@ -167,13 +167,13 @@ void set_storage_props(void)
 	}
 
 	if (rc && !strcmp(value, STORAGES_CONFIGURATION_DATAMEDIA)) { // if datamedia
-		ERROR("Got datamedia storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
+		INFO("Got datamedia storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
 		isDatamedia = TRUE;
 	} else if (rc && !strcmp(value, STORAGES_CONFIGURATION_INVERTED)) { // if swapped
-		ERROR("Got inverted storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
+		INFO("Got inverted storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
 		property_set("ro.vold.primary_physical", "1");
 	} else { // if classic
-		ERROR("Got classic storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
+		INFO("Got classic storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
 		property_set("ro.vold.primary_physical", "1");
 	}
 
@@ -184,5 +184,5 @@ void set_storage_props(void)
 		munmap(xml_config, size);
 	}
 
-	ERROR("Storages configuration applied\n");
+	INFO("Storages configuration applied\n");
 }

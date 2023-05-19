@@ -64,12 +64,9 @@ PRODUCT_PACKAGES += \
     android.hardware.light@2.0-impl
 
 # Power
-#PRODUCT_PACKAGES += \
-#    android.hardware.power@1.0-impl
-
-# Power
 PRODUCT_PACKAGES += \
-    android.hardware.power@1.0-service-qti
+    android.hardware.power@1.0-impl
+#    android.hardware.power@1.0-service-qti
 
 # RenderScript HAL
 PRODUCT_PACKAGES += \

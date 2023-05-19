@@ -30,14 +30,14 @@ import init.d10f.usb.rc
 on early-init
     write /sys/block/mmcblk0/queue/scheduler noop
     mount debugfs /sys/kernel/debug /sys/kernel/debug mode=755
+    mkdir /firmware 0771 system system
+    #mkdir /firmware/image 0771 system system
+    # chown system system /firmware/image
+
     symlink /data/tombstones /tombstones
 
-    mkdir /firmware 0771 system system
-    mkdir /firmware/image 0771 system system
-
-
 on init
-    export LD_SHIM_LIBS /system/bin/thermal-engine|libshims_thermal.so
+ #   export LD_SHIM_LIBS /system/bin/thermal-engine|libshims_thermal.so
 
     # Set permissions for persist partition
     mkdir /persist 0771 system system
@@ -50,7 +50,6 @@ on init
     # Symbols required for blobs
 #    export LD_SHIM_LIBS /system/lib/hw/camera.vendor.msm8226.so|libboringssl-compat.so:/system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so:/system/lib/libcrypto.so|libboringssl-compat.so
 #    export LD_PRELOAD /system/lib/libboringssl-compat.so
-#   export LD_PRELOAD libshim_cutils.so
 
     # add a cpuset for the camera daemon
     # we want all the cores for camera
@@ -60,10 +59,14 @@ on init
     chmod 0664 /dev/cpuset/camera-daemon/tasks
     write /dev/cpuset/camera-daemon/cpus 0-3
 
+
+
 on fs
-    exec u:object_r:init_exec:s0 root root -- /sbin/fstab /fstab.d10f regular generate
+    wait /dev/block/platform/${ro.boot.bootdevice}
+    symlink /dev/block/platform/${ro.boot.bootdevice} /dev/block/bootdevice
+
     mount_all fstab.d10f
-    exec u:object_r:init_exec:s0 root root -- /sbin/fstab /fstab.d10f regular update
+    exec u:object_r:init_exec:s0 root root -- /sbin/fstab /fstab.d10f regular
     swapon_all fstab.d10f
 
     restorecon_recursive /persist
@@ -185,8 +188,9 @@ on boot
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
-       # Wifi firmware reload path
+    # Wifi firmware reload path
     chown wifi wifi /sys/module/wlan/parameters/fwpath
+
 
 on post-fs-data
     # Create directory for TZ Apps
@@ -209,15 +213,15 @@ on post-fs-data
     mkdir /data/misc/quipc 0770 system gps
 
     # Create directories for Location services
-    mkdir /data/misc/location 0770 gps gps
-    mkdir /data/misc/location/mq 0770 gps gps
-    mkdir /data/misc/location/xtwifi 0770 gps gps
+    mkdir /data/vendor/location 0770 gps gps
+    mkdir /data/vendor/location/mq 0770 gps gps
+    mkdir /data/vendor/location/xtwifi 0770 gps gps
 
     # Create directory for hostapd
     mkdir /data/hostapd 0770 system wifi
 
-    # Create /data/time folder for time-services
-    mkdir /data/time/ 0700 system system
+    # Create /data/vendor/time folder for time-services
+    mkdir /data/vendor/time/ 0700 system system
 
     # Create directory used by sensor subsystem
     mkdir /data/system 0775 system system
@@ -241,21 +245,22 @@ on post-fs-data
     chown system system /sys/class/timed_output/vibrator/amp
     chmod 0664 /sys/class/timed_output/vibrator/amp
 
-service irsc_util /system/bin/irsc_util "/etc/sec_config"
+service irsc_util /vendor/bin/irsc_util "/etc/sec_config"
     class main
     user root
     oneshot
 
-service rmt_storage /system/bin/rmt_storage
+service rmt_storage /vendor/bin/rmt_storage
     class core
     user root
+    group system wakelock
 
-service rfs_access /system/bin/rfs_access
+service rfs_access /vendor/bin/rfs_access
     class core
     user system
     group system net_raw
 
-service bdaddr /system/bin/bdaddr_jsr
+service bdaddr /vendor/bin/bdaddr_jsr
     class core
     user root
     group system
@@ -265,10 +270,10 @@ on property:init.svc.bdaddr=stopped
     chmod 644 /data/misc/bluetooth/bdaddr
     chown bluetooth bluetooth /data/misc/bluetooth/bdaddr
 
-service hciattach /system/bin/init.d10f.bt.sh
+service hciattach /vendor/bin/init.d10f.bt.sh
     class late_start
     user bluetooth
-    group qcom_oncrpc bluetooth net_bt_admin system
+    group bluetooth net_bt_admin system
     disabled
     oneshot
 
@@ -279,20 +284,22 @@ on property:bluetooth.hciattach=false
     setprop bluetooth.status off
 
 # QMUX must be in multiple groups to support external process connections
-service qmuxd /system/bin/qmuxd
+service qmuxd /vendor/bin/qmuxd
     class main
     user radio
-    group radio audio bluetooth gps diag
+    group radio audio bluetooth wakelock gps diag oem_2950
 
-service netmgrd /system/bin/netmgrd
+service netmgrd /vendor/bin/netmgrd
     class main
+    user root
+    group root wifi wakelock radio inet system
 
-service sensors /system/bin/sensors.qcom
+service sensors /vendor/bin/sensors.qcom
     class late_start
     user root
     group root
 
-service p2p_supplicant /system/vendor/bin/hw/wpa_supplicant \
+service wpa_supplicant /vendor/bin/hw/wpa_supplicant \
     -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \
     -I/system/etc/wifi/p2p_supplicant_overlay.conf -N \
     -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
@@ -308,36 +315,24 @@ service p2p_supplicant /system/vendor/bin/hw/wpa_supplicant \
     disabled
     oneshot
 
-service wpa_supplicant /system/vendor/bin/hw/wpa_supplicant \
-    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
-    -I/system/etc/wifi/wpa_supplicant_overlay.conf \
-    -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0
-    # we will start as root and wpa_supplicant will switch to user wifi
-    # after setting up the capabilities required for WEXT
-    # user wifi
-    # group wifi inet keystore
-    class main
-    socket wpa_wlan0 dgram 660 wifi wifi
-    disabled
-    oneshot
-
 on property:ro.data.large_tcp_window_size=true
     # Adjust socket buffer to enlarge TCP receive window for high bandwidth (e.g. DO-RevB)
     write /proc/sys/net/ipv4/tcp_adv_win_scale  2
 
-service ril-daemon2 /system/bin/rild -c 2
+service ril-daemon2 /vendor/bin/hw/rild -c 2
     class main
     socket rild2 stream 660 root radio
     socket rild-debug2 stream 660 radio system
-    user root
+    user radio
     disabled
-    group radio cache inet misc audio log readproc wakelock diag
+    group radio cache inet misc audio sdcard_r sdcard_rw log readproc wakelock diag oem_2950
+    capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
 
 on property:persist.radio.multisim.config=dsds
     start ril-daemon2
     setprop ro.telephony.default_network 0,1
 
-service qcamerasvr /system/bin/mm-qcamera-daemon
+service qcamerasvr /vendor/bin/mm-qcamera-daemon
     class late_start
     user camera
     group camera system inet input graphics
@@ -348,22 +343,22 @@ on property:init.svc.media=restarting
 on property:init.svc.servicemanager=restarting
     restart qcamerasvr
 
-service time_daemon /system/bin/time_daemon
+service time_daemon /vendor/bin/time_daemon
     class late_start
     user root
     group root
 
-service mpdecision /system/bin/mpdecision --avg_comp
+service mpdecision /vendor/bin/mpdecision --avg_comp
     user root
     group root system
     disabled
 
-service thermal-engine /system/bin/thermal-engine
+service thermal-engine /vendor/bin/thermal-engine
     class main
     user root
     group root
 
-service qseecomd /system/bin/qseecomd
+service qseecomd /vendor/bin/qseecomd
     class core
     user root
     group root
@@ -374,44 +369,39 @@ on property:ro.boot.swap_sdcc=1
 on property:ro.boot.swap_sdcc=2
     stop qseecomd
 
-#service audiod /system/bin/audiod
-#    class late_start
-#    user system
-#    group system
-    
-service adsprpcd /system/bin/adsprpcd
+service adsprpcd /vendor/bin/adsprpcd
     class main
     user media
     group media
 
-service wcnss-service /system/bin/wcnss_service
+service wcnss-service /vendor/bin/wcnss_service
     class main
     user system
     group system wifi radio
     oneshot
 
-service location_mq /system/bin/location-mq
+service location_mq /vendor/bin/location-mq
     class late_start
     user gps
     group gps
     disabled
 
-service xtwifi_client /system/bin/xtwifi-client
+service xtwifi_client /vendor/bin/xtwifi-client
     class late_start
     user gps
     group net_admin wifi inet gps
     disabled
 
-service xtwifi_inet /system/bin/xtwifi-inet-agent
+service xtwifi_inet /vendor/bin/xtwifi-inet-agent
     class late_start
     user gps
     group inet gps
     disabled
 
-service charger /sbin/healthd -c
+service charger /charger
     class charger
     critical
-    seclabel u:r:healthd:s0
+    seclabel u:r:charger:s0
 
 on charger
     # Enable Power modes and set the CPU Freq Sampling rates

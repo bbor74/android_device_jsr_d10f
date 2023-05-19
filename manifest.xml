@@ -172,7 +172,7 @@
     </hal>
     <hal format="hidl">
         <name>android.hardware.keymaster</name>
-        <transport arch="32">passthrough</transport>
+        <transport>hwbinder</transport>
         <version>3.0</version>
         <interface>
             <name>IKeymasterDevice</name>
@@ -283,7 +283,7 @@
     <hal format="hidl">
         <name>android.hardware.wifi</name>
         <transport>hwbinder</transport>
-        <version>1.0</version>
+        <version>1.1</version>
         <interface>
             <name>IWifi</name>
             <instance>default</instance>

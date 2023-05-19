@@ -14,7 +14,9 @@
 # limitations under the License.
 #
 
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+DEVICE_PACKAGE_OVERLAYS += \
+    $(LOCAL_PATH)/overlay \
+    $(LOCAL_PATH)/overlay-lineage
 
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xhdpi
@@ -26,7 +28,7 @@ TARGET_SCREEN_WIDTH := 720
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 
 # Dexpreopt
-PRODUCT_DEXPREOPT_SPEED_APPS += SystemUI
+#PRODUCT_DEXPREOPT_SPEED_APPS += SystemUI
 
 # HIDL HALs
 $(call inherit-product, $(LOCAL_PATH)/hidl-hals.mk)
@@ -46,7 +48,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Audio
 PRODUCT_PACKAGES += \
-    audiod \
     audio.a2dp.default \
     audio.primary.msm8226 \
     audio.r_submix.default \
@@ -62,10 +63,10 @@ PRODUCT_PACKAGES += \
     tinymix
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/audio_effects.conf:system/vendor/etc/audio_effects.conf \
-    $(LOCAL_PATH)/configs/audio_platform_info.xml:system/etc/audio_platform_info.xml \
-    $(LOCAL_PATH)/configs/audio_policy.conf:system/etc/audio_policy.conf \
-    $(LOCAL_PATH)/configs/mixer_paths.xml:system/etc/mixer_paths.xml
+    $(LOCAL_PATH)/configs/audio_effects.xml:system/vendor/etc/audio_effects.xml \
+    $(LOCAL_PATH)/configs/audio_platform_info.xml:system/vendor/etc/audio_platform_info.xml \
+    $(LOCAL_PATH)/configs/audio_policy_configuration.xml:system/vendor/etc/audio_policy_configuration.xml \
+    $(LOCAL_PATH)/configs/mixer_paths.xml:system/vendor/etc/mixer_paths.xml
 
 PRODUCT_COPY_FILES += \
     frameworks/av/services/audiopolicy/config/a2dp_audio_policy_configuration.xml:system/vendor/etc/a2dp_audio_policy_configuration.xml \
@@ -76,10 +77,11 @@ PRODUCT_COPY_FILES += \
 
 # Bluetooth
 PRODUCT_PACKAGES += \
+    libbt-vendor \
     bdaddr_jsr
 
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/init.d10f.bt.sh:system/bin/init.d10f.bt.sh
+    $(LOCAL_PATH)/configs/init.d10f.bt.sh:system/vendor/bin/init.d10f.bt.sh
 
 # CABL
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -173,11 +175,16 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     media.stagefright.legacyencoder=true \
-    media.stagefright.less-secure=true
+    media.stagefright.less-secure=true \
+    persist.media.treble_omx=false
 
 # Custom Settings page
 PRODUCT_PACKAGES += \
     JSR_Settings
+
+# KeyHandler
+PRODUCT_PACKAGES += \
+    com.lineageos.keyhandler
 
 # This build information
 PRODUCT_COPY_FILES += \
@@ -209,8 +216,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/privapp-permissions-d10f.xml:system/etc/permissions/privapp-permissions-d10f.xml
 
 # Power
-#PRODUCT_PACKAGES += \
-#    power.msm8226
+PRODUCT_PACKAGES += \
+    power.msm8226
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
@@ -223,6 +230,23 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/init.recovery.d10f.rc:root/init.recovery.d10f.rc \
     $(LOCAL_PATH)/rootdir/ueventd.d10f.rc:root/ueventd.d10f.rc
 
+#DTRD
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/dtrd/compatible:root/dtrd/compatible \
+    $(LOCAL_PATH)/dtrd/fstab/compatible:root/dtrd/fstab/compatible \
+    $(LOCAL_PATH)/dtrd/fstab/system/compatible:root/dtrd/fstab/system/compatible \
+    $(LOCAL_PATH)/dtrd/fstab/system/dev:root/dtrd/fstab/system/dev \
+    $(LOCAL_PATH)/dtrd/fstab/system/fsmgr_flags:root/dtrd/fstab/system/fsmgr_flags \
+    $(LOCAL_PATH)/dtrd/fstab/system/mnt_flags:root/dtrd/fstab/system/mnt_flags \
+    $(LOCAL_PATH)/dtrd/fstab/system/mnt_point:root/dtrd/fstab/system/mnt_point \
+    $(LOCAL_PATH)/dtrd/fstab/system/status:root/dtrd/fstab/system/status \
+    $(LOCAL_PATH)/dtrd/fstab/system/type:root/dtrd/fstab/system/type
+
+# Seccomp
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/seccomp/mediacodec.policy:system/vendor/etc/seccomp_policy/mediacodec.policy \
+    $(LOCAL_PATH)/seccomp/mediaextractor.policy:system/vendor/etc/seccomp_policy/mediaextractor.policy
+
 # Sensors
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sensors/_hals.conf:system/vendor/etc/sensors/_hals.conf \
@@ -233,7 +257,7 @@ PRODUCT_PACKAGES += \
 
 # Storage
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.sys.sdcardfs=true
+    ro.sys.sdcardfs=false
 
 # TCP fix
 PRODUCT_COPY_FILES += \

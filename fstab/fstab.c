@@ -71,7 +71,7 @@ static void load_storage_config_prop() {
         // not be a hard link to any other file.
         if (((sb.st_mode & (S_IRWXG | S_IRWXO)) != 0) || (sb.st_uid != 0) || (sb.st_gid != 0) ||
                 (sb.st_nlink != 1)) {
-            ERROR("skipping insecure property file %s (uid=%u gid=%u nlink=%u mode=%o)\n",
+            WARNING("skipping insecure property file %s (uid=%u gid=%u nlink=%u mode=%o)\n",
                   entry->d_name, (unsigned int)sb.st_uid, (unsigned int)sb.st_gid,
                   (unsigned int)sb.st_nlink, sb.st_mode);
             close(fd);
@@ -82,7 +82,7 @@ static void load_storage_config_prop() {
         int length = read(fd, value, sizeof(value) - 1);
         if (length >= 0) {
             value[length] = 0;
-            ERROR("%s: property_set(%s, %s)\n", __func__, entry->d_name, value);
+            INFO("%s: property_set(%s, %s)\n", __func__, entry->d_name, value);
             property_set(entry->d_name, value);
         } else {
             ERROR("Unable to read persistent property file %s: %s\n",
@@ -103,10 +103,10 @@ static int check_for_partition(int sdcc, const char *part_name)
         snprintf(full_part_name, PROP_VALUE_MAX, "/dev/block/platform/msm_sdcc.%d/by-name/%s", sdcc, part_name);
 
     if (access(full_part_name, F_OK) == 0) {
-        ERROR("%s: INFO: Checking for partition '%s': TRUE\n", __func__, full_part_name);
+        INFO("%s: INFO: Checking for partition '%s': TRUE\n", __func__, full_part_name);
         return TRUE;
     }
-    ERROR("%s: INFO: Checking for partition '%s': FALSE\n", __func__, full_part_name);
+    INFO("%s: INFO: Checking for partition '%s': FALSE\n", __func__, full_part_name);
     return FALSE;
 }
 
@@ -169,7 +169,7 @@ static char *lookup_for_partition(const char *part_name, int search_order) {
     }
 
     if (!partition_is_found) {
-        ERROR("%s: WARNING: partition for '%s' NOT FOUND!", __func__, part_name);
+        WARNING("%s: WARNING: partition for '%s' NOT FOUND!", __func__, part_name);
         return NULL;
     }
 
@@ -191,7 +191,7 @@ static char *lookup_for_partition(const char *part_name, int search_order) {
             break;
     }
 
-    ERROR("%s: INFO: using partition '%s'", __func__, full_part_name);
+    INFO("%s: INFO: using partition '%s'", __func__, full_part_name);
     return full_part_name;
 }
 
@@ -203,9 +203,9 @@ static int get_partition_number(const char *part_name)
     char raw_blockdev_name[PROP_VALUE_MAX] = {0};
     char partition[PROP_VALUE_MAX + 1] = {0};
     int sdcc = -1;
-    ERROR("%s: entered, part_name=%s", __func__, part_name);
+    INFO("%s: entered, part_name=%s", __func__, part_name);
     if (sscanf(part_name, "/devices/msm_sdcc.%d/mmc_host*", &sdcc) == 1) {
-        ERROR("%s: recursively detecting partition usbmsc on sdcc%d\n", __func__, sdcc);
+        INFO("%s: recursively detecting partition usbmsc on sdcc%d\n", __func__, sdcc);
         snprintf(raw_blockdev_name, PROP_VALUE_MAX, "/dev/block/platform/msm_sdcc.%d/by-name/usbmsc", sdcc);
         return get_partition_number(raw_blockdev_name);
     }
@@ -222,11 +222,11 @@ static int get_partition_number(const char *part_name)
           return -2;
         }
       } else {
-        ERROR("%s: lookup_for_partition() returned NULL for %s on sdcc %d\n", __func__, partition, sdcc);
+        WARNING("%s: lookup_for_partition() returned NULL for %s on sdcc %d\n", __func__, partition, sdcc);
         return -3;
       }
 
-      ERROR("%s: sdcc=%d (%s): %s\n", __func__, sdcc, full_part_name, raw_blockdev_name);
+      INFO("%s: sdcc=%d (%s): %s\n", __func__, sdcc, full_part_name, raw_blockdev_name);
 
       if (strlen(raw_blockdev_name)) {
         if (sscanf(raw_blockdev_name, "/dev/block/mmcblk%dp%d", &sdcc, &part_number) != 2) {
@@ -234,7 +234,7 @@ static int get_partition_number(const char *part_name)
           return -1;
         }
         sdcc += 1;
-        ERROR("%s: part_number for %s on sdcc%d is %d\n", __func__, full_part_name, sdcc, part_number);
+        INFO("%s: part_number for %s on sdcc%d is %d\n", __func__, full_part_name, sdcc, part_number);
       }
 
       free(full_part_name);
@@ -242,21 +242,21 @@ static int get_partition_number(const char *part_name)
     }
 
     if (!strncmp(part_name, "/devices/platform/msm_hsusb_host/usb", sizeof("/devices/platform/msm_hsusb_host/usb"))) {
-        ERROR("%s: %s is the USB host device, so returning 0\n", __func__, part_name);
+        WARNING("%s: %s is the USB host device, so returning 0\n", __func__, part_name);
         return 0;
     }
 
     if (!strcmp(part_name, "/dev/block/mmcblk1p1 /dev/block/mmcblk1")) {
-        ERROR("%s: %s is the TWRP plain SD card device, so returning 0\n", __func__, part_name);
+        WARNING("%s: %s is the TWRP plain SD card device, so returning 0\n", __func__, part_name);
         return 0;
     }
 
     if (!strcmp(part_name, "/dev/block/mmcblk0rpmb") || !strcmp(part_name, "/dev/block/mmcblk0")) {
-        ERROR("%s: %s is the TWRP raw eMMC device, so returning 0\n", __func__, part_name);
+        WARNING("%s: %s is the TWRP raw eMMC device, so returning 0\n", __func__, part_name);
         return 0;
     }
 
-    ERROR("%s: Should not reach here (part_name=%s)!\n", __func__, part_name);
+    WARNING("%s: Should not reach here (part_name=%s)!\n", __func__, part_name);
     return -4;
 }
 
@@ -305,32 +305,32 @@ static int add_fstab_entry(
 }
 
 static void emmc_has_usbmsc(void) {
-  ERROR(__func__);
+  INFO(__func__);
   property_set(EMMC_HAS_USBMSC_PROP, "true");
 }
 
 static void emmc_has_no_usbmsc(void) {
-  ERROR(__func__);
+  INFO(__func__);
   property_set(EMMC_HAS_USBMSC_PROP, "false");
 }
 
 static void sd_has_usbmsc(void) {
-  ERROR(__func__);
+  INFO(__func__);
   property_set(SD_HAS_USBMSC_PROP, "true");
 }
 
 static void sd_has_no_usbmsc(void) {
-  ERROR(__func__);
+  INFO(__func__);
   property_set(SD_HAS_USBMSC_PROP, "false");
 }
 
 static void sd_has_plain_part(void) {
-  ERROR(__func__);
+  INFO(__func__);
   property_set(SD_HAS_PLAIN_PART_PROP, "true");
 }
 
 static void sd_has_no_plain_part(void) {
-  ERROR(__func__);
+  INFO(__func__);
   property_set(SD_HAS_PLAIN_PART_PROP, "false");
 }
 
@@ -342,7 +342,7 @@ static void sd_has_no_plain_part(void) {
 
 static int update_regular_classic(int fd, int type, int sdcc_config) {
   int ret = 0;
-  ERROR(__func__);
+  INFO(__func__);
   switch (sdcc_config) {
     case REGULAR:
       if (check_for_partition(SDCC_1, "usbmsc")) {
@@ -404,7 +404,7 @@ static int update_regular_classic(int fd, int type, int sdcc_config) {
 
 static int update_regular_inverted(int fd, int type, int sdcc_config) {
   int ret = 0;
-  ERROR(__func__);
+  INFO(__func__);
   switch (sdcc_config) {
     case REGULAR:
       if (check_for_partition(SDCC_2, "usbmsc")) {
@@ -451,7 +451,7 @@ static int update_regular_inverted(int fd, int type, int sdcc_config) {
 
 static int update_regular_datamedia(int fd, int type, int sdcc_config) {
   int ret = 0;
-  ERROR(__func__);
+  INFO(__func__);
     switch (sdcc_config) {
     case REGULAR:
       if (check_for_partition(SDCC_1, "usbmsc")) {
@@ -510,8 +510,8 @@ static int update_regular_datamedia(int fd, int type, int sdcc_config) {
 static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_config)
 {
     int ret = 0;
-    ERROR(__func__);
-    ERROR("%s: storage_config=%d, sdcc_config=%d\n", __func__, storage_config, sdcc_config);
+    INFO(__func__);
+    INFO("%s: storage_config=%d, sdcc_config=%d\n", __func__, storage_config, sdcc_config);
 
     switch (storage_config) {
         case STORAGE_CONFIGURATION_CLASSIC:
@@ -531,13 +531,13 @@ static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_c
 
 static int update_recovery_fstab(int fd, int type, int storage_config, int sdcc_config)
 {
-    ERROR(__func__);
+    INFO(__func__);
     return (update_regular_fstab(fd, type, storage_config, sdcc_config)); // STUB for now
 }
 
 static int update_twrp_regular(int fd, int type, int sdcc_config) {
   int ret = 0;
-  ERROR(__func__);
+  INFO(__func__);
   switch (sdcc_config) {
     case REGULAR:
       if (check_for_partition(SDCC_1, "usbmsc")) {
@@ -595,7 +595,7 @@ static int update_twrp_regular(int fd, int type, int sdcc_config) {
 
 static int update_twrp_datamedia(int fd, int type, int sdcc_config) {
   int ret = 0;
-  ERROR(__func__);
+  INFO(__func__);
   switch (sdcc_config) {
     case REGULAR:
       if (check_for_partition(SDCC_2, "usbmsc")) {
@@ -632,23 +632,23 @@ static int update_twrp_datamedia(int fd, int type, int sdcc_config) {
 static int update_twrp_fstab(int fd, int type, int storage_config, int sdcc_config)
 {
     int ret = 0;
-    ERROR("%s: sdcc_config = %d\n", __func__, sdcc_config);
+    INFO("%s: sdcc_config = %d\n", __func__, sdcc_config);
     switch (sdcc_config) {
       case REGULAR:
-        ERROR("%s: sdcc_config = regular, adding mmcblk0\n", __func__);
+        INFO("%s: sdcc_config = regular, adding mmcblk0\n", __func__);
         ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk0",     "/full", "emmc", "flags=backup=1;display=\"eMMC\"", "");
         ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk0rpmb", "/rpmb", "emmc", "flags=backup=1;subpartitionof=/full", "");
         break;
       case INVERTED:
-        ERROR("%s: sdcc_config = inverted, adding mmcblk1\n", __func__);
+        INFO("%s: sdcc_config = inverted, adding mmcblk1\n", __func__);
         ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk1",     "/full", "emmc", "flags=backup=1;display=\"eMMC\"", "");
         ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk1rpmb", "/rpmb", "emmc", "flags=backup=1;subpartitionof=/full", "");
         break;
       case ISOLATED:
-        ERROR("%s: sdcc_config = isolated, not ading eMMC backup partition record\n", __func__);
+        INFO("%s: sdcc_config = isolated, not ading eMMC backup partition record\n", __func__);
         break;
       default:
-        ERROR("%s: sdcc_config = default!!\n", __func__);
+        INFO("%s: sdcc_config = default!!\n", __func__);
         break;
     }
 
@@ -676,11 +676,11 @@ static void remount_rootfs(unsigned long *flags)
         ERROR("statvfs() failed, errno: %d (%s)\n", errno, strerror(errno));
     else
         mount_flags=statvfs_buf.f_flag;
-    ERROR("Remounting / with flags=%lu\n", *flags);
+    INFO("Remounting / with flags=%lu\n", *flags);
     errno = 0;
     error = mount("rootfs", "/", "rootfs", MS_REMOUNT|*flags, NULL);
     if (error)
-        ERROR("WARNING: Remounting / with flags=%lu FAILED (%s), mount returned %d\n", *flags, strerror(errno), error);
+        WARNING("WARNING: Remounting / with flags=%lu FAILED (%s), mount returned %d\n", *flags, strerror(errno), error);
     *flags=mount_flags;
     return;
 }
@@ -700,7 +700,7 @@ static void print_fstab(const char *fstab_name)
       {
          if ( feof (mf) != 0)
          {
-            ERROR("INFO: End of fstab\n");
+            INFO("INFO: End of fstab\n");
             break;
          }
          else
@@ -712,7 +712,7 @@ static void print_fstab(const char *fstab_name)
       if (str[strlen(str)-1] == '\n') {
           str[strlen(str)-1] = '\0';
       }
-      ERROR("%s\n", str);
+      INFO("%s\n", str);
    }
    fclose(mf);
 }
@@ -743,7 +743,7 @@ int process_fstab(const char *fstab_name, const int fstab_type)
     int fd = -1, ret = 0;
     int storage_config = STORAGE_CONFIGURATION_CLASSIC;
     int sdcc_config    = REGULAR;
-    ERROR("%s: entered with name=%s type=%d\n", __func__, fstab_name, fstab_type);
+    INFO("%s: entered with name=%s type=%d\n", __func__, fstab_name, fstab_type);
 
     remount_rootfs(&flags);
 
@@ -754,15 +754,15 @@ int process_fstab(const char *fstab_name, const int fstab_type)
         counter++;
     }
 
-    ERROR("%s: Loading storages configuration", __func__);
+    INFO("%s: Loading storages configuration", __func__);
     load_storage_config_prop();
     property_get("ro.boot.swap_sdcc", config, "");
     sdcc_config = atoi(config);
     property_get("persist.storages.configuration", config, "");
     storage_config = atoi(config);
-    ERROR("storage_config=%d, sdcc_config=%d, '%s'\n", storage_config, sdcc_config, config);
+    INFO("storage_config=%d, sdcc_config=%d, '%s'\n", storage_config, sdcc_config, config);
 
-    ERROR("Updating fstab '%s', type %d\n", fstab_name, fstab_type);
+    INFO("Updating fstab '%s', type %d\n", fstab_name, fstab_type);
     fd = open(fstab_name, O_WRONLY|O_CLOEXEC, 0600);
     lseek(fd, 0l, SEEK_END);
 
@@ -771,13 +771,13 @@ int process_fstab(const char *fstab_name, const int fstab_type)
         goto failure;
     }
 
-    ERROR("opened '%s' (fd=%d)\n", fstab_name, fd);
-    ERROR("FSTAB before processing:\n");
+    INFO("opened '%s' (fd=%d)\n", fstab_name, fd);
+    INFO("FSTAB before processing:\n");
     print_fstab(fstab_name);
 
     if (sdcc_config == REGULAR) {
       if (!check_for_partition(RAWDEV, "mmcblk1")) {
-        ERROR("%s: SD card not found", __func__);
+        WARNING("%s: SD card not found", __func__);
         sd_has_no_usbmsc();
         sd_has_no_plain_part();
       }
@@ -795,9 +795,9 @@ int process_fstab(const char *fstab_name, const int fstab_type)
 
     // Perform dry-run pass to set up properties
     dry_run = TRUE;
-    ERROR("%s: Dry_run pass started", __func__);
+    INFO("%s: Dry_run pass started", __func__);
     process_fstab_real(fd, fstab_type, storage_config, sdcc_config);
-    ERROR("%s: Dry_run pass finished", __func__);
+    INFO("%s: Dry_run pass finished", __func__);
 
     // this will fail if props was set already - ro.* props can be set only once
     emmc_has_no_usbmsc();
@@ -813,44 +813,44 @@ int process_fstab(const char *fstab_name, const int fstab_type)
     int sd_plain_part= strcmp(tmp, "false");
 
     if (storage_config == STORAGE_CONFIGURATION_CLASSIC && !emmc_usbmsc) {
-      ERROR("%s: storage_config=%d is invalid - no usbmsc partition on eMMC found, fixing\n", __func__, storage_config);
+      INFO("%s: storage_config=%d is invalid - no usbmsc partition on eMMC found, fixing\n", __func__, storage_config);
       if (sd_usbmsc || sd_plain_part) {
-        ERROR("%s: SD card can become primary storage, using it\n", __func__);
+        INFO("%s: SD card can become primary storage, using it\n", __func__);
         storage_config = STORAGE_CONFIGURATION_INVERTED;
         sprintf(tmp, "%d", STORAGE_CONFIGURATION_INVERTED);
         property_set(STORAGE_CONFIG_PROP, tmp);
       } else {
-        ERROR("%s: SD card can't become primary storage, using datamedia\n", __func__);
+        INFO("%s: SD card can't become primary storage, using datamedia\n", __func__);
         storage_config = STORAGE_CONFIGURATION_DATAMEDIA;
         sprintf(tmp, "%d", STORAGE_CONFIGURATION_DATAMEDIA);
         property_set(STORAGE_CONFIG_PROP, tmp);
       }
-      ERROR("%s: now storage_config=%d\n", __func__, storage_config);
+      INFO("%s: now storage_config=%d\n", __func__, storage_config);
     }
 
     if (storage_config == STORAGE_CONFIGURATION_INVERTED && !sd_usbmsc && !sd_plain_part) {
-      ERROR("%s: storage_config=%d is invalid - no usbmsc or plain data partition on SD found, fixing\n", __func__, storage_config);
+      WARNING("%s: storage_config=%d is invalid - no usbmsc or plain data partition on SD found, fixing\n", __func__, storage_config);
       if (emmc_usbmsc) {
-        ERROR("%s: eMMC usbmsc can become primary storage, using it\n", __func__);
+        INFO("%s: eMMC usbmsc can become primary storage, using it\n", __func__);
         storage_config = STORAGE_CONFIGURATION_CLASSIC;
         sprintf(tmp, "%d", STORAGE_CONFIGURATION_CLASSIC);
         property_set(STORAGE_CONFIG_PROP, tmp);
       } else {
-        ERROR("%s: eMMC usbmsc can't become primary storage, using datamedia\n", __func__);
+        INFO("%s: eMMC usbmsc can't become primary storage, using datamedia\n", __func__);
         storage_config = STORAGE_CONFIGURATION_DATAMEDIA;
         sprintf(tmp, "%d", STORAGE_CONFIGURATION_DATAMEDIA);
         property_set(STORAGE_CONFIG_PROP, tmp);
       }
-      ERROR("%s: now storage_config=%d\n", __func__, storage_config);
+      INFO("%s: now storage_config=%d\n", __func__, storage_config);
     }
 
     // Perform real update pass
     dry_run = FALSE;
-    ERROR("%s: Real update pass started", __func__);
+    INFO("%s: Real update pass started", __func__);
     ret = process_fstab_real(fd, fstab_type, storage_config, sdcc_config);
-    ERROR("%s: Real update finished", __func__);
+    INFO("%s: Real update finished", __func__);
 
-    ERROR("FSTAB after processing:\n");
+    INFO("FSTAB after processing:\n");
     print_fstab(fstab_name);
     close(fd);
 
@@ -870,7 +870,7 @@ int main(int nargs, char **args)
         ERROR("%s: invalid arguments (nargs=%d, args[0]=%s, args[1]=%s, args[2]=%s\n", __func__, nargs, args[0], args[1], args[2]);
         return FALSE;
     }
-    ERROR("%s: entered with name=%s type=%s\n", __func__, args[1], args[2]);
+    INFO("%s: entered with name=%s type=%s\n", __func__, args[1], args[2]);
     const char *fstab_name = args[1];
     if (!strncmp(args[2],"regular", sizeof("regular")))
         fstab_type = FSTAB_TYPE_REGULAR;
