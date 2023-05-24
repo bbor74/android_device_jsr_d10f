@@ -68,7 +68,7 @@ static void load_storage_config_prop() {
         // not be a hard link to any other file.
         if (((sb.st_mode & (S_IRWXG | S_IRWXO)) != 0) || (sb.st_uid != 0) || (sb.st_gid != 0) ||
                 (sb.st_nlink != 1)) {
-            ERROR("skipping insecure property file %s (uid=%u gid=%u nlink=%u mode=%o)\n",
+            WARNING("skipping insecure property file %s (uid=%u gid=%u nlink=%u mode=%o)\n",
                   entry->d_name, (unsigned int)sb.st_uid, (unsigned int)sb.st_gid,
                   (unsigned int)sb.st_nlink, sb.st_mode);
             close(fd);
@@ -79,7 +79,7 @@ static void load_storage_config_prop() {
         int length = read(fd, value, sizeof(value) - 1);
         if (length >= 0) {
             value[length] = 0;
-            ERROR("%s: property_set(%s, %s)\n", __func__, entry->d_name, value);
+            INFO("%s: property_set(%s, %s)\n", __func__, entry->d_name, value);
             property_set(entry->d_name, value);
         } else {
             ERROR("Unable to read persistent property file %s: %s\n",
@@ -98,7 +98,7 @@ static int check_for_partition(int sdcc, const char *part_name)
         snprintf(full_part_name, PROP_VALUE_MAX, "/dev/block/%s", part_name);
     else
         snprintf(full_part_name, PROP_VALUE_MAX, "/dev/block/platform/msm_sdcc.%d/by-name/%s", sdcc, part_name);
-    ERROR("%s: INFO: Checking for partition '%s'\n", __func__, full_part_name);
+    INFO("%s: INFO: Checking for partition '%s'\n", __func__, full_part_name);
 
     if (access(full_part_name, F_OK) == 0)
         return TRUE;
@@ -165,7 +165,7 @@ static char *lookup_for_partition(const char *part_name, int search_order) {
     }
 
     if (!partition_is_found) {
-        ERROR("%s: WARNING: partition for '%s' NOT FOUND!", __func__, part_name);
+        WARNING("%s: WARNING: partition for '%s' NOT FOUND!", __func__, part_name);
         return NULL;
     }
 
@@ -187,7 +187,7 @@ static char *lookup_for_partition(const char *part_name, int search_order) {
             break;
     }
 
-    ERROR("%s: INFO: using partition '%s'", __func__, full_part_name);
+    INFO("%s: INFO: using partition '%s'", __func__, full_part_name);
     return full_part_name;
 }
 
@@ -200,7 +200,7 @@ static int get_partition_number(const char *part_name)
     char partition[PROP_VALUE_MAX] = {0};
     int sdcc = -1;
     if (sscanf(part_name, "/devices/msm_sdcc.%d/mmc_host*", &sdcc) == 1) {
-        ERROR("%s: recursively detecting partition usbmsc on sdcc%d\n", __func__, sdcc);
+        INFO("%s: recursively detecting partition usbmsc on sdcc%d\n", __func__, sdcc);
         snprintf(raw_blockdev_name, PROP_VALUE_MAX, "/dev/block/platform/msm_sdcc.%d/by-name/usbmsc", sdcc);
         return get_partition_number(raw_blockdev_name);
     }
@@ -213,11 +213,11 @@ static int get_partition_number(const char *part_name)
           return -2;
         }
       } else {
-        ERROR("%s: lookup_for_partition() returned NULL for %s on sdcc %d\n", __func__, partition, sdcc);
+        WARNING("%s: lookup_for_partition() returned NULL for %s on sdcc %d\n", __func__, partition, sdcc);
         return -3;
       }
 
-      ERROR("%s: sdcc=%d (%s): %s\n", __func__, sdcc, full_part_name, raw_blockdev_name);
+      INFO("%s: sdcc=%d (%s): %s\n", __func__, sdcc, full_part_name, raw_blockdev_name);
 
       if (strlen(raw_blockdev_name)) {
         if (sscanf(raw_blockdev_name, "/dev/block/mmcblk%dp%d", &sdcc, &part_number) != 2) {
@@ -225,14 +225,14 @@ static int get_partition_number(const char *part_name)
           return -1;
         }
         sdcc += 1;
-        ERROR("%s: part_number for %s on sdcc%d is %d\n", __func__, full_part_name, sdcc, part_number);
+        INFO("%s: part_number for %s on sdcc%d is %d\n", __func__, full_part_name, sdcc, part_number);
       }
 
       free(full_part_name);
       return part_number;
     }
     
-    ERROR("%s: Should not reach here!\n", __func__);
+    WARNING("%s: Should not reach here!\n", __func__);
     return -4;
 }
 
@@ -282,10 +282,10 @@ static int generate_regular_fstab(int fd, int type, int sdcc_config)
     int ret = 0;
     (void)sdcc_config;
     dprintf(fd, FSTAB_HEADER);
-    ret += add_fstab_entry(fd, type, SDCC_1, "system",   "/system",   "ext4", "ro,barrier=1", "wait");
-    ret += add_fstab_entry(fd, type, SDCC_1, "cache",    "/cache",    "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check");
+ //   ret += add_fstab_entry(fd, type, SDCC_1, "system",   "/system",   "ext4", "ro,barrier=1", "wait");
+ //   ret += add_fstab_entry(fd, type, SDCC_1, "cache",    "/cache",    "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check");
     ret += add_fstab_entry(fd, type, SDCC_1, "cache",    "/cache",    "ext4", "noatime,nosuid,nodev,barrier=1", "wait,check,formattable");
-    ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check,encryptable=footer");
+ //   ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check,encryptable=footer");
     ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "ext4", "noatime,nosuid,nodev,barrier=1,noauto_da_alloc", "wait,check,formattable,encryptable=footer");
     ret += add_fstab_entry(fd, type, SDCC_1, "persist",  "/persist",  "ext4", "nosuid,nodev,barrier=1", "wait");
     ret += add_fstab_entry(fd, type, SDCC_1, "modem",    "/firmware", "vfat", "ro,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337,context=u:object_r:firmware_file:s0", "wait");
@@ -331,24 +331,24 @@ static int generate_twrp_fstab(int fd, int type, int sdcc_config)
     ret += add_fstab_entry(fd, type, SDCC_1, "fsc",      "/fsc",      "emmc", "flags=backup=1;subpartitionof=/efs1", "");
     ret += add_fstab_entry(fd, type, SDCC_1, "sdi",      "/sdi",      "emmc", "flags=backup=1;display=\"SDI\"", "");
     ret += add_fstab_entry(fd, type, SDCC_1, "misc",     "/misc",     "emmc", "", "");
-    ERROR("%s: sdcc_config = %d\n", __func__, sdcc_config);
+    INFO("%s: sdcc_config = %d\n", __func__, sdcc_config);
     switch (sdcc_config) {
         case REGULAR:
-            ERROR("%s: sdcc_config = regular, adding mmcblk0\n", __func__);
+            INFO("%s: sdcc_config = regular, adding mmcblk0\n", __func__);
             ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk0",     "/full", "emmc", "flags=backup=1;display=\"eMMC\"", "");
             ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk0rpmb", "/rpmb", "emmc", "flags=backup=1;subpartitionof=/full", "");
             break;
         case INVERTED:
-            ERROR("%s: sdcc_config = inverted, adding mmcblk1\n", __func__);
+            INFO("%s: sdcc_config = inverted, adding mmcblk1\n", __func__);
             ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk1",     "/full", "emmc", "flags=backup=1;display=\"eMMC\"", "");
             ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk1rpmb", "/rpmb", "emmc", "flags=backup=1;subpartitionof=/full", "");
             break;
         case ISOLATED:
-            ERROR("%s: sdcc_config = isolated, not ading eMMC backup partition record\n", __func__);
+            INFO("%s: sdcc_config = isolated, not ading eMMC backup partition record\n", __func__);
             break;
 
         default:
-            ERROR("%s: sdcc_config = default!!\n", __func__);
+            INFO("%s: sdcc_config = default!!\n", __func__);
             break;
     }
     return (ret < 0 ? 1 : 0);
@@ -358,7 +358,7 @@ static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_c
 {
     int ret = 0;
     (void)sdcc_config;
-    ERROR("%s: storage_config=%d, sdcc_config=%d\n", __func__, storage_config, sdcc_config);
+    INFO("%s: storage_config=%d, sdcc_config=%d\n", __func__, storage_config, sdcc_config);
     switch (storage_config) {
         case STORAGE_CONFIGURATION_CLASSIC:
             switch (sdcc_config) {
@@ -505,11 +505,11 @@ static void remount_rootfs(unsigned long *flags)
         ERROR("statvfs() failed, errno: %d (%s)\n", errno, strerror(errno));
     else
         mount_flags=statvfs_buf.f_flag;
-    ERROR("Remounting / with flags=%lu\n", *flags);
+    INFO("Remounting / with flags=%lu\n", *flags);
     errno = 0;
     error = mount("rootfs", "/", "rootfs", MS_REMOUNT|*flags, NULL);
     if (error)
-        ERROR("WARNING: Remounting / with flags=%lu FAILED (%s), mount returned %d\n", *flags, strerror(errno), error);
+        WARNING("WARNING: Remounting / with flags=%lu FAILED (%s), mount returned %d\n", *flags, strerror(errno), error);
     *flags=mount_flags;
     return;
 }
@@ -529,7 +529,7 @@ static void print_fstab(const char *fstab_name)
       {
          if ( feof (mf) != 0)
          {
-            ERROR("INFO: End of fstab\n");
+            INFO("INFO: End of fstab\n");
             break;
          }
          else
@@ -538,7 +538,7 @@ static void print_fstab(const char *fstab_name)
             break;
          }
       }
-      ERROR("%s\n", str);
+      INFO("%s\n", str);
    }
    fclose(mf);
 }
@@ -551,7 +551,7 @@ int process_fstab(const char *fstab_name, const int fstab_type, const int fstab_
     int fd = -1, ret = 0;
     int storage_config = STORAGE_CONFIGURATION_CLASSIC;
     int sdcc_config    = REGULAR;
-    ERROR("%s: entered with name=%s type=%d action=%d\n", __func__, fstab_name, fstab_type, fstab_action);
+    INFO("%s: entered with name=%s type=%d action=%d\n", __func__, fstab_name, fstab_type, fstab_action);
 
     remount_rootfs(&flags);
 
@@ -567,23 +567,23 @@ int process_fstab(const char *fstab_name, const int fstab_type, const int fstab_
     sdcc_config = atoi(config);
     property_get("persist.storages.configuration", config, "");
     storage_config = atoi(config);
-    ERROR("storage_config=%d, sdcc_config=%d, '%s'\n", storage_config, sdcc_config, config);
+    INFO("storage_config=%d, sdcc_config=%d, '%s'\n", storage_config, sdcc_config, config);
 
     errno = 0;
     if (fstab_action == FSTAB_ACTION_GENERATE) {
-        ERROR("Generating fstab '%s', type %d\n", fstab_name, fstab_type);
+        INFO("Generating fstab '%s', type %d\n", fstab_name, fstab_type);
         fd = open(fstab_name, O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0600);
     }
     else
     {
-        ERROR("Updating fstab '%s', type %d\n", fstab_name, fstab_type);
+        INFO("Updating fstab '%s', type %d\n", fstab_name, fstab_type);
         fd = open(fstab_name, O_WRONLY|O_CLOEXEC, 0600);
         lseek(fd, 0l, SEEK_END);
     }
 
     if (fd >= 0) {
-        ERROR("opened '%s' (fd=%d)\n", fstab_name, fd);
-        ERROR("FSTAB before processing:\n");
+        INFO("opened '%s' (fd=%d)\n", fstab_name, fd);
+        INFO("FSTAB before processing:\n");
         print_fstab(fstab_name);
         switch (fstab_type) {
             case FSTAB_TYPE_REGULAR:
@@ -608,7 +608,7 @@ int process_fstab(const char *fstab_name, const int fstab_type, const int fstab_
                 ERROR("Error: Unknown fstab type (%d)\n", fstab_type);
 
         }
-        ERROR("FSTAB after processing:\n");
+        INFO("FSTAB after processing:\n");
         print_fstab(fstab_name);
         close(fd);
     } else {
@@ -629,7 +629,7 @@ int main(int nargs, char **args)
     int fstab_type     = FSTAB_TYPE_REGULAR;
     int fstab_action   = FSTAB_ACTION_GENERATE;
     int ret = FALSE;
-    ERROR("%s: entered with name=%s type=%s action=%s\n", __func__, args[1], args[2], args[3]);
+    INFO("%s: entered with name=%s type=%s action=%s\n", __func__, args[1], args[2], args[3]);
     if (nargs == 4 && args[1] && args[2] && args[3]) {
         const char *fstab_name = args[1];
         if (!strncmp(args[2],"regular", sizeof("regular")))
