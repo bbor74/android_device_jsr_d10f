@@ -206,7 +206,8 @@ TARGET_LD_SHIM_LIBS := \
     /system/vendor/lib/hw/camera.msm8226.so|libboringssl-compat.so \
     /system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so \
     /system/lib/libcrypto.so|libboringssl-compat.so \
-    /system/bin/thermal-engine|libshims_thermal.so
+    /system/bin/thermal-engine|libshims_thermal.so \
+    /system/vendor/bin/mpdecision|libshims_atomic.so
 
 # Snapdragon LLVM
 TARGET_USE_SDCLANG := true

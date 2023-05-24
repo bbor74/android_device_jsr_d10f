@@ -267,13 +267,14 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermal-engine-8226.conf:system/etc/thermal-engine-8226.conf
 
+# Shims
 PRODUCT_PACKAGES += \
-    libshims_thermal
+    libshims_thermal \
+    libshims_atomic
 
 # Time services
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.timed.enable=true
-
 
 # Wifi
 PRODUCT_PACKAGES += \
