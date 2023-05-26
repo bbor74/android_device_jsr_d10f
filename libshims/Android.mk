@@ -29,8 +29,9 @@ include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := atomic.cpp
 
-#LOCAL_SHARED_LIBRARIES := libutils libgui liblog libbinder libsensor
 LOCAL_MODULE := libshims_atomic
 LOCAL_MODULE_TAGS := optional
+LOCAL_SHARED_LIBRARIES := liblog
+#LOCAL_SHARED_LIBRARIES := libutils libgui liblog libbinder libsensor
 
 include $(BUILD_SHARED_LIBRARY)

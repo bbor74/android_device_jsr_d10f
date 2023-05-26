@@ -31,9 +31,6 @@ on early-init
     write /sys/block/mmcblk0/queue/scheduler noop
     mount debugfs /sys/kernel/debug /sys/kernel/debug mode=755
     mkdir /firmware 0771 system system
-    #mkdir /firmware/image 0771 system system
-    # chown system system /firmware/image
-
     symlink /data/tombstones /tombstones
 
 on init
@@ -191,7 +188,6 @@ on boot
 
     # Wifi firmware reload path
     chown wifi wifi /sys/module/wlan/parameters/fwpath
-
 
 on post-fs-data
     # Create directory for TZ Apps
@@ -363,6 +359,11 @@ service qseecomd /vendor/bin/qseecomd
     class core
     user root
     group root
+
+service audiod /system/bin/audiod
+    class late_start
+    user system
+    group system
 
 on property:ro.boot.swap_sdcc=1
     stop qseecomd

@@ -14,4 +14,8 @@
     "target_path": "vendor/jsr/d10f",
     "branch":      "cm-14.1"
   }
+  {
+    "repository": "android_external_sony_boringssl-compat",
+    "target_path": "external/sony/boringssl-compat"
+  }
 ]

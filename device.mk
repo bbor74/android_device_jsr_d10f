@@ -48,19 +48,16 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Audio
 PRODUCT_PACKAGES += \
-    audio.a2dp.default \
     audio.primary.msm8226 \
-    audio.r_submix.default \
-    audio.usb.default
+    audio.a2dp.default \
+    audio.usb.default \
+    audio.r_submix.default
 
 PRODUCT_PACKAGES += \
     libaudio-resampler \
-    libaudioroute \
     libqcompostprocbundle \
     libqcomvisualizer \
-    libqcomvoiceprocessing \
-    libtinycompress \
-    tinymix
+    libqcomvoiceprocessing
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/audio_effects.xml:system/vendor/etc/audio_effects.xml \
@@ -128,19 +125,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     gps.msm8226
 
-# HIDL
-# PRODUCT_COPY_FILES += \
-#    $(LOCAL_PATH)/manifest.xml:system/vendor/manifest.xml
-
 # IPC router
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sec_config:system/etc/sec_config
-
-# IPv6
-PRODUCT_PACKAGES += \
-    ebtables \
-    ethertypes \
-    libebtc
 
 # Keylayouts
 PRODUCT_COPY_FILES += \
@@ -161,7 +148,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
     $(LOCAL_PATH)/configs/media_codecs_performance.xml:system/etc/media_codecs_performance.xml \
-    $(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml \
+    $(LOCAL_PATH)/configs/media_profiles_V1_0.xml:system/etc/media_profiles_V1_0.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml
@@ -257,7 +244,7 @@ PRODUCT_PACKAGES += \
 
 # Storage
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.sys.sdcardfs=false
+    ro.sys.sdcardfs=true
 
 # TCP fix
 PRODUCT_COPY_FILES += \
@@ -285,18 +272,18 @@ PRODUCT_PACKAGES += \
     WCNSS_qcom_cfg.ini \
     WCNSS_qcom_wlan_nv.bin
 
+#    wificond \
+#    wifilogd \
 PRODUCT_PACKAGES += \
-    wificond \
-    wifilogd \
     hostapd \
     wpa_supplicant \
     wpa_supplicant.conf
 
+#    libwcnss_qmi \
 PRODUCT_PACKAGES += \
     libcurl \
     libqsap_sdk \
     libQWiFiSoftApCfg \
-    libwcnss_qmi \
     wcnss_service
 
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -315,5 +302,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Debug
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     persist.logd.logpersistd=logcatd \
-    persist.sys.usb.config=mtp,adb
+    persist.sys.usb.config=mtp,adb \
+    ro.product.locale=ru-RU \
+    persist.sys.timezone=Europe/Moscow
 

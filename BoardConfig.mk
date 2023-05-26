@@ -28,12 +28,6 @@ TARGET_CPU_ABI2 := armeabi
 TARGET_CPU_VARIANT := cortex-a7
 
 # Audio
-#BOARD_USES_ALSA_AUDIO := true
-#AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
-#AUDIO_FEATURE_ENABLED_NEW_SAMPLE_RATE := true
-#USE_CUSTOM_AUDIO_POLICY := 1
-
-# Audio
 BOARD_USES_ALSA_AUDIO := true
 AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
 AUDIO_FEATURE_ENABLED_NEW_SAMPLE_RATE := true
@@ -134,14 +128,11 @@ TARGET_KEYMASTER_WAIT_FOR_QSEE := true
 #TARGET_PROVIDES_KEYMASTER := true
 
 # Camera
-#USE_CAMERA_STUB := true
-#ifeq ($(USE_CAMERA_STUB), false)
 USE_DEVICE_SPECIFIC_CAMERA := true
 TARGET_HAS_LEGACY_CAMERA_HAL1 := true
-#TARGET_PROVIDES_CAMERA_HAL := true
+TARGET_PROVIDES_CAMERA_HAL := true
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
-#TARGET_USES_NON_TREBLE_CAMERA := true
-#endif
+TARGET_USES_NON_TREBLE_CAMERA := true
 
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
@@ -152,16 +143,16 @@ TARGET_BOARD_PLATFORM_GPU := qcom-adreno305
 QCOM_BOARD_PLATFORMS += msm8226
 
 # Power
-TARGET_HAS_LEGACY_POWER_STATS := true
-TARGET_HAS_NO_WIFI_STATS := true
-TARGET_USES_INTERACTION_BOOST := true
+#TARGET_HAS_LEGACY_POWER_STATS := true
+#TARGET_HAS_NO_WIFI_STATS := true
+#TARGET_USES_INTERACTION_BOOST := true
 #TARGET_POWERHAL_VARIANT := qcom
 
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE := true
 
 # Radio
-#TARGET_RIL_VARIANT := caf
+TARGET_RIL_VARIANT := caf
 
 # Recovery
 TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/fstab.full
@@ -206,7 +197,7 @@ TARGET_LD_SHIM_LIBS := \
     /system/vendor/lib/hw/camera.msm8226.so|libboringssl-compat.so \
     /system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so \
     /system/lib/libcrypto.so|libboringssl-compat.so \
-    /system/bin/thermal-engine|libshims_thermal.so \
+    /system/vendor/bin/thermal-engine|libshims_thermal.so \
     /system/vendor/bin/mpdecision|libshims_atomic.so
 
 # Snapdragon LLVM
@@ -229,7 +220,7 @@ WPA_SUPPLICANT_VERSION := VER_0_8_X
 TARGET_PROVIDES_WCNSS_QMI := true
 TARGET_USES_QCOM_WCNSS_QMI := true
 WIFI_DRIVER_MODULE_NAME := "wlan"
-WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/wlan.ko"
+WIFI_DRIVER_MODULE_PATH := "/system/vendor/lib/modules/wlan.ko"
 
 # inherit from the proprietary version
 -include vendor/jsr/d10f/BoardConfigVendor.mk
