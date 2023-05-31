@@ -84,9 +84,8 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.qualcomm.cabl=0
 
-# Camera
+# Camera    camera.msm8226
 PRODUCT_PACKAGES += \
-    camera.msm8226 \
     libboringssl-compat \
     libxml2 \
     Snap
@@ -272,19 +271,23 @@ PRODUCT_PACKAGES += \
     WCNSS_qcom_cfg.ini \
     WCNSS_qcom_wlan_nv.bin
 
-#    wificond \
-#    wifilogd \
+#    wificond 
+#    wifilogd 
 PRODUCT_PACKAGES += \
     hostapd \
     wpa_supplicant \
     wpa_supplicant.conf
 
-#    libwcnss_qmi \
 PRODUCT_PACKAGES += \
+    libwcnss_qmi \
     libcurl \
     libqsap_sdk \
     libQWiFiSoftApCfg \
     wcnss_service
+
+# Superuser
+PRODUCT_PACKAGES += \
+    su
 
 PRODUCT_PROPERTY_OVERRIDES += \
     wifi.interface=wlan0 \

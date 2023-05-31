@@ -27,6 +27,7 @@ ro.opengles.version=196608
 ro.sf.lcd_density=320
 persist.hwc.mdpcomp.enable=true
 debug.hwui.use_buffer_age=false
+qemu.hw.mainkeys=1
 
 # GPS
 ro.gps.agps_provider=1
