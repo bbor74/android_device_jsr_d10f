@@ -1,0 +1,6 @@
+allow init fuse:dir { mounton search };
+allow init self:capability sys_module;
+allow init self:process execmem;
+
+
+

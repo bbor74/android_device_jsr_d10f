@@ -28,7 +28,7 @@ TARGET_SCREEN_WIDTH := 720
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 
 # Dexpreopt
-#PRODUCT_DEXPREOPT_SPEED_APPS += SystemUI
+PRODUCT_DEXPREOPT_SPEED_APPS += SystemUI
 
 # HIDL HALs
 $(call inherit-product, $(LOCAL_PATH)/hidl-hals.mk)
@@ -55,6 +55,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     libaudio-resampler \
+    libaudioroute \
     libqcompostprocbundle \
     libqcomvisualizer \
     libqcomvoiceprocessing
@@ -262,6 +263,12 @@ PRODUCT_PACKAGES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.timed.enable=true
 
+# WCNSS
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/wifi/WCNSS_qcom_cfg.ini:system/vendor/etc/wifi/WCNSS_qcom_cfg.ini \
+    $(LOCAL_PATH)/wifi/WCNSS_cfg.dat:system/vendor/firmware/wlan/prima/WCNSS_cfg.dat \
+    $(LOCAL_PATH)/wifi/WCNSS_qcom_wlan_nv.bin:system/vendor/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
+
 # Wifi
 PRODUCT_PACKAGES += \
     hostapd_default.conf \
@@ -271,15 +278,18 @@ PRODUCT_PACKAGES += \
     WCNSS_qcom_cfg.ini \
     WCNSS_qcom_wlan_nv.bin
 
-#    wificond 
-#    wifilogd 
 PRODUCT_PACKAGES += \
+    libwpa_client \
+    wificond \
+    wifilogd \
     hostapd \
     wpa_supplicant \
     wpa_supplicant.conf
 
+#
 PRODUCT_PACKAGES += \
     libwcnss_qmi \
+    libwifi-hal-qcom \
     libcurl \
     libqsap_sdk \
     libQWiFiSoftApCfg \
@@ -308,4 +318,5 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mtp,adb \
     ro.product.locale=ru-RU \
     persist.sys.timezone=Europe/Moscow
+
 

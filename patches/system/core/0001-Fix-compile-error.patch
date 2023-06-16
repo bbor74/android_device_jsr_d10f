@@ -1,0 +1,38 @@
+From 88e1649ad81eafb16a60c47b7b07d57a68b06543 Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Thu, 8 Jun 2023 10:37:24 +0400
+Subject: [PATCH 1/2] Fix compile error
+
+Change-Id: I875dd44bb540ec5d63c1e7bbbb33d64afc33c360
+---
+ libcutils/include/cutils/android_reboot.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/libcutils/include/cutils/android_reboot.h b/libcutils/include/cutils/android_reboot.h
+index 716567a2b..a8361da28 100644
+--- a/libcutils/include/cutils/android_reboot.h
++++ b/libcutils/include/cutils/android_reboot.h
+@@ -18,7 +18,9 @@
+ #define __CUTILS_ANDROID_REBOOT_H__
+ 
+ 
+-__BEGIN_DECLS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ 
+ /* Commands */
+ #define ANDROID_RB_RESTART 0xDEAD0001 /* deprecated. Use RESTART2. */
+@@ -39,6 +41,8 @@ __BEGIN_DECLS
+  */
+ int android_reboot(int cmd, int flags, const char *arg);
+ 
+-__END_DECLS
++#ifdef __cplusplus
++}
++#endif
+ 
+ #endif /* __CUTILS_ANDROID_REBOOT_H__ */
+-- 
+2.17.1
+

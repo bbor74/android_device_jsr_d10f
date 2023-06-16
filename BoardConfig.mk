@@ -37,13 +37,12 @@ USE_CUSTOM_AUDIO_POLICY := 1
 USE_XML_AUDIO_POLICY_CONF := 1
 
 # Binder API version
-TARGET_USES_64_BIT_BINDER := true
+TARGET_USES_64_BIT_BINDER := false
 
 # Bionic
 MALLOC_SVELTE := true
 
 # Bluetooth
-#TARGET_BT_VENDOR_VARIANT := caf
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_QCOM := true
@@ -192,9 +191,8 @@ include device/qcom/sepolicy/legacy-sepolicy.mk
 
 BOARD_SEPOLICY_DIRS += $(LOCAL_PATH)/sepolicy
 
-# Shims
+# Shims    /system/vendor/lib/hw/camera.msm8226.so|libboringssl-compat.so
 TARGET_LD_SHIM_LIBS := \
-    /system/vendor/lib/hw/camera.msm8226.so|libboringssl-compat.so \
     /system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so \
     /system/lib/libcrypto.so|libboringssl-compat.so \
     /system/vendor/bin/thermal-engine|libshims_thermal.so \
@@ -221,6 +219,8 @@ TARGET_PROVIDES_WCNSS_QMI := true
 TARGET_USES_QCOM_WCNSS_QMI := true
 WIFI_DRIVER_MODULE_NAME := "wlan"
 WIFI_DRIVER_MODULE_PATH := "/system/vendor/lib/modules/wlan.ko"
+WIFI_DRIVER_MODULE_ARG := ""
+# WIFI_DRIVER_OPERSTATE_PATH := "/sys/class/net/wlan0/operstate"
 
 # inherit from the proprietary version
 -include vendor/jsr/d10f/BoardConfigVendor.mk

@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-//#define LOG_NDEBUG 0
+#define LOG_NDEBUG 0
 
 #define LOG_TAG "wcnss_jsr"
 
-#define MAC_ADDR_SIZE 6
-
 #include <cutils/log.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
-extern int qmi_nv_read_wlan_mac(unsigned char** mac);
+#define WCNSS_INI "/system/etc/wifi/WCNSS_qcom_cfg.ini"
 
 int wcnss_init_qmi(void)
 {
@@ -32,25 +34,38 @@ int wcnss_init_qmi(void)
 
 int wcnss_qmi_get_wlan_address(unsigned char *pBdAddr)
 {
-    int i;
-    unsigned char *buf = NULL;
-
-    qmi_nv_read_wlan_mac(&buf);
-
-    /* swap bytes */
-    for (i = 0; i < MAC_ADDR_SIZE; i++) {
-        pBdAddr[i] = buf[MAC_ADDR_SIZE - 1 - i];
+  FILE *fp;
+  int i;
+  
+  ALOGE("wcnss_qmi_get_wlan_address");
+  
+  fp = fopen(WCNSS_INI,"r");
+  if(fp == NULL){
+    return -1;
+  }
+  
+  char buf[256];
+  while (fgets (buf, sizeof(buf), fp)) {
+    if((strncmp("Intf0MacAddress=",buf,16) == 0) && strlen(buf) == 29){
+      char* pos = &buf[16];
+      for(i = 0; i < 6; i++) {
+	sscanf(pos, "%2hhx", &pBdAddr[i]);
+	pos += 2 * sizeof(char);
+      }
+      break;
     }
-
-    ALOGI("Found MAC address: %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
-            pBdAddr[0],
-            pBdAddr[1],
-            pBdAddr[2],
-            pBdAddr[3],
-            pBdAddr[4],
-            pBdAddr[5]);
-
-    return 0;
+  }
+  
+  ALOGE("Found MAC address: %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
+	pBdAddr[0],
+	pBdAddr[1],
+	pBdAddr[2],
+	pBdAddr[3],
+	pBdAddr[4],
+	pBdAddr[5]);
+  
+  fclose(fp);
+  return 0;
 }
 
 void wcnss_qmi_deinit(void)

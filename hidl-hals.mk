@@ -88,6 +88,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.vibrator@1.0-impl
 
-# WiFi
+# WiFi     android.hardware.wifi@1.0-impl 
 PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service
