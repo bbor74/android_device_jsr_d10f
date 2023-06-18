@@ -240,7 +240,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sensor_def_qcomdev.conf:system/etc/sensor_def_qcomdev.conf
 
 PRODUCT_PACKAGES += \
-    sensors.d10f
+    sensors.msm8226
 
 # Storage
 PRODUCT_PROPERTY_OVERRIDES += \

@@ -240,7 +240,7 @@ vendor/lib/libxml.so
 
 # Sensors
 bin/sensors.qcom:vendor/bin/sensors.qcom
-vendor/lib/hw/sensors.msm8226.so:vendor/lib/hw/sensors.d10f.so
+vendor/lib/hw/sensors.msm8226.so:vendor/lib/sensors.d10f.so
 vendor/lib/libAKM8963.so
 vendor/lib/libsensor1.so
 vendor/lib/libsensor_reg.so
