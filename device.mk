@@ -28,7 +28,7 @@ TARGET_SCREEN_WIDTH := 720
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 
 # Dexpreopt
-PRODUCT_DEXPREOPT_SPEED_APPS += SystemUI
+#PRODUCT_DEXPREOPT_SPEED_APPS += SystemUI
 
 # HIDL HALs
 $(call inherit-product, $(LOCAL_PATH)/hidl-hals.mk)
@@ -146,12 +146,12 @@ PRODUCT_PACKAGES += \
 
 # Media
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
-    $(LOCAL_PATH)/configs/media_codecs_performance.xml:system/etc/media_codecs_performance.xml \
-    $(LOCAL_PATH)/configs/media_profiles_V1_0.xml:system/etc/media_profiles_V1_0.xml \
-    frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
-    frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
-    frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml
+    $(LOCAL_PATH)/configs/media_codecs.xml:system/vendor/etc/media_codecs.xml \
+    $(LOCAL_PATH)/configs/media_codecs_performance.xml:system/vendor/etc/media_codecs_performance.xml \
+    $(LOCAL_PATH)/configs/media_profiles_V1_0.xml:system/vendor/etc/media_profiles_V1_0.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/vendor/etc/media_codecs_google_audio.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/vendor/etc/media_codecs_google_telephony.xml \
+    frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/vendor/etc/media_codecs_google_video.xml
 
 PRODUCT_PACKAGES += \
     libextmedia_jni \
@@ -313,10 +313,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.control_privapp_permissions=log
 
 # Debug
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    persist.logd.logpersistd=logcatd \
-    persist.sys.usb.config=mtp,adb \
-    ro.product.locale=ru-RU \
-    persist.sys.timezone=Europe/Moscow
-
+# PRODUCT_DEFAULT_PROPERTY_OVERRIDES += 
+#    persist.logd.logpersistd=logcatd 
+#    persist.sys.usb.config=mtp,adb 
+#    ro.product.locale=ru-RU 
+#    persist.sys.timezone=Europe/Moscow
+#
 

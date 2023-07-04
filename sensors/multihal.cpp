@@ -17,7 +17,8 @@
 #include "SensorEventQueue.h"
 #include "multihal.h"
 
-#define LOG_NDEBUG 1
+#define LOG_TAG "multihal"
+//#define LOG_NDEBUG 0
 #include <cutils/log.h>
 #include <cutils/atomic.h>
 #include <hardware/sensors.h>
@@ -263,6 +264,7 @@ int sensors_poll_context_t::get_device_version_by_handle(int handle) {
 
 static bool halIsAPILevelCompliant(sensors_poll_context_t *ctx, int handle, int level) {
     int version = ctx->get_device_version_by_handle(handle);
+    ALOGI("%s: version: %d, level: %d", __func__, version, level);
     return version != -1 && (version >= level);
 }
 
@@ -351,6 +353,7 @@ int sensors_poll_context_t::poll(sensors_event_t *data, int maxReads) {
             } else {
                 empties = 0;
                 this->copy_event_remap_handle(&data[eventsRead], event, nextReadIndex);
+                ALOGV("event type %d", data[eventsRead].type);
                 if (data[eventsRead].sensor == -1) {
                     // Bad handle, do not pass corrupted event upstream !
                     ALOGW("Dropping bad local handle event packet on the floor");
@@ -482,6 +485,7 @@ static int device__close(struct hw_device_t *dev) {
 
 static int device__activate(struct sensors_poll_device_t *dev, int handle,
         int enabled) {
+    ALOGI("Called device__activate, handle: %d, enable: %s", handle, enabled ? "true" : "false");
     sensors_poll_context_t* ctx = (sensors_poll_context_t*) dev;
     return ctx->activate(handle, enabled);
 }
@@ -489,6 +493,7 @@ static int device__activate(struct sensors_poll_device_t *dev, int handle,
 static int device__setDelay(struct sensors_poll_device_t *dev, int handle,
         int64_t ns) {
     sensors_poll_context_t* ctx = (sensors_poll_context_t*) dev;
+    ALOGI("Called device__setDelay: handle: %d, ns: %lld", handle, ns);
     return ctx->setDelay(handle, ns);
 }
 
@@ -500,6 +505,8 @@ static int device__poll(struct sensors_poll_device_t *dev, sensors_event_t* data
 
 static int device__batch(struct sensors_poll_device_1 *dev, int handle,
         int flags, int64_t period_ns, int64_t timeout) {
+    ALOGI("Called device__batch: handle %d, flags: %d, period_ns %lld, timeout %lld",
+            handle, flags, period_ns, timeout);
     sensors_poll_context_t* ctx = (sensors_poll_context_t*) dev;
     ctx->setDelay(handle, period_ns);
     return 0;
