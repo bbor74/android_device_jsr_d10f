@@ -52,6 +52,12 @@ persist.bt.enableAptXHD=true
 persist.service.btui.use_aptx=1
 persistent.bt.a2dp_offload_cap=sbc-aptx-aptXHD
 
+# Debug
+persist.logd.logpersistd=logcatd 
+persist.sys.usb.config=mtp,adb 
+ro.product.locale=ru-RU 
+persist.sys.timezone=Europe/Moscow
+
 # Telephony
 rild.libpath=/vendor/lib/libril-qc-qmi-1.so
 rild.libargs=-d /dev/smd0
