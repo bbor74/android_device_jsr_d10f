@@ -33,8 +33,8 @@ on early-init
     mkdir /firmware 0771 system system
     symlink /data/tombstones /tombstones
 
-    exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules reset_modem rt2x00lib rt2800lib mac80211 eeprom_93cx6 gspca_main ansi_cprng oprofile dma_test
-    # evbug
+    exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules rt2x00lib rt2800lib mac80211 eeprom_93cx6
+    # evbug oprofile reset_modem dma_test ansi_cprng gspca_main
 
 on init
  #   export LD_SHIM_LIBS /system/bin/thermal-engine|libshims_thermal.so
