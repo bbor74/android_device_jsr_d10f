@@ -292,7 +292,6 @@ PRODUCT_PACKAGES += \
 #
 PRODUCT_PACKAGES += \
     libwcnss_qmi \
-    libwifi-hal-qcom \
     libcurl \
     libqsap_sdk \
     libQWiFiSoftApCfg \

@@ -1,0 +1,24 @@
+From 1b6bdcf177facb787423bfbc79d7e38882a15057 Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Fri, 18 Aug 2023 15:15:57 +0400
+Subject: [PATCH] wifi: Fix for load modules
+
+Change-Id: I471dd4ee34967db9e34e35212f4b835f8c6242fe
+---
+ wifi/1.1/default/android.hardware.wifi@1.0-service.rc | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/wifi/1.1/default/android.hardware.wifi@1.0-service.rc b/wifi/1.1/default/android.hardware.wifi@1.0-service.rc
+index 696b1f93..8956223d 100644
+--- a/wifi/1.1/default/android.hardware.wifi@1.0-service.rc
++++ b/wifi/1.1/default/android.hardware.wifi@1.0-service.rc
+@@ -1,4 +1,5 @@
+ service wifi_hal_legacy /vendor/bin/hw/android.hardware.wifi@1.0-service
+     class hal
+-    user wifi
++    user root
+     group wifi gps
++    capabilities NET_ADMIN NET_RAW SYS_MODULE
+-- 
+2.17.1
+

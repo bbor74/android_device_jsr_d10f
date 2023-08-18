@@ -217,10 +217,10 @@ WIFI_DRIVER_FW_PATH_STA := "sta"
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 TARGET_PROVIDES_WCNSS_QMI := true
 TARGET_USES_QCOM_WCNSS_QMI := true
-# WIFI_DRIVER_MODULE_NAME := "wlan"
-# WIFI_DRIVER_MODULE_PATH := "/system/vendor/lib/modules/wlan.ko"
-# WIFI_DRIVER_MODULE_ARG := ""
-# WIFI_DRIVER_OPERSTATE_PATH := "/sys/class/net/wlan0/operstate"
+WIFI_DRIVER_MODULE_NAME := "wlan"
+WIFI_DRIVER_MODULE_PATH := "/system/vendor/lib/modules/wlan.ko"
+WIFI_DRIVER_MODULE_ARG := ""
+WIFI_DRIVER_OPERSTATE_PATH := "/sys/class/net/wlan0/operstate"
 
 # inherit from the proprietary version
 -include vendor/jsr/d10f/BoardConfigVendor.mk
