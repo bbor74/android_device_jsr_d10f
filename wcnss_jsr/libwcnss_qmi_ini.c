@@ -37,7 +37,7 @@ int wcnss_qmi_get_wlan_address(unsigned char *pBdAddr)
   FILE *fp;
   int i;
   
-  ALOGE("wcnss_qmi_get_wlan_address");
+  ALOGI("wcnss_qmi_get_wlan_address");
   
   fp = fopen(WCNSS_INI,"r");
   if(fp == NULL){
@@ -56,7 +56,7 @@ int wcnss_qmi_get_wlan_address(unsigned char *pBdAddr)
     }
   }
   
-  ALOGE("Found MAC address: %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
+  ALOGI("Found MAC address: %02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx\n",
 	pBdAddr[0],
 	pBdAddr[1],
 	pBdAddr[2],
