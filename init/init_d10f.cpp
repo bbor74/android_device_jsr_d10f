@@ -67,6 +67,7 @@ void vendor_load_properties()
 
     property_override("ro.product.device", "d10f");
     property_override("ro.build.product", "d10f");
-    property_override("ro.build.description", "lineage_d10f-userdebug 8.1.0 OPM7.181205.001 2bec50b54e test-keys");
+ /*   property_override("ro.build.description", "lineage_d10f-userdebug 8.1.0 OPM7.181205.001 2bec50b54e test-keys");
     property_override("ro.build.fingerprint", "JSR/lineage_d10f/d10f:8.1.0/OPM7.181205.001/2bec50b54e:userdebug/test-keys");
+*/
 }

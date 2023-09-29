@@ -18,8 +18,6 @@
 #define _INIT_FSTAB_H
 #include "log.h"
 
-#define FALSE 0
-#define TRUE !FALSE
 #define FSTAB_HEADER \
 "# Android fstab file.\n\
 # The filesystem that contains the filesystem checker binary (typically /system) cannot\n\
@@ -70,7 +68,5 @@ enum sdcc_configs
         ISOLATED
 };
 
-#define STORAGE_CONFIG_PROP "persist.storages.configuration"
-#define PERSISTENT_PROPERTY_DIR  "/data/property"
 
 #endif //_INIT_FSTAB_H

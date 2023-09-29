@@ -14,24 +14,6 @@
 #include <string.h>
 
 #include <sys/stat.h>
-#define FALSE 0
-#define TRUE 1
-
-#define PERSISTENT_PROPERTY_DIR  "/data/property"
-#define PERSISTENT_PROPERTY_CONFIGURATION_NAME "persist.storages.configuration"
-#define STORAGES_CONFIGURATION_CLASSIC   "0"
-#define STORAGES_CONFIGURATION_INVERTED  "1"
-#define STORAGES_CONFIGURATION_DATAMEDIA "2"
-#define SERVICE_VOLD "vold"
-
-#define STORAGE_XML_PATH "/data/system/storage.xml"
-#define STORAGE_XML_TMP_PATH "/data/system/storage.tmp"
-#define STORAGE_XML_HEADER "<?xml version='1.0' encoding='utf-8' standalone='yes' ?>\n"
-#define STORAGE_XML_VOLUMES_TOKEN "<volumes version=\""
-#define STORAGE_XML_PRIMARY_PHYSICAL_UUID_TOKEN "primaryStorageUuid=\"primary_physical\" "
-
-#define STORAGE_XML_CONFIG_CLASSIC_FMT   "<volumes version=\"%d\" primaryStorageUuid=\"primary_physical\" forceAdoptable=\"%s\">\n"
-#define STORAGE_XML_CONFIG_DATAMEDIA_FMT "<volumes version=\"%d\" forceAdoptable=\"%s\">\n"
 
 char *mmap_xml_configuration(off_t *size) {
 	FILE *xml_config_filestream = fopen(STORAGE_XML_PATH, "r+");
@@ -52,6 +34,35 @@ char *mmap_xml_configuration(off_t *size) {
 	}
 	fclose(xml_config_filestream); // mmaped data still available
 	return config;
+}
+
+static void print_xml(const char *xml_name)
+{
+  FILE *mf = fopen(xml_name, "r");
+  if (!mf) {
+    ERROR("%d: mf not opened: %s", __LINE__,strerror(errno));
+    return;
+  }
+  while (1)
+   {
+      char str[512];
+      char *estr = fgets (str,sizeof(str),mf);
+      if (estr == NULL)
+      {
+         if ( feof (mf) != 0)
+         {
+            INFO("INFO: End of xml\n");
+            break;
+         }
+         else
+         {
+            ERROR("ERROR: Error reading xml: %s\n", strerror(errno));
+            break;
+         }
+      }
+      INFO("%s\n", str);
+   }
+   fclose(mf);
 }
 
 void update_xml_configuration(char *xml_config, off_t config_size, int isDatamedia) {
@@ -125,7 +136,7 @@ void update_xml_configuration(char *xml_config, off_t config_size, int isDatamed
 	// just copy rest of config data
 	rest_of_config=xml_config + strlen(STORAGE_XML_HEADER) + scanned_size;
 	strncpy(data, rest_of_config, buffer_free_bytes);
-	INFO("Going to write '%s' into config %s\n", buffer, STORAGE_XML_PATH);
+//	INFO("Going to write '%s' into config %s\n", buffer, STORAGE_XML_PATH); // 1280-byte message too long for printk
 	INFO("Updating %s\n", STORAGE_XML_PATH);
 	munmap(xml_config, config_size);
 	FILE *storage_config = fopen(STORAGE_XML_PATH, "w");
@@ -137,23 +148,40 @@ void update_xml_configuration(char *xml_config, off_t config_size, int isDatamed
 	fwrite(buffer, strlen(buffer)-1, 1, storage_config);
 	fclose(storage_config);
 	free (buffer);
+	print_xml(STORAGE_XML_PATH);
 }
 
-void set_storage_props(void)
+void set_storage_props(int usbmsc_present)
 {
 	char value[PROP_VALUE_MAX+1];
 	int isDatamedia = FALSE;
 	int rc = 0;
 
-	rc = property_get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, value, "");
+	rc = property_get(STORAGE_CONFIG_PROP, value, "");
 	if (rc && !strcmp(value, STORAGES_CONFIGURATION_DATAMEDIA)) { // if datamedia
-		INFO("Got datamedia storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
+		INFO("Got datamedia storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
 		isDatamedia = TRUE;
 	} else if (rc && !strcmp(value, STORAGES_CONFIGURATION_INVERTED)) { // if swapped
-		INFO("Got inverted storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
+		INFO("Got inverted storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
 		property_set("ro.vold.primary_physical", "1");
-	} else { // if classic
-		INFO("Got classic storage configuration (" PERSISTENT_PROPERTY_CONFIGURATION_NAME " == %s)\n", value);
+	} else { 
+		if (rc == 0) {  // If the storages configuration property is unspecified
+			WARNING("Storages configuration is undefined!\n");
+				if (usbmsc_present) {
+					strncpy(value, STORAGES_CONFIGURATION_CLASSIC, PROP_VALUE_MAX);
+					property_set(USBMSC_PRESENT_PROP, "true");
+					WARNING("Trying classic storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
+				} else {
+					strncpy(value, STORAGES_CONFIGURATION_DATAMEDIA, PROP_VALUE_MAX);
+					property_set(USBMSC_PRESENT_PROP, "false");
+					isDatamedia = TRUE;
+					WARNING("Trying datamedia storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
+				}
+			property_set(STORAGE_CONFIG_PROP, value);
+
+		} else {// if classic
+			INFO("Got classic storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
+		}
 		property_set("ro.vold.primary_physical", "1");
 	}
 
