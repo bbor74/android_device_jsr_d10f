@@ -189,7 +189,7 @@ endif
 include device/qcom/sepolicy/sepolicy.mk
 include device/qcom/sepolicy/legacy-sepolicy.mk
 
-BOARD_SEPOLICY_DIRS += $(LOCAL_PATH)/sepolicy
+BOARD_SEPOLICY_DIRS += device/jsr/d10f/sepolicy
 
 # Shims    /system/vendor/lib/hw/camera.msm8226.so|libboringssl-compat.so
 TARGET_LD_SHIM_LIBS := \
