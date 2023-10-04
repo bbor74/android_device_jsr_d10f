@@ -278,6 +278,7 @@ service bdaddr /vendor/bin/bdaddr_jsr
     class core
     user root
     group system
+    seclabel u:r:bdaddr:s0
     oneshot
 
 on property:init.svc.bdaddr=stopped
@@ -289,6 +290,7 @@ service hciattach /vendor/bin/init.d10f.bt.sh
     user bluetooth
     group bluetooth net_bt_admin system
     disabled
+    seclabel u:r:bluetooth_loader:s0
     oneshot
 
 on property:bluetooth.hciattach=true

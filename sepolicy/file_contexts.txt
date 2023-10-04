@@ -1,0 +1,3 @@
+# Binaries
+/system/vendor/bin/bdaddr_jsr                                                     u:object_r:bdaddr_exec:s0
+
