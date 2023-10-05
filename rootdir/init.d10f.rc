@@ -51,15 +51,6 @@ on init
 #    export LD_SHIM_LIBS /system/lib/hw/camera.vendor.msm8226.so|libboringssl-compat.so:/system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so:/system/lib/libcrypto.so|libboringssl-compat.so
 #    export LD_PRELOAD /system/lib/libboringssl-compat.so
 
-    # add a cpuset for the camera daemon
-    # we want all the cores for camera
-    mkdir /dev/cpuset/camera-daemon
-    chown system system /dev/cpuset/camera-daemon
-    chown system system /dev/cpuset/camera-daemon/tasks
-    chmod 0664 /dev/cpuset/camera-daemon/tasks
-    write /dev/cpuset/camera-daemon/cpus 0-3
-
-
 
 on fs
     wait /dev/block/platform/${ro.boot.bootdevice}
