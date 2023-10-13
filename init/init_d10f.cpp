@@ -49,25 +49,25 @@ void property_override(char const prop[], char const value[])
         __system_property_add(prop, strlen(prop), value, strlen(value));
 }
 
+void property_override_dual(char const system_prop[], char const vendor_prop[], char const value[])
+{
+    property_override(system_prop, value);
+    property_override(vendor_prop, value);
+}
+
 void vendor_load_properties()
 {
     std::string platform = GetProperty("ro.board.platform", "");
     if (platform != ANDROID_TARGET)
         return;
 
-      property_override("ro.product.model", "D10F");
+    property_override_dual("ro.product.model", "ro.vendor.product.model", "D10F");
 
- /*   std::string modem = GetProperty("ro.boot.modem", "");
+ 
+    property_override_dual("ro.product.name", "ro.vendor.product.name", "d10f");
+    property_override_dual("ro.product.device", "ro.vendor.product.device", "d10f");
+    property_override_dual("ro.build.product","ro.vendor.build.product", "d10f");
 
-    if (modem == "HM1AW") {
-        property_override("ro.product.model", "HM 1SW");
-    } else if (modem == "HM1AC") {
-        property_override("ro.product.model", "HM 1SC");
-    }   */
-
-    property_override("ro.product.device", "d10f");
-    property_override("ro.build.product", "d10f");
- /*   property_override("ro.build.description", "lineage_d10f-userdebug 8.1.0 OPM7.181205.001 2bec50b54e test-keys");
-    property_override("ro.build.fingerprint", "JSR/lineage_d10f/d10f:8.1.0/OPM7.181205.001/2bec50b54e:userdebug/test-keys");
-*/
+    property_override_dual("ro.build.description","ro.vendor.build.description", "lineage_d10f-userdebug 8.1.0 OPM7.181205.001 bad4f6dcc0 test-keys");
+    property_override_dual("ro.build.fingerprint", "ro.vendor.build.fingerprint", "JSR/lineage_d10f/d10f:8.1.0/OPM7.181205.001/bad4f6dcc0:userdebug/test-keys");
 }

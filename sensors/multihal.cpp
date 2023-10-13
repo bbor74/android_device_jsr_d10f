@@ -271,15 +271,15 @@ static bool halIsAPILevelCompliant(sensors_poll_context_t *ctx, int handle, int 
 const char *apiNumToStr(int version) {
     switch(version) {
     case SENSORS_DEVICE_API_VERSION_1_0:
-        return "SENSORS_DEVICE_API_VERSION_1_0";
+        return "1_0";
     case SENSORS_DEVICE_API_VERSION_1_1:
-        return "SENSORS_DEVICE_API_VERSION_1_1";
+        return "1_1";
     case SENSORS_DEVICE_API_VERSION_1_2:
-        return "SENSORS_DEVICE_API_VERSION_1_2";
+        return "1_2";
     case SENSORS_DEVICE_API_VERSION_1_3:
-        return "SENSORS_DEVICE_API_VERSION_1_3";
+        return "1_3";
     case SENSORS_DEVICE_API_VERSION_1_4:
-        return "SENSORS_DEVICE_API_VERSION_1_4";
+        return "1_4";
     default:
         return "UNKNOWN";
     }
@@ -562,7 +562,7 @@ static void get_so_paths(std::vector<std::string> *so_paths) {
             "requirements. Please move it to %s.",
             path, MULTI_HAL_CONFIG_FILE_PATH);
 
-    ALOGV("Multihal config file found at %s", path);
+    ALOGI("Multihal config file found at %s", path);
     std::string line;
     while (std::getline(stream, line)) {
         ALOGV("config file line: '%s'", line.c_str());
@@ -617,13 +617,40 @@ static void lazy_init_modules() {
  * reported by the wrapper.
  */
 static void fix_sensor_flags(int version, sensor_t& sensor) {
+    ALOGI("Sensor %s handle: %d type: %d flag: %d version API: %s", 
+                         sensor.name, sensor.handle, sensor.type, sensor.flags, apiNumToStr(version));
     if (version < SENSORS_DEVICE_API_VERSION_1_3) {
-        if (sensor.type == SENSOR_TYPE_PROXIMITY ||
-                sensor.type == SENSOR_TYPE_TILT_DETECTOR) {
-            int new_flags = SENSOR_FLAG_WAKE_UP | SENSOR_FLAG_ON_CHANGE_MODE;
-            ALOGV("Changing flags of handle=%d from %x to %x",
-                    sensor.handle, sensor.flags, new_flags);
-            sensor.flags = new_flags;
+        switch(sensor.type) {
+            case SENSOR_TYPE_PROXIMITY:
+                sensor.flags = SENSOR_FLAG_WAKE_UP | SENSOR_FLAG_ON_CHANGE_MODE;
+                ALOGI("Changing flags to %x", sensor.flags);
+                break;
+            case SENSOR_TYPE_TILT_DETECTOR:
+                sensor.flags = SENSOR_FLAG_WAKE_UP | SENSOR_FLAG_ON_CHANGE_MODE;
+                ALOGI("Changing flags to %x", sensor.flags);
+                break;
+            case SENSOR_TYPE_STEP_DETECTOR:
+                sensor.flags = SENSOR_FLAG_SPECIAL_REPORTING_MODE;
+                ALOGI("Changing flags to %x", sensor.flags);
+                break;
+            case SENSOR_TYPE_STEP_COUNTER:
+                sensor.flags = SENSOR_FLAG_ON_CHANGE_MODE;
+                ALOGI("Changing flags to %x", sensor.flags);
+                break;
+            case SENSOR_TYPE_SIGNIFICANT_MOTION:
+                sensor.flags = SENSOR_FLAG_ONE_SHOT_MODE | SENSOR_FLAG_WAKE_UP;
+                ALOGI("Changing flags to %x", sensor.flags);
+                break;
+            case SENSOR_TYPE_PICK_UP_GESTURE: // LGE Tap To Wake
+                sensor.flags = SENSOR_FLAG_ONE_SHOT_MODE | SENSOR_FLAG_WAKE_UP;
+                ALOGI("Changing flags to %x", sensor.flags);
+                break;
+            case SENSOR_TYPE_LIGHT:
+                sensor.flags = SENSOR_FLAG_ON_CHANGE_MODE;
+                ALOGI("Changing flags to %x", sensor.flags);
+                break;
+            default:
+                break;
         }
     }
     /*
@@ -781,7 +808,7 @@ static int open_sensors(const struct hw_module_t* hw_module, const char* name,
         struct hw_device_t* sub_hw_device;
         int sub_open_result = sensors_module->common.methods->open(*it, name, &sub_hw_device);
         if (!sub_open_result) {
-            ALOGV("This HAL reports API level : %s",
+            ALOGV("This HAL reports API level: %s",
                     apiNumToStr(sub_hw_device->version));
             dev->addSubHwDevice(sub_hw_device);
             sub_hw_versions->insert(std::make_pair(*it, sub_hw_device->version));

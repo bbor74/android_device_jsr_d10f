@@ -46,6 +46,21 @@ ro.qualcomm.sensors.pedometer=true
 ro.qualcomm.sensors.pam=true
 ro.qualcomm.sensors.scrn_ortn=false
 ro.qualcomm.sensors.cmc=true
+ro.qualcomm.sensors.game_rv=false
+ro.qualcomm.sensors.smd=false
+
+## max rate
+#ro.qc.sensors.max_accel_rate=200
+#ro.qc.sensors.max_gyro_rate=200
+#ro.qc.sensors.max_gamerv_rate=200
+#ro.qc.sensors.max_geomag_rotvec=50
+#ro.qc.sensors.max_rotvec=200
+#ro.qc.sensors.max_grav_no_gyro=50
+#ro.qc.sensors.max_grav=200
+
+## sensors qti
+ro.qualcomm.sensors.vmd=false
+ro.qualcomm.sensors.gtap=false
 
 # Qualcomm® aptX™
 persist.bt.enableAptXHD=true
@@ -55,7 +70,7 @@ persistent.bt.a2dp_offload_cap=sbc-aptx-aptXHD
 # Debug
 persist.logd.logpersistd=logcatd 
 persist.sys.usb.config=mtp,adb 
-ro.product.locale=ru-RU 
+# ro.product.locale=ru-RU 
 persist.sys.timezone=Europe/Moscow
 
 # Telephony

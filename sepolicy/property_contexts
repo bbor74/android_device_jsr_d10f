@@ -1,3 +1,5 @@
+runtime.akm.resetdoe              u:object_r:sensors_prop:s0
+
 ro.usbmsc.present              u:object_r:vold_prop:s0
 ro.vold.primary_physical              u:object_r:vold_prop:s0
 persist.storages.configuration              u:object_r:vold_prop:s0
