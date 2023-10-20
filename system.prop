@@ -46,8 +46,8 @@ ro.qualcomm.sensors.pedometer=true
 ro.qualcomm.sensors.pam=true
 ro.qualcomm.sensors.scrn_ortn=false
 ro.qualcomm.sensors.cmc=true
-ro.qualcomm.sensors.game_rv=false
-ro.qualcomm.sensors.smd=false
+ro.qualcomm.sensors.game_rv=true
+ro.qualcomm.sensors.smd=true
 
 ## max rate
 #ro.qc.sensors.max_accel_rate=200
@@ -58,9 +58,9 @@ ro.qualcomm.sensors.smd=false
 #ro.qc.sensors.max_grav_no_gyro=50
 #ro.qc.sensors.max_grav=200
 
-## sensors qti
-ro.qualcomm.sensors.vmd=false
-ro.qualcomm.sensors.gtap=false
+## sensors from huawei mt2
+ro.qualcomm.sensors.vmd=true
+ro.qualcomm.sensors.gtap=true
 
 # Qualcomm® aptX™
 persist.bt.enableAptXHD=true

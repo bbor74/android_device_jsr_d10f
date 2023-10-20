@@ -623,6 +623,10 @@ static void fix_sensor_flags(int version, sensor_t& sensor) {
         switch(sensor.type) {
             case SENSOR_TYPE_PROXIMITY:
                 sensor.flags = SENSOR_FLAG_WAKE_UP | SENSOR_FLAG_ON_CHANGE_MODE;
+                sensor.maxRange = 5.0;
+                sensor.resolution = 5.0;
+                sensor.minDelay = 0;
+                sensor.maxDelay = 0;
                 ALOGI("Changing flags to %x", sensor.flags);
                 break;
             case SENSOR_TYPE_TILT_DETECTOR:
@@ -641,10 +645,10 @@ static void fix_sensor_flags(int version, sensor_t& sensor) {
                 sensor.flags = SENSOR_FLAG_ONE_SHOT_MODE | SENSOR_FLAG_WAKE_UP;
                 ALOGI("Changing flags to %x", sensor.flags);
                 break;
-            case SENSOR_TYPE_PICK_UP_GESTURE: // LGE Tap To Wake
-                sensor.flags = SENSOR_FLAG_ONE_SHOT_MODE | SENSOR_FLAG_WAKE_UP;
-                ALOGI("Changing flags to %x", sensor.flags);
-                break;
+            //case SENSOR_TYPE_PICK_UP_GESTURE: // LGE Tap To Wake
+            //    sensor.flags = SENSOR_FLAG_ONE_SHOT_MODE | SENSOR_FLAG_WAKE_UP;
+            //    ALOGI("Changing flags to %x", sensor.flags);
+            //    break;
             case SENSOR_TYPE_LIGHT:
                 sensor.flags = SENSOR_FLAG_ON_CHANGE_MODE;
                 ALOGI("Changing flags to %x", sensor.flags);
