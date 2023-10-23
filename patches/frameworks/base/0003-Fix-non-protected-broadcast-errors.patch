@@ -1,0 +1,60 @@
+From e9ea8528b2c61499d2cb544c7671dc66f20ac295 Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Mon, 23 Oct 2023 14:00:44 +0400
+Subject: [PATCH] Fix non-protected broadcast errors
+
+E ActivityManager: Sending non-protected broadcast lineageos.intent.action.LID_STATE_CHANGED from system 1325:system/1000 pkg android
+
+E ActivityManager: Sending non-protected broadcast android.intent.action.SU_SESSION_CHANGED from system 1325:system/1000 pkg android
+
+Change-Id: I4eecdea7aaa89909abd40dec493a69b44d2a689b
+---
+ core/res/AndroidManifest.xml | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/core/res/AndroidManifest.xml b/core/res/AndroidManifest.xml
+index 8f9df8332d6..55a42ea3a59 100644
+--- a/core/res/AndroidManifest.xml
++++ b/core/res/AndroidManifest.xml
+@@ -82,6 +82,7 @@
+     <protected-broadcast android:name="android.intent.action.USER_SWITCHED" />
+     <protected-broadcast android:name="android.intent.action.USER_INITIALIZE" />
+     <protected-broadcast android:name="android.intent.action.INTENT_FILTER_NEEDS_VERIFICATION" />
++    <protected-broadcast android:name="android.intent.action.SU_SESSION_CHANGED" />
+     <protected-broadcast android:name="android.intent.action.OVERLAY_ADDED" />
+     <protected-broadcast android:name="android.intent.action.OVERLAY_CHANGED" />
+     <protected-broadcast android:name="android.intent.action.OVERLAY_REMOVED" />
+@@ -551,6 +552,14 @@
+     <protected-broadcast android:name="android.media.tv.action.CHANNEL_BROWSABLE_REQUESTED" />
+     <protected-broadcast android:name="com.android.server.InputMethodManagerService.SHOW_INPUT_METHOD_PICKER" />
+ 
++    <!-- LineageOS -additions -->
++
++    <!-- Used to launch a common app (FlipFlap) for devices with flip cover. -->
++    <protected-broadcast android:name="lineageos.intent.action.LID_STATE_CHANGED" />
++
++    <!-- Used for long press power torch feature - automatic turn off on timeout -->
++    <protected-broadcast android:name="com.android.server.policy.PhoneWindowManager.ACTION_TORCH_OFF" />
++
+     <!-- ====================================================================== -->
+     <!--                          RUNTIME PERMISSIONS                           -->
+     <!-- ====================================================================== -->
+@@ -3562,6 +3571,15 @@
+     <permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"
+         android:protectionLevel="signature|development|instant|appop" />
+ 
++    <!-- LineageOS -additions -->
++
++    <!-- Allows an application to override the power key action
++         @hide <p>Not for use by third-party applications.
++    -->
++    <permission android:name="android.permission.PREVENT_POWER_KEY"
++        android:protectionLevel="signature|privileged" />
++
++
+     <application android:process="system"
+                  android:persistent="true"
+                  android:hasCode="false"
+-- 
+2.17.1
+
