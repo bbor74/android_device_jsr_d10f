@@ -207,8 +207,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/privapp-permissions-d10f.xml:system/etc/permissions/privapp-permissions-d10f.xml
 
 # Power
-PRODUCT_PACKAGES += \
-    power.msm8226
+#PRODUCT_PACKAGES += 
+#    power.msm8226
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
