@@ -64,10 +64,7 @@ on fs
     restorecon_recursive /persist
 
     # remove logcat files
-    rm /data/misc/logd/logcat
-    rm /data/misc/logd/logcat.001
-    rm /data/misc/logd/logcat.002
-    rm /data/misc/logd/logcat.003
+    exec - logd log -- /system/bin/logcat -c -f /data/misc/logd/logcat -n 256
 
 on early-boot
     # Set RLIMIT_MEMLOCK to 64MB
