@@ -1,0 +1,27 @@
+From 04b5b122bd1672624dea6aec39beedef6ee2bf28 Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Fri, 3 Nov 2023 13:23:32 +0400
+Subject: [PATCH] Fix sepolicy for init.d
+
+Change-Id: Ib872fb9702ead05ac9727fb32edac952c8ca74dc
+---
+ common/private/sysinit.te | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/common/private/sysinit.te b/common/private/sysinit.te
+index 1b9c89d..c412c16 100644
+--- a/common/private/sysinit.te
++++ b/common/private/sysinit.te
+@@ -11,6 +11,9 @@ allow sysinit system_file:dir r_dir_perms;
+ allow sysinit system_file:file rx_file_perms;
+ allow sysinit toolbox_exec:file rx_file_perms;
+ 
++allow sysinit self:rawip_socket { create getopt setopt };
++allow sysinit self:capability { net_raw net_admin };
++
+ userdebug_or_eng(`
+     allow sysinit userinit_data_exec:file { r_file_perms relabelto };
+     allow sysinit sysfs:file rw_file_perms;
+-- 
+2.17.1
+
