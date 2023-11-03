@@ -1,2 +1,6 @@
 # Allow /data/misc/bluetooth access
 allow bluetooth_loader bluetooth_data_file:dir search;
+
+allow bluetooth_loader shell_exec:file { getattr read };
+
+allow bluetooth_loader toolbox_exec:file { getattr execute read open execute_no_trans };
