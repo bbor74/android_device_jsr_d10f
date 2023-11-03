@@ -9,7 +9,8 @@ allow update_engine rootfs:filesystem remount;
 allow update_engine property_socket:sock_file write;
 allow update_engine init:unix_stream_socket connectto;
 
-allow update_engine property_data_file:dir { open read };
+allow update_engine property_data_file:dir { search open read };
+allow update_engine property_data_file:file { getattr open read };
 allow update_engine system_data_file:file { open write };
 
 allow update_engine vold_prop:property_service set;
