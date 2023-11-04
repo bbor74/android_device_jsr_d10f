@@ -1,0 +1,64 @@
+From 3c329b827e898a37781c98f83bf9a96fa4e1912f Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Sat, 4 Nov 2023 20:05:50 +0400
+Subject: [PATCH] Fix for gallery_app
+
+Change-Id: Ic7155768a253951ede1da2ed49dd6967d62c1350
+---
+ common/property.te       | 2 +-
+ common/property_contexts | 2 +-
+ public/property.te       | 3 +++
+ public/property_contexts | 3 +++
+ 4 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/common/property.te b/common/property.te
+index 897b87e..5ac945a 100644
+--- a/common/property.te
++++ b/common/property.te
+@@ -71,7 +71,7 @@ type location_prop, property_type;
+ 
+ #properites for init.qcom.sh script
+ type rmnet_mux_prop, property_type;
+-type qemu_hw_mainkeys_prop, property_type;
++#type qemu_hw_mainkeys_prop, property_type;
+ type sys_usb_controller_prop, property_type;
+ type sys_usb_configfs_prop, property_type;
+ 
+diff --git a/common/property_contexts b/common/property_contexts
+index 9b138cd..122c9ba 100644
+--- a/common/property_contexts
++++ b/common/property_contexts
+@@ -71,7 +71,7 @@ persist.rmnet.mux          u:object_r:rmnet_mux_prop:s0
+ sys.usb.controller         u:object_r:sys_usb_controller_prop:s0
+ sys.usb.configfs           u:object_r:sys_usb_configfs_prop:s0
+ sys.usb.tethering          u:object_r:sys_usb_tethering_prop:s0
+-qemu.hw.mainkeys           u:object_r:qemu_hw_mainkeys_prop:s0
++#qemu.hw.mainkeys           u:object_r:qemu_hw_mainkeys_prop:s0
+ ro.dbg.coresight.cfg_file     u:object_r:coresight_prop:s0
+ ctl.hbtp                   u:object_r:ctl_hbtp_prop:s0
+ vendor.audio.sys.init             u:object_r:audio_prop:s0
+diff --git a/public/property.te b/public/property.te
+index 642a45b..8380514 100644
+--- a/public/property.te
++++ b/public/property.te
+@@ -26,3 +26,6 @@
+ # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ type persist_dpm_prop, property_type;
++
++type qemu_hw_mainkeys_prop, property_type;
++
+diff --git a/public/property_contexts b/public/property_contexts
+index 1180822..3a4ad83 100644
+--- a/public/property_contexts
++++ b/public/property_contexts
+@@ -26,3 +26,6 @@
+ # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ persist.dpm.feature        u:object_r:persist_dpm_prop:s0
++
++qemu.hw.mainkeys              u:object_r:qemu_hw_mainkeys_prop:s0
++
+-- 
+2.17.1
+
