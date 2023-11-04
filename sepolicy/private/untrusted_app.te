@@ -1,0 +1,4 @@
+allow untrusted_app audioserver_exec:file getattr;
+allow untrusted_app incidentd_exec:file getattr;
+allow untrusted_app userinit_exec:file getattr;
+
