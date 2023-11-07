@@ -1,0 +1,70 @@
+
+#============= priv_app ==============
+allow priv_app bg_boot_complete_prop:file { getattr open };
+allow priv_app bg_daemon_prop:file { getattr open };
+allow priv_app boot_mode_prop:file { getattr open };
+allow priv_app device:dir open;
+allow priv_app kernel:security read_policy;
+allow priv_app per_mgr_state_prop:file { getattr open };
+allow priv_app proc_interrupts:file { getattr open };
+allow priv_app proc_modules:file { getattr open };
+allow priv_app qcom_ims_prop:file { getattr open };
+allow priv_app qdma_prop:file { getattr open };
+allow priv_app sdm_idle_time_prop:file { getattr open };
+allow priv_app sensors_prop:file { getattr open };
+allow priv_app spcomlib_prop:file { getattr open };
+allow priv_app sys_usb_controller_prop:file { getattr open };
+allow priv_app sys_usb_tethering_prop:file { getattr open };
+allow priv_app uicc_prop:file { getattr open };
+allow priv_app vendor_rild_libpath_prop:file { getattr open };
+allow priv_app wcnss_prop:file { getattr open };
+
+allow priv_app boot_animation_prop:file { getattr open };
+allow priv_app crash_prop:file { getattr open };
+allow priv_app dolby_prop:file { getattr open };
+allow priv_app fm_prop:file { getattr open };
+allow priv_app fst_prop:file { getattr open };
+allow priv_app location_prop:file { getattr open };
+allow priv_app mmi_prop:file { getattr open };
+allow priv_app mpdecision_prop:file { getattr open };
+allow priv_app netd_prop:file { getattr open };
+allow priv_app nfc_nq_prop:file { getattr open };
+allow priv_app postprocessing_prop:file { getattr open };
+allow priv_app qemu_gles_prop:file { getattr open };
+allow priv_app rmnet_mux_prop:file { getattr open };
+allow priv_app scr_enabled_prop:file { getattr open };
+allow priv_app sys_usb_configfs_prop:file { getattr open };
+allow priv_app vendor_system_prop:file { getattr open };
+allow priv_app wifi_prop:file { getattr open };
+allow priv_app wififtmd_prop:file { getattr open };
+allow priv_app wigig_prop:file { getattr open };
+allow priv_app xlat_prop:file { getattr open };
+
+allow priv_app alarm_instance_prop:file { getattr open };
+allow priv_app coresight_prop:file { getattr open };
+allow priv_app freq_prop:file { getattr open };
+allow priv_app opengles_prop:file { getattr open };
+allow priv_app usf_prop:file { getattr open };
+allow priv_app alarm_handled_prop:file { getattr open };
+allow priv_app alarm_boot_prop:file { getattr open };
+#nev allow priv_app bluetooth_prop:file { getattr open };
+allow priv_app boottime_prop:file { getattr open };
+allow priv_app dumpstate_options_prop:file { getattr open };
+#nev allow priv_app firstboot_prop:file { getattr open };
+allow priv_app logpersistd_logging_prop:file { getattr open };
+allow priv_app net_dns_prop:file { getattr open };
+#nev allow priv_app netd_stable_secret_prop:file { getattr open };
+allow priv_app persistent_properties_ready_prop:file { getattr open };
+allow priv_app safemode_prop:file { getattr open };
+#nev allow priv_app serialno_prop:file { getattr open };
+allow priv_app device_logging_prop:file { getattr open };
+allow priv_app mmc_prop:file { getattr open };
+allow priv_app overlay_prop:file { getattr open };
+
+#============= priv_app ==============
+allow priv_app su_exec:file { open read };
+
+#============= priv_app ==============
+allow priv_app hal_memtrack_hwservice:hwservice_manager find;
+allow priv_app kgsl_debugfs:file { getattr open read };
+

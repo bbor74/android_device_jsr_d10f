@@ -63,3 +63,13 @@ allow untrusted_app system_data_file:dir read;
 allow untrusted_app tombstone_data_file:file getattr;
 allow untrusted_app user_profile_data_file:dir { getattr read };
 
+#============= untrusted_app ==============
+allow untrusted_app sysfs:file { getattr open read };
+
+#============= untrusted_app ==============
+allow untrusted_app debugfs:dir open;
+#nev allow untrusted_app proc:file { getattr read };
+allow untrusted_app proc_interrupts:file { getattr open read };
+#nev allow untrusted_app selinuxfs:file { open read };
+
+
