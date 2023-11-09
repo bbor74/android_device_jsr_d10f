@@ -5,3 +5,4 @@ allow system_server kernel:process setsched;
 
 allow system_server zygote:process getpgid;
 
+allow system_server sensors_data_file:dir search;
