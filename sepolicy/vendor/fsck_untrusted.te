@@ -1,0 +1,3 @@
+#============= fsck_untrusted ==============
+allow fsck_untrusted block_device:dir getattr;
+

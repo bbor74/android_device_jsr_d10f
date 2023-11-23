@@ -72,4 +72,7 @@ allow untrusted_app debugfs:dir open;
 allow untrusted_app proc_interrupts:file { getattr open read };
 #nev allow untrusted_app selinuxfs:file { open read };
 
+#============= untrusted_app ==============
+allow untrusted_app debugfs_rpm:file getattr;
+
 

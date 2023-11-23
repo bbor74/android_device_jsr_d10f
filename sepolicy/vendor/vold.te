@@ -1,1 +1,5 @@
 allow vold bk1_block_device:blk_file rw_file_perms;
+
+#============= vold ==============
+allow vold system_block_device:blk_file getattr;
+
