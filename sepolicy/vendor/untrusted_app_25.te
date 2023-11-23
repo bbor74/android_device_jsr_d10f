@@ -1,8 +1,8 @@
 #============= untrusted_app_25 ==============
-allow untrusted_app_25 proc_stat:file open;
+allow untrusted_app_25 proc_stat:file { getattr open read };
 allow untrusted_app_25 sysfs_lowmemorykiller:dir search;
-allow untrusted_app_25 sysfs_lowmemorykiller:file { getattr read };
-allow untrusted_app_25 sysfs_vibrator:file read;
+allow untrusted_app_25 sysfs_lowmemorykiller:file { getattr open read };
+allow untrusted_app_25 sysfs_vibrator:file { getattr open read };
 
 #============= untrusted_app_25 ==============
 allow untrusted_app_25 block_device:dir getattr;
@@ -11,8 +11,10 @@ allow untrusted_app_25 persist_file:dir getattr;
 #nev allow untrusted_app_25 proc:file { getattr open read };
 allow untrusted_app_25 rootfs:dir { open read };
 allow untrusted_app_25 self:udp_socket ioctl;
-#nev allow untrusted_app_25 serialno_prop:file { getattr open };
+#nev allow untrusted_app_25 serialno_prop:file { getattr open read };
 allow untrusted_app_25 sysfs:file { getattr open read };
 allow untrusted_app_25 system_block_device:blk_file getattr;
 allow untrusted_app_25 userdata_block_device:blk_file getattr;
+
+
 
