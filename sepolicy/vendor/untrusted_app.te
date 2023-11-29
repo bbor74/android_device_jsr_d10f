@@ -1,78 +1,98 @@
-allow untrusted_app rootfs:dir { open read };
-allow untrusted_app rootfs:file { getattr };
-allow untrusted_app persist_file:dir { getattr search };
-allow untrusted_app device:dir { open read };
-allow untrusted_app block_device:dir { open read search };
-allow untrusted_app vndservice_contexts_file:file { getattr };
-allow untrusted_app hwservice_contexts_file:file { getattr };
-allow untrusted_app service_contexts_file:file { getattr };
-allow untrusted_app seapp_contexts_file:file { getattr };
-allow untrusted_app nonplat_service_contexts_file:file { getattr };
-allow untrusted_app file_contexts_file:file { getattr };
-allow untrusted_app sepolicy_file:file { getattr };
-allow untrusted_app mnt_media_rw_file:dir { getattr search };
-allow untrusted_app init_exec:file { getattr };
-allow untrusted_app tombstone_data_file:dir { getattr search };
-allow untrusted_app install_data_file:file { getattr };
-allow untrusted_app drm_data_file:dir { getattr };
+allow untrusted_app rootfs:dir { getattr open read search };
+allow untrusted_app rootfs:file { getattr open read };
+allow untrusted_app persist_file:dir { getattr open read search };
+allow untrusted_app device:dir { getattr open read search };
+allow untrusted_app block_device:dir { getattr open read search };
+allow untrusted_app vndservice_contexts_file:file { getattr open read };
+allow untrusted_app hwservice_contexts_file:file { getattr open read };
+allow untrusted_app service_contexts_file:file { getattr open read };
+allow untrusted_app seapp_contexts_file:file { getattr open read };
+allow untrusted_app nonplat_service_contexts_file:file { getattr open read };
+allow untrusted_app file_contexts_file:file { getattr open read };
+allow untrusted_app sepolicy_file:file { getattr open read };
+allow untrusted_app mnt_media_rw_file:dir { getattr open read search };
+allow untrusted_app init_exec:file { getattr open read };
+allow untrusted_app tombstone_data_file:dir { getattr open read search };
+allow untrusted_app install_data_file:file { getattr open read };
+allow untrusted_app drm_data_file:dir { getattr open read search };
 
 ##################################################
-allow untrusted_app adb_data_file:dir getattr;
-allow untrusted_app adb_keys_file:dir getattr;
-allow untrusted_app adbd_exec:file getattr;
-#nev  allow untrusted_app anr_data_file:dir read;
-allow untrusted_app asec_image_file:dir getattr;
-allow untrusted_app backup_data_file:dir getattr;
-allow untrusted_app bdaddr_exec:file getattr;
-allow untrusted_app bluetooth_loader_exec:file getattr;
-allow untrusted_app bootchart_data_file:dir read;
-allow untrusted_app cgroup:dir read;
-allow untrusted_app clatd_exec:file getattr;
-allow untrusted_app configfs:dir read;
-allow untrusted_app configfs:file getattr;
-allow untrusted_app debugfs:dir read;
-allow untrusted_app debugfs:file getattr;
-allow untrusted_app debugfs_mmc:dir { read search };
-allow untrusted_app debugfs_tracing:dir read;
-allow untrusted_app debugfs_tracing:file getattr;
-allow untrusted_app debugfs_tracing_debug:file getattr;
-allow untrusted_app dnsmasq_exec:file getattr;
-allow untrusted_app e2fs_exec:file getattr;
-allow untrusted_app firmware_file:dir { read search };
-allow untrusted_app firmware_file:file getattr;
-allow untrusted_app fsck_exec:file getattr;
-allow untrusted_app healthd_exec:file getattr;
-allow untrusted_app heapdump_data_file:dir getattr;
-#nev allow untrusted_app keystore_data_file:dir getattr;
-allow untrusted_app kgsl_debugfs:dir read;
-allow untrusted_app kgsl_debugfs:file getattr;
-allow untrusted_app mac_perms_file:file getattr;
-allow untrusted_app misc_logd_file:dir getattr;
-allow untrusted_app persist_file:file getattr;
-allow untrusted_app persist_misc_file:dir read;
-allow untrusted_app qti_debugfs:dir read;
-allow untrusted_app qti_debugfs:file getattr;
-allow untrusted_app radio_data_file:dir getattr;
-allow untrusted_app sensors_data_file:dir read;
-allow untrusted_app sensors_data_file:file getattr;
-allow untrusted_app sensors_persist_file:dir read;
-allow untrusted_app sensors_persist_file:file getattr;
-allow untrusted_app system_app_data_file:dir getattr;
+allow untrusted_app adb_data_file:dir { getattr open read search };
+allow untrusted_app adb_keys_file:dir { getattr open read search };
+allow untrusted_app adbd_exec:file { getattr open read };
+#nev  allow untrusted_app anr_data_file:dir { getattr open read search };
+allow untrusted_app asec_image_file:dir { getattr open read search };
+allow untrusted_app backup_data_file:dir { getattr open read search };
+allow untrusted_app bdaddr_exec:file { getattr open read };
+allow untrusted_app bluetooth_loader_exec:file { getattr open read };
+allow untrusted_app bootchart_data_file:dir { getattr open read search };
+allow untrusted_app cgroup:dir { getattr open read search };
+allow untrusted_app clatd_exec:file { getattr open read };
+allow untrusted_app configfs:dir { getattr open read search };
+allow untrusted_app configfs:file { getattr open read };
+allow untrusted_app debugfs:dir { getattr open read search };
+allow untrusted_app debugfs:file { getattr };
+allow untrusted_app debugfs_mmc:dir { getattr open read search };
+allow untrusted_app debugfs_tracing:dir { getattr open read search };
+allow untrusted_app debugfs_tracing:file { getattr };
+allow untrusted_app debugfs_tracing_debug:file { getattr };
+allow untrusted_app dnsmasq_exec:file { getattr open read };
+allow untrusted_app e2fs_exec:file { getattr open read };
+allow untrusted_app firmware_file:dir { getattr open read search };
+allow untrusted_app firmware_file:file { getattr open read };
+allow untrusted_app fsck_exec:file { getattr open read };
+allow untrusted_app healthd_exec:file { getattr open read };
+allow untrusted_app heapdump_data_file:dir { getattr open read search };
+#nev allow untrusted_app keystore_data_file:dir { getattr open read search };
+allow untrusted_app kgsl_debugfs:dir { getattr open read search };
+allow untrusted_app kgsl_debugfs:file { getattr };
+allow untrusted_app mac_perms_file:file { getattr open read };
+allow untrusted_app misc_logd_file:dir { getattr open read search };
+allow untrusted_app persist_file:file { getattr open read };
+allow untrusted_app persist_misc_file:dir { getattr open read search };
+allow untrusted_app qti_debugfs:dir { getattr open read search };
+allow untrusted_app qti_debugfs:file { getattr };
+allow untrusted_app radio_data_file:dir { getattr open read search };
+allow untrusted_app sensors_data_file:dir { getattr open read search };
+allow untrusted_app sensors_data_file:file { getattr open read };
+allow untrusted_app sensors_persist_file:dir { getattr open read search };
+allow untrusted_app sensors_persist_file:file { getattr open read };
+allow untrusted_app system_app_data_file:dir { getattr read search };
 allow untrusted_app system_app_data_file:lnk_file read;
-allow untrusted_app system_data_file:dir read;
-allow untrusted_app tombstone_data_file:file getattr;
-allow untrusted_app user_profile_data_file:dir { getattr read };
+allow untrusted_app system_data_file:dir { getattr open read search };
+allow untrusted_app tombstone_data_file:file { getattr open read };
+allow untrusted_app user_profile_data_file:dir { getattr open read search };
 
 #============= untrusted_app ==============
 allow untrusted_app sysfs:file { getattr open read };
 
 #============= untrusted_app ==============
-allow untrusted_app debugfs:dir open;
-#nev allow untrusted_app proc:file { getattr read };
+allow untrusted_app debugfs:dir { getattr open read search };
+#nev allow untrusted_app proc:file { getattr open read };
 allow untrusted_app proc_interrupts:file { getattr open read };
 #nev allow untrusted_app selinuxfs:file { open read };
 
 #============= untrusted_app ==============
-allow untrusted_app debugfs_rpm:file getattr;
+allow untrusted_app debugfs_rpm:file { getattr };
+
+#============= untrusted_app ==============
+allow untrusted_app proc_stat:file { getattr open read };
+
+#============= untrusted_app ==============
+allow untrusted_app alarm_boot_prop:file { getattr open read };
+allow untrusted_app alarm_handled_prop:file { getattr open read };
+allow untrusted_app alarm_instance_prop:file { getattr open read };
+allow untrusted_app coresight_prop:file { getattr open read };
+allow untrusted_app freq_prop:file { getattr open read };
+allow untrusted_app mpdecision_prop:file { getattr open read };
+allow untrusted_app opengles_prop:file { getattr open read };
+allow untrusted_app qemu_gles_prop:file { getattr open read };
+allow untrusted_app scr_enabled_prop:file { getattr open read };
+allow untrusted_app spcomlib_prop:file { getattr open read };
+allow untrusted_app usf_prop:file { getattr open read };
+allow untrusted_app wcnss_prop:file { getattr open read };
+allow untrusted_app wififtmd_prop:file { getattr open read };
+allow untrusted_app wigig_prop:file { getattr open read };
+
 
 
