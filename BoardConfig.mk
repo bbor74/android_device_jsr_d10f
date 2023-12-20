@@ -208,6 +208,9 @@ BOARD_USES_QC_TIME_SERVICES := true
 # Properties
 TARGET_SYSTEM_PROP += device/jsr/d10f/system.prop
 
+# Extended Filesystem Support
+TARGET_EXFAT_DRIVER := sdfat
+
 # Wifi
 BOARD_HAS_QCOM_WLAN := true
 BOARD_WLAN_DEVICE := qcwcn
