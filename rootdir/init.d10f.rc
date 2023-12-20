@@ -33,7 +33,7 @@ on early-init
     mkdir /firmware 0771 system system
     symlink /data/tombstones /tombstones
 
-    exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules rt2x00lib rt2800lib mac80211 eeprom_93cx6
+    # exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules rt2x00lib rt2800lib mac80211 eeprom_93cx6
     # evbug oprofile reset_modem dma_test ansi_cprng gspca_main
 
 on init
