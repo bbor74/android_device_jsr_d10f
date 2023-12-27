@@ -58,6 +58,9 @@ on fs
 
     exec u:r:update_engine:s0 root root -- /sbin/fstab /fstab.d10f regular generate
     mount_all fstab.d10f
+
+    mkdir /data/property 0700 root root
+
     exec u:r:update_engine:s0 root root -- /sbin/fstab /fstab.d10f regular update
     swapon_all fstab.d10f
 
