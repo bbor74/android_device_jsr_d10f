@@ -151,43 +151,61 @@ on boot
     chown system system /sys/class/leds/blue/duty_pcts
     chown system system /sys/class/leds/blue/ramp_step_ms
 
-    # Switch to interactive and let PowerHAL configure it
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/boost
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/boost
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/boostpulse
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/boostpulse
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
-    # chown system system /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
-    # chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
-    # chown system system /sys/devices/system/cpu/cpufreq/interactive/sync_freq
-    # chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/sync_freq
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/target_loads
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/target_loads
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_rate
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/timer_rate
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_slack
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/timer_slack
-    # chown system system /sys/devices/system/cpu/cpufreq/interactive/up_threshold_any_cpu_freq
-    # chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/up_threshold_any_cpu_freq
-    # chown system system /sys/devices/system/cpu/cpufreq/interactive/up_threshold_any_cpu_load
-    # chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/up_threshold_any_cpu_load
+    # Switch to arteractive and let PowerHAL configure it
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor arteractive
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/above_hispeed_delay
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/above_hispeed_delay
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/boost
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/boost
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/boostpulse
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/boostpulse
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/boostpulse_duration
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/boostpulse_duration
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/go_hispeed_load
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/go_hispeed_load
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/hispeed_freq
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/hispeed_freq
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/io_is_busy
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/io_is_busy
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/min_sample_time
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/min_sample_time
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/sampling_down_factor
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/sampling_down_factor
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/sync_freq
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/sync_freq
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/target_loads
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/target_loads
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/timer_rate
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/timer_rate
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/timer_slack
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/timer_slack
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/up_threshold_any_cpu_freq
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/up_threshold_any_cpu_freq
+    chown system system /sys/devices/system/cpu/cpufreq/arteractive/up_threshold_any_cpu_load
+    chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/up_threshold_any_cpu_load
 
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/max_freq_hysteresis
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/max_freq_hysteresis
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/align_windows
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/align_windows
+	chown system system /sys/devices/system/cpu/cpufreq/arteractive/mode
+	chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/mode
+	chown system system /sys/devices/system/cpu/cpufreq/arteractive/enforced_mode
+	chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/enforced_mode
+	chown system system /sys/devices/system/cpu/cpufreq/arteractive/param_index
+	chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/param_index
+	chown system system /sys/devices/system/cpu/cpufreq/arteractive/multi_enter_load
+	chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/multi_enter_load
+	chown system system /sys/devices/system/cpu/cpufreq/arteractive/multi_exit_load
+	chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/multi_exit_load
+	chown system system /sys/devices/system/cpu/cpufreq/arteractive/single_enter_load
+	chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/single_enter_load
+	chown system system /sys/devices/system/cpu/cpufreq/arteractive/single_exit_load
+	chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/single_exit_load
+	chown system system /sys/devices/system/cpu/cpufreq/arteractive/multi_enter_time
+	chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/multi_enter_time
+	chown system system /sys/devices/system/cpu/cpufreq/arteractive/multi_exit_time
+	chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/multi_exit_time
+	chown system system /sys/devices/system/cpu/cpufreq/arteractive/single_enter_time
+	chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/single_enter_time
+	chown system system /sys/devices/system/cpu/cpufreq/arteractive/single_exit_time
+	chmod 0644 /sys/devices/system/cpu/cpufreq/arteractive/single_exit_time
 
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
