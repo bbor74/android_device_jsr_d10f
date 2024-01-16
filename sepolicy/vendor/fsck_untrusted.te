@@ -1,3 +1,5 @@
 #============= fsck_untrusted ==============
 allow fsck_untrusted block_device:dir getattr;
 
+#============= fsck_untrusted ==============
+allow fsck_untrusted media_rw_data_file:dir getattr;

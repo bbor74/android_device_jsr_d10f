@@ -97,8 +97,5 @@ allow untrusted_app wigig_prop:file { getattr open read };
 #============= untrusted_app ==============
 #nev allow untrusted_app apk_data_file:file setattr;
 allow untrusted_app proc_tty_drivers:file { getattr open read };
-allow untrusted_app self:udp_socket ioctl;
 #nev allow untrusted_app serialno_prop:file { getattr open read };
-
-
 

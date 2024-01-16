@@ -4,3 +4,6 @@ allow mm-qcamerad system_data_file:dir w_dir_perms;
 allow mm-qcamerad system_file:file execmod;
 
 allow mm-qcamerad vendor_file:file execmod;
+
+#============= mm-qcamerad ==============
+allow mm-qcamerad system_data_file:dir { add_name remove_name write };
