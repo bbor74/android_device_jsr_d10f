@@ -99,3 +99,7 @@ allow untrusted_app wigig_prop:file { getattr open read };
 allow untrusted_app proc_tty_drivers:file { getattr open read };
 #nev allow untrusted_app serialno_prop:file { getattr open read };
 
+#============= untrusted_app ==============
+allow untrusted_app sysfs_lowmemorykiller:dir { read search };
+allow untrusted_app sysfs_lowmemorykiller:file { getattr open read };
+
