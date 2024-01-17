@@ -1,0 +1,71 @@
+From 4f7b46583915f746af6fbca0ceb806c34aa8843b Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Wed, 17 Jan 2024 16:40:46 +0400
+Subject: [PATCH] libqdutils: stub HDMI calls for 8226
+
+Stub out getHDMINode and getEdidRawData for 8226. This will avoid error messages from above functions.
+
+Stops this logspam:
+
+01-25 14:01:18.876   239   239 E qdutils : getHDMINode: Failed to open fb node 2
+01-25 14:01:18.876   239   239 E qdutils : getHDMINode: Failed to find HDMI node
+
+Change-Id: Ief2dd8907de15d7320a3d0b5b1880356edf322f8
+Signed-off-by: Sachin Bhayare <sbhayare@qti.qualcomm.com>
+---
+ libqdutils/Android.mk   |  5 +++++
+ libqdutils/qd_utils.cpp | 14 ++++++++++++++
+ 2 files changed, 19 insertions(+)
+
+diff --git a/libqdutils/Android.mk b/libqdutils/Android.mk
+index 1c9352b09..5b4bcfe22 100644
+--- a/libqdutils/Android.mk
++++ b/libqdutils/Android.mk
+@@ -8,6 +8,11 @@ LOCAL_MODULE_TAGS             := optional
+ LOCAL_SHARED_LIBRARIES        := $(common_libs) libui libbinder libqservice
+ LOCAL_C_INCLUDES              := $(common_includes) $(kernel_includes)
+ LOCAL_CFLAGS                  := $(common_flags) -DLOG_TAG=\"qdutils\"
++
++ifeq ($(TARGET_SUPPORTS_WEARABLES),true)
++LOCAL_CFLAGS                  += -DHDMI_STUB
++endif
++
+ LOCAL_ADDITIONAL_DEPENDENCIES := $(common_deps)
+ LOCAL_COPY_HEADERS_TO         := $(common_header_export_path)
+ LOCAL_COPY_HEADERS            := display_config.h mdp_version.h
+diff --git a/libqdutils/qd_utils.cpp b/libqdutils/qd_utils.cpp
+index 1ecfa86a9..e74baca3e 100644
+--- a/libqdutils/qd_utils.cpp
++++ b/libqdutils/qd_utils.cpp
+@@ -31,7 +31,20 @@
+ #define QD_UTILS_DEBUG 0
+ 
+ namespace qdutils {
++#ifdef HDMI_STUB
++int getHDMINode(void)
++{
++    ALOGD_IF(QD_UTILS_DEBUG, "%s: HDMI_STUB\n", __func__);
++    return -1;
++}
+ 
++int getEdidRawData(char *buffer)
++{
++    ALOGD_IF(QD_UTILS_DEBUG, "%s: HDMI_STUB\n", __func__);
++    (void) buffer;
++    return 0;
++}
++#else
+ int getHDMINode(void)
+ {
+     FILE *displayDeviceFP = NULL;
+@@ -91,6 +104,7 @@ int getEdidRawData(char *buffer)
+     close(edidFile);
+     return size;
+ }
++#endif
+ 
+ /* Calculates the aspect ratio for based on src & dest */
+ void getAspectRatioPosition(int destWidth, int destHeight, int srcWidth,
+-- 
+2.17.1
+
