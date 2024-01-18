@@ -47,16 +47,12 @@ allow priv_app opengles_prop:file { getattr open };
 allow priv_app usf_prop:file { getattr open };
 allow priv_app alarm_handled_prop:file { getattr open };
 allow priv_app alarm_boot_prop:file { getattr open };
-#nev allow priv_app bluetooth_prop:file { getattr open };
 allow priv_app boottime_prop:file { getattr open };
 allow priv_app dumpstate_options_prop:file { getattr open };
-#nev allow priv_app firstboot_prop:file { getattr open };
 allow priv_app logpersistd_logging_prop:file { getattr open };
 allow priv_app net_dns_prop:file { getattr open };
-#nev allow priv_app netd_stable_secret_prop:file { getattr open };
 allow priv_app persistent_properties_ready_prop:file { getattr open };
 allow priv_app safemode_prop:file { getattr open };
-#nev allow priv_app serialno_prop:file { getattr open };
 allow priv_app device_logging_prop:file { getattr open };
 allow priv_app mmc_prop:file { getattr open };
 allow priv_app overlay_prop:file { getattr open };
@@ -67,4 +63,9 @@ allow priv_app su_exec:file { open read };
 #============= priv_app ==============
 allow priv_app hal_memtrack_hwservice:hwservice_manager find;
 allow priv_app kgsl_debugfs:file { getattr open read };
+
+dontaudit priv_app bluetooth_prop:file { getattr open };
+dontaudit priv_app firstboot_prop:file { getattr open };
+dontaudit priv_app netd_stable_secret_prop:file { getattr open };
+dontaudit priv_app serialno_prop:file { getattr open };
 
