@@ -1,0 +1,2 @@
+#============= bootstat ==============
+allow bootstat reboot_data_file:file { getattr open setattr write };
