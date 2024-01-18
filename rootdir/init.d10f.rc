@@ -74,7 +74,6 @@ on early-boot
     setrlimit 8 67108864 67108864
     write /sys/kernel/boot_adsp/boot 1
 
-on boot
     # Dynamic FPS
     chown system graphics /sys/class/graphics/fb0/dynamic_fps
     chmod 0664 /sys/class/graphics/fb0/dynamic_fps
@@ -85,6 +84,7 @@ on boot
     chown system graphics /sys/class/graphics/fb0/idle_notify
     chmod 0664 /sys/class/graphics/fb0/idle_notify
 
+on boot
     chown bluetooth bluetooth /sys/module/hci_smd/parameters/hcismd_set
     chmod 0660 /sys/module/hci_smd/parameters/hcismd_set
 
