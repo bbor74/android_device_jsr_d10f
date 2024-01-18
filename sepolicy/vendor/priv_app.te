@@ -64,6 +64,9 @@ allow priv_app su_exec:file { open read };
 allow priv_app hal_memtrack_hwservice:hwservice_manager find;
 allow priv_app kgsl_debugfs:file { getattr open read };
 
+#============= priv_app ==============
+allow priv_app hal_memtrack_default:binder call;
+
 dontaudit priv_app bluetooth_prop:file { getattr open };
 dontaudit priv_app firstboot_prop:file { getattr open };
 dontaudit priv_app netd_stable_secret_prop:file { getattr open };
