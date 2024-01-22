@@ -500,5 +500,7 @@ on property:sys.boot_completed=1
 
     write /proc/sys/vm/swappiness 70
 
+    write /sys/module/lowmemorykiller/parameters/minfree "2048,4096,8192,16384,24576,32768"
+
     rm /data/system/default_values
     # start mpdecision
