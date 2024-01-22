@@ -20,3 +20,8 @@ allow untrusted_app mkfs_exec:file { getattr open read };
 allow untrusted_app sysinit_exec:file { getattr open read };
 
 allow untrusted_app config_gz:file getattr;
+
+allow untrusted_app adbtcp_prop:file { getattr open };
+allow untrusted_app lineage_recovery_prop:file { getattr open };
+allow untrusted_app userinit_prop:file { getattr open };
+

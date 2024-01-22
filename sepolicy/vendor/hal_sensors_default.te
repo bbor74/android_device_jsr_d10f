@@ -3,3 +3,7 @@ allow hal_sensors_default sensors:unix_stream_socket connectto;
 allow hal_sensors_default sensors_device:chr_file getattr;
 allow hal_sensors_default sensors_socket:sock_file write;
 allow hal_sensors_default sysfs:file { getattr open write };
+
+#============= hal_sensors_default ==============
+dontaudit hal_sensors_default shell_data_file:dir search;
+

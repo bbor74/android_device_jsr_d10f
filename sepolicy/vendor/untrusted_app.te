@@ -93,7 +93,7 @@ allow untrusted_app wigig_prop:file { getattr open read };
 allow untrusted_app proc_tty_drivers:file { getattr open read };
 
 #============= untrusted_app ==============
-allow untrusted_app sysfs_lowmemorykiller:dir { read search };
+allow untrusted_app sysfs_lowmemorykiller:dir { open read search };
 allow untrusted_app sysfs_lowmemorykiller:file { getattr open read };
 
 #============= untrusted_app ==============
@@ -108,14 +108,14 @@ allow untrusted_app bootanim_exec:file { getattr open read };
 allow untrusted_app bootstat_data_file:dir getattr;
 allow untrusted_app bootstat_exec:file { getattr open read };
 allow untrusted_app camera_data_file:dir getattr;
-allow untrusted_app crash_prop:file getattr;
+allow untrusted_app crash_prop:file { getattr open read };
 allow untrusted_app device:chr_file getattr;
 allow untrusted_app device:file getattr;
 allow untrusted_app dolby_prop:file { getattr open };
 allow untrusted_app drmserver_exec:file { getattr open read };
 allow untrusted_app dumpstate_exec:file { getattr open read };
 allow untrusted_app fm_prop:file { getattr open };
-allow untrusted_app fst_prop:file open;
+allow untrusted_app fst_prop:file { getattr open };
 allow untrusted_app gatekeeperd_exec:file { getattr open read };
 allow untrusted_app graphics_device:chr_file getattr;
 allow untrusted_app graphics_device:dir { getattr read search };
@@ -129,7 +129,7 @@ allow untrusted_app mediadrmserver_exec:file { getattr open read };
 allow untrusted_app mediaextractor_exec:file { getattr open read };
 allow untrusted_app mediametrics_exec:file { getattr open read };
 allow untrusted_app mediaserver_exec:file { getattr open read };
-allow untrusted_app mmi_prop:file open;
+allow untrusted_app mmi_prop:file { getattr open };
 allow untrusted_app mtp_exec:file { getattr open read };
 allow untrusted_app netd_exec:file { getattr open read };
 allow untrusted_app netd_prop:file { getattr open };
@@ -179,4 +179,30 @@ dontaudit untrusted_app keystore_data_file:dir { getattr open read search };
 dontaudit untrusted_app selinuxfs:file { open read };
 dontaudit untrusted_app apk_data_file:file setattr;
 dontaudit untrusted_app serialno_prop:file { getattr open read };
+dontaudit untrusted_app vold_data_file:dir getattr;
+dontaudit untrusted_app netd_stable_secret_prop:file { getattr open };
+dontaudit untrusted_app firstboot_prop:file { getattr open };
+dontaudit untrusted_app bluetooth_prop:file { getattr open };
+
+#============= untrusted_app ==============
+allow untrusted_app apk_private_data_file:dir getattr;
+allow untrusted_app audioserver_data_file:dir getattr;
+allow untrusted_app boottime_prop:file { getattr open };
+allow untrusted_app data_qsee_file:dir getattr;
+allow untrusted_app device_logging_prop:file { getattr open };
+allow untrusted_app dumpstate_options_prop:file { getattr open };
+allow untrusted_app logpersistd_logging_prop:file { getattr open };
+allow untrusted_app method_trace_data_file:dir getattr;
+allow untrusted_app mmc_prop:file { getattr open };
+allow untrusted_app net_dns_prop:file { getattr open };
+allow untrusted_app overlay_prop:file { getattr open };
+allow untrusted_app persistent_properties_ready_prop:file { getattr open };
+allow untrusted_app recovery_data_file:dir getattr;
+allow untrusted_app safemode_prop:file { getattr open };
+allow untrusted_app shared_relro_file:dir getattr;
+allow untrusted_app systemkeys_data_file:dir getattr;
+allow untrusted_app update_engine_data_file:dir getattr;
+allow untrusted_app vpn_data_file:dir getattr;
+allow untrusted_app wifi_data_file:dir getattr;
+allow untrusted_app wifi_prop:file { getattr open };
 

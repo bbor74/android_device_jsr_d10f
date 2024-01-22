@@ -26,3 +26,8 @@ allow untrusted_app_25 mnt_media_rw_file:dir getattr;
 dontaudit untrusted_app_25 proc:file { getattr open read };
 dontaudit untrusted_app_25 serialno_prop:file { getattr open read };
 
+#============= untrusted_app_25 ==============
+allow untrusted_app_25 init_exec:file getattr;
+allow untrusted_app_25 rootfs:file getattr;
+allow untrusted_app_25 tombstone_data_file:dir getattr;
+
