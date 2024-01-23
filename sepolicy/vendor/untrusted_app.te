@@ -139,7 +139,7 @@ allow untrusted_app perfprofd_exec:file { getattr open read };
 allow untrusted_app postprocessing_prop:file { getattr open };
 allow untrusted_app ppp_exec:file { getattr open read };
 allow untrusted_app proc_iomem:file getattr;
-allow untrusted_app proc_misc:file { getattr read };
+allow untrusted_app proc_misc:file { getattr open read };
 allow untrusted_app proc_sysrq:file getattr;
 allow untrusted_app proc_timer:file getattr;
 allow untrusted_app proc_zoneinfo:file getattr;
@@ -205,4 +205,19 @@ allow untrusted_app update_engine_data_file:dir getattr;
 allow untrusted_app vpn_data_file:dir getattr;
 allow untrusted_app wifi_data_file:dir getattr;
 allow untrusted_app wifi_prop:file { getattr open };
+
+#============= untrusted_app ==============
+allow untrusted_app boottrace_data_file:dir getattr;
+allow untrusted_app camera_data_file:file getattr;
+allow untrusted_app dhcp_data_file:dir getattr;
+allow untrusted_app gatekeeper_data_file:dir getattr;
+allow untrusted_app location_data_file:dir getattr;
+allow untrusted_app ota_package_file:dir getattr;
+allow untrusted_app property_data_file:dir getattr;
+allow untrusted_app time_data_file:dir getattr;
+
+#============= untrusted_app ==============
+allow untrusted_app media_data_file:dir getattr;
+allow untrusted_app net_data_file:dir getattr;
+allow untrusted_app profman_dump_data_file:dir getattr;
 
