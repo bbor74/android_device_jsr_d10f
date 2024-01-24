@@ -1,2 +1,3 @@
 #============= crash_dump ==============
-allow crash_dump app_data_file:file read;
+allow crash_dump app_data_file:file { getattr open read };
+

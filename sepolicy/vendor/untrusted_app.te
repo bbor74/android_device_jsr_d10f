@@ -220,4 +220,5 @@ allow untrusted_app time_data_file:dir getattr;
 allow untrusted_app media_data_file:dir getattr;
 allow untrusted_app net_data_file:dir getattr;
 allow untrusted_app profman_dump_data_file:dir getattr;
+allow untrusted_app ota_data_file:dir getattr;
 
