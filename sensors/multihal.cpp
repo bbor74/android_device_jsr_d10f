@@ -507,12 +507,12 @@ static int device__batch(struct sensors_poll_device_1 *dev, int handle,
     ALOGI("Called device__batch: handle %d, flags: %d, period_ns %lld, timeout %lld",
             handle, flags, period_ns, timeout);
     sensors_poll_context_t* ctx = (sensors_poll_context_t*) dev;
-    ctx->setDelay(handle, period_ns);
-    return 0;
+    return ctx->batch(handle, flags, period_ns, timeout);
 }
 
 static int device__flush(struct sensors_poll_device_1 *dev, int handle) {
-    return -EINVAL;
+    sensors_poll_context_t* ctx = (sensors_poll_context_t*) dev;
+    return ctx->flush(handle);
 }
 
 static int device__inject_sensor_data(struct sensors_poll_device_1 *dev,
@@ -656,12 +656,6 @@ static void fix_sensor_flags(int version, sensor_t& sensor) {
                 break;
         }
     }
-    /*
-     * Because batching and flushing don't work modify the
-     * sensor fields to not report any fifo counts.
-     */
-    sensor.fifoReservedEventCount = 0;
-    sensor.fifoMaxEventCount = 0;
 }
 
 /*
