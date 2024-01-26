@@ -25,3 +25,5 @@ allow untrusted_app adbtcp_prop:file { getattr open };
 allow untrusted_app lineage_recovery_prop:file { getattr open };
 allow untrusted_app userinit_prop:file { getattr open };
 
+allow untrusted_app debugfs_trace_marker:file getattr;
+
