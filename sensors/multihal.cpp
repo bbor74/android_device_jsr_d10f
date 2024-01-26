@@ -17,7 +17,6 @@
 #include "SensorEventQueue.h"
 #include "multihal.h"
 
-#define LOG_TAG "multihal"
 //#define LOG_NDEBUG 0
 #include <cutils/log.h>
 #include <cutils/atomic.h>
