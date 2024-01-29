@@ -9,5 +9,8 @@ allow vold block_device:blk_file getattr;
 
 #============= vold ==============
 allow vold persist_misc_file:dir { add_name getattr remove_name setattr write };
-allow vold persist_misc_file:file { open read write };
+allow vold persist_misc_file:file { create unlink open read write };
+
+#============= vold ==============
+allow vold cache_file:dir { create setattr };
 
