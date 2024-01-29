@@ -284,9 +284,11 @@ int sensors_poll_context_t::get_device_version_by_handle(int handle) {
     }
 }
 
+const char *apiNumToStr(int version);
+
 static bool halIsAPILevelCompliant(sensors_poll_context_t *ctx, int handle, int level) {
     int version = ctx->get_device_version_by_handle(handle);
-    ALOGI("%s: version: %d, level: %d", __func__, version, level);
+    ALOGI("%s: version: %s, level: %s", __func__, apiNumToStr(version), apiNumToStr(level));
     return version != -1 && (version >= level);
 }
 
@@ -673,8 +675,8 @@ static void fix_sensor_flags(int version, sensor_t& sensor) {
                 sensor.flags = SENSOR_FLAG_WAKE_UP | SENSOR_FLAG_ON_CHANGE_MODE;
                 sensor.maxRange = 5.0;
                 sensor.resolution = 5.0;
-                sensor.minDelay = 0;
-                sensor.maxDelay = 0;
+                // sensor.minDelay = 0;
+                // sensor.maxDelay = 0;
                 ALOGI("Changing flags to %x", sensor.flags);
                 break;
             case SENSOR_TYPE_TILT_DETECTOR:
