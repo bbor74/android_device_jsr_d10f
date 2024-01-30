@@ -679,32 +679,35 @@ static void fix_sensor_flags(int version, sensor_t& sensor) {
                 // sensor.maxDelay = 0;
                 ALOGI("Changing flags to %x", sensor.flags);
                 break;
-            case SENSOR_TYPE_TILT_DETECTOR:
-                sensor.flags = SENSOR_FLAG_WAKE_UP | SENSOR_FLAG_ON_CHANGE_MODE;
-                ALOGI("Changing flags to %x", sensor.flags);
-                break;
-            case SENSOR_TYPE_STEP_DETECTOR:
-                sensor.flags = SENSOR_FLAG_SPECIAL_REPORTING_MODE;
-                ALOGI("Changing flags to %x", sensor.flags);
-                break;
-            case SENSOR_TYPE_STEP_COUNTER:
-                sensor.flags = SENSOR_FLAG_ON_CHANGE_MODE;
-                ALOGI("Changing flags to %x", sensor.flags);
-                break;
-            case SENSOR_TYPE_SIGNIFICANT_MOTION:
-                sensor.flags = SENSOR_FLAG_ONE_SHOT_MODE | SENSOR_FLAG_WAKE_UP;
-                ALOGI("Changing flags to %x", sensor.flags);
-                break;
+//            case SENSOR_TYPE_TILT_DETECTOR:
+//                sensor.flags = SENSOR_FLAG_WAKE_UP | SENSOR_FLAG_ON_CHANGE_MODE;
+//                ALOGI("Changing flags to %x", sensor.flags);
+//                break;
+//            case SENSOR_TYPE_STEP_DETECTOR:
+//                sensor.flags = SENSOR_FLAG_SPECIAL_REPORTING_MODE;
+//                ALOGI("Changing flags to %x", sensor.flags);
+//                break;
+//            case SENSOR_TYPE_STEP_COUNTER:
+//                sensor.flags = SENSOR_FLAG_ON_CHANGE_MODE;
+//                ALOGI("Changing flags to %x", sensor.flags);
+//                break;
+//            case SENSOR_TYPE_SIGNIFICANT_MOTION:
+//                sensor.flags = SENSOR_FLAG_ONE_SHOT_MODE | SENSOR_FLAG_WAKE_UP;
+//                ALOGI("Changing flags to %x", sensor.flags);
+//                break;
             //case SENSOR_TYPE_PICK_UP_GESTURE: // LGE Tap To Wake
             //    sensor.flags = SENSOR_FLAG_ONE_SHOT_MODE | SENSOR_FLAG_WAKE_UP;
             //    ALOGI("Changing flags to %x", sensor.flags);
             //    break;
-            case SENSOR_TYPE_LIGHT:
-                sensor.flags = SENSOR_FLAG_ON_CHANGE_MODE;
-                ALOGI("Changing flags to %x", sensor.flags);
-                break;
+//            case SENSOR_TYPE_LIGHT:
+//                sensor.flags = SENSOR_FLAG_ON_CHANGE_MODE;
+//                ALOGI("Changing flags to %x", sensor.flags);
+//                break;
             default:
                 break;
+        }
+        if (sensor.minDelay > 0 && sensor.maxDelay == 0) {
+               sensor.maxDelay = 1000000;
         }
     }
 }
