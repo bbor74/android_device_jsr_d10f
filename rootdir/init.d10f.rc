@@ -227,7 +227,7 @@ on boot
 
     # Adaptive LMK
     write /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk 1
-    write /sys/module/lowmemorykiller/parameters/vmpressure_file_min 81920
+    write /sys/module/lowmemorykiller/parameters/vmpressure_file_min 53059
 
     # Wifi firmware reload path
     chmod 0660 /sys/module/wlan/parameters/fwpath
@@ -500,7 +500,7 @@ on property:sys.boot_completed=1
 
     write /proc/sys/vm/swappiness 70
 
-    write /sys/module/lowmemorykiller/parameters/minfree "2048,4096,8192,16384,24576,32768"
+    # write /sys/module/lowmemorykiller/parameters/minfree "2048,4096,8192,16384,24576,32768"
 
     rm /data/system/default_values
     # start mpdecision
