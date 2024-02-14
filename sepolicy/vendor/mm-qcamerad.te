@@ -7,3 +7,7 @@ allow mm-qcamerad vendor_file:file execmod;
 
 #============= mm-qcamerad ==============
 allow mm-qcamerad system_data_file:dir { add_name remove_name write };
+
+#============= mm-qcamerad ==============
+allow mm-qcamerad sensors_socket:sock_file read;
+
