@@ -93,7 +93,7 @@
 
     <!-- Array of ConnectivityManager.TYPE_xxxx values allowable for tethering -->
     <!-- Common options are [1, 4] for TYPE_WIFI and TYPE_MOBILE_DUN or
-             <!== [0,1,5,7] for TYPE_MOBILE, TYPE_WIFI, TYPE_MOBILE_HIPRI and TYPE_BLUETOOTH -->
+    <!== [0,1,5,7] for TYPE_MOBILE, TYPE_WIFI, TYPE_MOBILE_HIPRI and TYPE_BLUETOOTH -->
     <integer-array translatable="false" name="config_tether_upstream_types">
         <item>0</item>
         <item>1</item>
@@ -130,7 +130,7 @@
     <!-- Screen brightness used to dim the screen while dozing in a very low power state.
          May be less than the minimum allowed brightness setting
          that can be set by the user. -->
-    <integer name="config_screenBrightnessDoze">17</integer>
+    <integer name="config_screenBrightnessDoze">10</integer>
 
     <!-- Screen brightness used to dim the screen when the user activity
          timeout expires.  May be less than the minimum allowed brightness setting
@@ -198,7 +198,6 @@
         <item>255</item> <!-- 100% --> <!-- 2500 -->
     </integer-array>
 
-    <!--<integer name="config_buttonBrightnessSettingDefault">0</integer-->
     <!-- Array of output values for LCD backlight corresponding to the LUX values
          in the config_autoBrightnessLevels array.  This array should have size one greater
          than the size of the config_autoBrightnessLevels array.
@@ -227,8 +226,8 @@
             5 - In-app Search
          This needs to match the constants in
          policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
-    -->
-    <integer name="config_longPressOnHomeBehavior">3</integer>
+
+    <integer name="config_longPressOnHomeBehavior">3</integer> -->
 
     <!-- Boolean indicating if restoring network selection should be skipped -->
     <!-- The restoring is handled by modem if it is true-->
@@ -305,12 +304,6 @@
          format is UMTS|LTE|... -->
     <string translatable="false" name="config_radio_access_family">GSM | WCDMA</string>
 
-	<!-- Night Mode -->
-    <bool name="config_nightDisplayAvailable">true</bool>
-
-    <!-- Whether to enable HumanInteractionController by default 
-    <bool name="config_HICEnabledDefault">false</bool> -->
-    <add-resource type="bool" name="config_HICEnabledDefault">false</add-resource>
 
     <bool name="config_showNavigationBar">true</bool>
 </resources>
