@@ -23,8 +23,8 @@ import java.nio.charset.Charset;
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, OnPreferenceClickListener {
 
     private static final String TAG = "JSR_Settings";
-    private static final String BTN_FUNC_APP = "btn_func_app";
-    private static final String BTN_FUNC_APP2 = "btn_func_app2";
+/*    private static final String BTN_FUNC_APP = "btn_func_app";
+    private static final String BTN_FUNC_APP2 = "btn_func_app2"; */
     private static final String PERSISTENT_PROPERTY_CONFIGURATION_NAME = "persist.storages.configuration";
     private static final String USBMSC_PRESENT_PROPERTY_NAME = "ro.usbmsc.present";
     private static final String STORAGES_CONFIGURATION_CLASSIC = "0" ;
@@ -36,8 +36,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private static final String SWT_VOICE_REC = "swt_voice_rec";
     private static final String SWT_AUDIO_REC = "swt_audio_rec";
 
-    EditTextPreferenceEx btn_func_app;
-    EditTextPreferenceEx btn_func_app2;
+/*    EditTextPreferenceEx btn_func_app;
+    EditTextPreferenceEx btn_func_app2; */
     Preference btn_g_cal;
     SwitchPreference swt_spkr;
     SwitchPreference swt_call;
@@ -110,11 +110,11 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         main_storage.setValue(configuration);
 
-        btn_func_app = (EditTextPreferenceEx)findPreference(BTN_FUNC_APP);
+/*        btn_func_app = (EditTextPreferenceEx)findPreference(BTN_FUNC_APP);
         btn_func_app.setOnPreferenceChangeListener(this);
 
         btn_func_app2 = (EditTextPreferenceEx)findPreference(BTN_FUNC_APP2);
-        btn_func_app2.setOnPreferenceChangeListener(this);
+        btn_func_app2.setOnPreferenceChangeListener(this); */
 
         btn_g_cal = (Preference)findPreference(BTN_G_CAL);
         btn_g_cal.setOnPreferenceClickListener(this);
@@ -140,12 +140,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             SystemProperties.set(PERSISTENT_PROPERTY_CONFIGURATION_NAME, (String)newValue);
             Toast.makeText(getActivity(), R.string.reboot_needed, Toast.LENGTH_LONG).show();
         }
-        if (preference.getKey().equals(BTN_FUNC_APP)) {
+/*        if (preference.getKey().equals(BTN_FUNC_APP)) {
             Settings.System.putString(getActivity().getContentResolver(), preference.getKey(), (String)newValue);
         }
         if (preference.getKey().equals(BTN_FUNC_APP2)) {
             Settings.System.putString(getActivity().getContentResolver(), preference.getKey(), (String)newValue);
-        }
+        } */
         if (preference.getKey().equals(SWT_SPKR)) {
             SystemProperties.set("persist.audio.fluence.speaker", newValue.toString());
             Toast.makeText(getActivity(), R.string.reboot_needed, Toast.LENGTH_LONG).show();
