@@ -69,7 +69,7 @@ persistent.bt.a2dp_offload_cap=sbc-aptx-aptXHD
 
 # Debug
 persist.logd.logpersistd=logcatd 
-persist.sys.usb.config=mtp,adb 
+# persist.sys.usb.config=mtp,adb
 # ro.product.locale=ru-RU 
 persist.sys.timezone=Europe/Moscow
 
