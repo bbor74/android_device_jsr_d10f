@@ -50,13 +50,14 @@ ro.qualcomm.sensors.game_rv=true
 ro.qualcomm.sensors.smd=true
 
 ## max rate
-#ro.qc.sensors.max_accel_rate=200
-#ro.qc.sensors.max_gyro_rate=200
-#ro.qc.sensors.max_gamerv_rate=200
-#ro.qc.sensors.max_geomag_rotvec=50
-#ro.qc.sensors.max_rotvec=200
-#ro.qc.sensors.max_grav_no_gyro=50
-#ro.qc.sensors.max_grav=200
+ro.qc.sensors.max_accel_rate=60
+ro.qc.sensors.max_mag_rate=15
+ro.qc.sensors.max_gyro_rate=15
+ro.qc.sensors.max_grav_rate=15
+ro.qc.sensors.max_grav_no_gyro=15
+ro.qc.sensors.max_rotvec_rate=15
+ro.qc.sensors.max_geomag_rotvec=15
+ro.qc.sensors.max_gamerv_rate=60
 
 ## sensors from huawei mt2
 ro.qualcomm.sensors.vmd=true
