@@ -9,3 +9,5 @@ allow sudaemon surfaceflinger_service:service_manager { find };
 allow sudaemon user_service:service_manager { find };
 allow sudaemon window_service:service_manager { find };
 
+#============= sudaemon ==============
+allow sudaemon settings_service:service_manager find;
