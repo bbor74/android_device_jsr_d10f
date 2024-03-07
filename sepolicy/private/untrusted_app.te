@@ -1,0 +1,29 @@
+
+allow untrusted_app audioserver_exec:file { getattr open read };
+allow untrusted_app incidentd_exec:file { getattr open read };
+# allow untrusted_app userinit_exec:file { getattr open read };
+
+allow untrusted_app isolated_app_tmpfs:file write;
+
+dontaudit untrusted_app self:udp_socket ioctl;
+
+#============= untrusted_app ==============
+allow untrusted_app atrace_exec:file { getattr open read };
+allow untrusted_app blkid_exec:file { getattr open read };
+allow untrusted_app dexoptanalyzer_exec:file { getattr open read };
+allow untrusted_app hal_allocator_default_exec:file { getattr open read };
+allow untrusted_app incident_exec:file { getattr open read };
+allow untrusted_app mdnsd_exec:file { getattr open read };
+allow untrusted_app storaged_exec:file { getattr open read };
+allow untrusted_app surfaceflinger_exec:file { getattr open read };
+allow untrusted_app mkfs_exec:file { getattr open read };
+allow untrusted_app sysinit_exec:file { getattr open read };
+
+allow untrusted_app config_gz:file getattr;
+
+# allow untrusted_app adbtcp_prop:file { getattr open };
+allow untrusted_app lineage_recovery_prop:file { getattr open };
+allow untrusted_app userinit_prop:file { getattr open };
+
+allow untrusted_app debugfs_trace_marker:file getattr;
+

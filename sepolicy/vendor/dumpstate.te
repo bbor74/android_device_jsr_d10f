@@ -1,0 +1,7 @@
+#============= dumpstate ==============
+# allow dumpstate boot_mode_prop:file getattr;
+allow dumpstate debugfs_mmc:dir search;
+allow dumpstate gatekeeper_service:service_manager find;
+# allow dumpstate persist_file:dir getattr;
+# allow dumpstate sys_usb_controller_prop:file open;
+# allow dumpstate wcnss_prop:file open;

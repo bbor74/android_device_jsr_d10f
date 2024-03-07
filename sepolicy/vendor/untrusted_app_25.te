@@ -1,0 +1,36 @@
+#============= untrusted_app_25 ==============
+# allow untrusted_app_25 proc_stat:file { getattr open read };
+allow untrusted_app_25 sysfs_lowmemorykiller:dir { read search };
+allow untrusted_app_25 sysfs_lowmemorykiller:file { getattr open read };
+allow untrusted_app_25 sysfs_vibrator:file { getattr open read };
+
+#============= untrusted_app_25 ==============
+allow untrusted_app_25 block_device:dir { getattr open read };
+allow untrusted_app_25 cache_block_device:blk_file getattr;
+# allow untrusted_app_25 persist_file:dir getattr;
+allow untrusted_app_25 rootfs:dir { open read };
+# allow untrusted_app_25 sysfs:file { getattr open read };
+allow untrusted_app_25 system_block_device:blk_file getattr;
+allow untrusted_app_25 userdata_block_device:blk_file getattr;
+
+#============= untrusted_app_25 ==============
+allow untrusted_app_25 boot_block_device:blk_file getattr;
+allow untrusted_app_25 misc_block_device:blk_file getattr;
+allow untrusted_app_25 modem_efs_partition_device:blk_file getattr;
+allow untrusted_app_25 ssd_device:blk_file getattr;
+
+#============= untrusted_app_25 ==============
+allow untrusted_app_25 block_device:blk_file getattr;
+allow untrusted_app_25 mnt_media_rw_file:dir getattr;
+
+dontaudit untrusted_app_25 proc:file { getattr open read };
+dontaudit untrusted_app_25 serialno_prop:file { getattr open read };
+
+#============= untrusted_app_25 ==============
+allow untrusted_app_25 init_exec:file getattr;
+allow untrusted_app_25 rootfs:file getattr;
+allow untrusted_app_25 tombstone_data_file:dir getattr;
+
+#============= untrusted_app_25 ==============
+allow untrusted_app_25 app_data_file:file unlink;
+

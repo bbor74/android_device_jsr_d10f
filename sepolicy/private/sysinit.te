@@ -1,0 +1,4 @@
+
+allow sysinit self:rawip_socket { create getopt setopt };
+allow sysinit self:capability { net_raw net_admin };
+

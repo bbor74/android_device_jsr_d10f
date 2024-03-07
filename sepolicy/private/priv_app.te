@@ -1,0 +1,12 @@
+
+# allow priv_app adbtcp_prop:file { getattr open };
+
+allow priv_app userinit_prop:file { getattr open };
+
+allow priv_app lineage_recovery_prop:file { getattr open };
+
+#============= priv_app ==============
+allow priv_app isolated_app_tmpfs:file write;
+
+
+
