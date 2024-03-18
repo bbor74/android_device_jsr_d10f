@@ -18,7 +18,7 @@
 #ifndef _BDROID_BUILDCFG_H
 #define _BDROID_BUILDCFG_H
 
-// #include <cutils/properties.h>
+#include <cutils/properties.h>
 #include <string.h>
 
 #define BTM_DEF_LOCAL_NAME   "JSR D10F"
@@ -28,7 +28,7 @@
 #define MAX_L2CAP_CHANNELS    16
 #define BLE_VND_INCLUDED   TRUE
 #define BT_CLEAN_TURN_ON_DISABLED TRUE
-
+#undef PROPERTY_VALUE_MAX
 /* Defined if the kernel does not have support for CLOCK_BOOTTIME_ALARM 
 #define KERNEL_MISSING_CLOCK_BOOTTIME_ALARM TRUE */
 
