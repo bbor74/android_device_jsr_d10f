@@ -19,7 +19,8 @@ PRODUCT_PACKAGES += \
     android.hardware.audio@2.0-impl \
     android.hardware.audio@2.0-service \
     android.hardware.audio.effect@2.0-impl \
-    android.hardware.broadcastradio@1.0-impl
+    android.hardware.broadcastradio@1.0-impl \
+    android.hardware.soundtrigger@2.0-impl
 
 # Bluetooth
 PRODUCT_PACKAGES += \
@@ -43,6 +44,7 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.composer@2.1-impl \
     android.hardware.graphics.composer@2.1-service \
     android.hardware.graphics.mapper@2.0-impl \
+    android.hardware.graphics.mapper@2.0-service \
     android.hardware.memtrack@1.0-impl \
     android.hardware.memtrack@1.0-service
 
@@ -61,6 +63,12 @@ PRODUCT_PACKAGES += \
     android.hardware.health@1.0-impl \
     android.hardware.health@1.0-service
 
+# HIDL
+PRODUCT_PACKAGES += \
+    android.hidl.manager@1.0 \
+    android.hidl.manager@1.0-java \
+    android.hidl.base@1.0
+
 # Keystore
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@3.0-impl \
@@ -74,10 +82,6 @@ PRODUCT_PACKAGES += \
 # Power
 PRODUCT_PACKAGES += \
     android.hardware.power@1.1-service-qti
-
-#    android.hardware.power@1.0-service 
-#    android.hardware.power@1.0-impl
-
 
 # RenderScript HAL
 PRODUCT_PACKAGES += \
