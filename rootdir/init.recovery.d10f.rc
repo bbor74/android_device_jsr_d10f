@@ -5,3 +5,5 @@ on fs
     exec u:object_r:init_exec:s0 root root -- /sbin/fstab /etc/recovery.fstab twrp
     exec u:object_r:init_exec:s0 root root -- /sbin/fstab /fstab.recovery.d10f recovery
 
+on boot
+    setprop sys.usb.ffs.aio_compat 1
