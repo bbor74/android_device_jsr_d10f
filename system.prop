@@ -22,6 +22,11 @@ ro.bluetooth.sap=true
 ro.bluetooth.hfp.ver=1.6
 ro.qualcomm.bt.hci_transport=smd
 
+# Qualcomm® aptX™
+persist.bt.enableAptXHD=true
+persist.service.btui.use_aptx=1
+persistent.bt.a2dp_offload_cap=sbc-aptx-aptXHD
+
 # Display
 ro.opengles.version=196608
 ro.sf.lcd_density=320
@@ -62,11 +67,6 @@ ro.qualcomm.sensors.smd=true
 ## sensors from huawei mt2
 ro.qualcomm.sensors.vmd=true
 ro.qualcomm.sensors.gtap=true
-
-# Qualcomm® aptX™
-persist.bt.enableAptXHD=true
-persist.service.btui.use_aptx=1
-persistent.bt.a2dp_offload_cap=sbc-aptx-aptXHD
 
 # Debug
 persist.logd.logpersistd=logcatd 
