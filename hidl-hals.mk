@@ -74,6 +74,10 @@ PRODUCT_PACKAGES += \
     android.hardware.keymaster@3.0-impl \
     android.hardware.keymaster@3.0-service
 
+# LiveDisplay native
+PRODUCT_PACKAGES += \
+    vendor.lineage.livedisplay@1.0-service-sdm
+
 # Lights
 PRODUCT_PACKAGES += \
     android.hardware.light@2.0-impl \
