@@ -68,4 +68,8 @@
     <!-- Whether to enable HumanInteractionController by default -->
     <bool name="config_HICEnabledDefault">false</bool>
 
+    <!-- Indicate whether encryption causes significant performances loss.
+         This MUST NOT be set to true on devices produced in 2016 or later -->
+    <bool name="config_trustLegacyEncryption">true</bool>
+
 </resources>
