@@ -33,21 +33,11 @@ on early-init
     mkdir /firmware 0771 system system
     symlink /data/tombstones /tombstones
 
-    # exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules rt2x00lib rt2800lib mac80211 eeprom_93cx6
-    # evbug oprofile reset_modem dma_test ansi_cprng gspca_main
-
 on init
- #   export LD_SHIM_LIBS /system/bin/thermal-engine|libshims_thermal.so
-
     # Set permissions for persist partition
     mkdir /persist 0771 system system
 
     write /proc/sys/vm/page-cluster 0
-
-    # Symbols required for blobs
-#    export LD_SHIM_LIBS /system/lib/hw/camera.vendor.msm8226.so|libboringssl-compat.so:/system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so:/system/lib/libcrypto.so|libboringssl-compat.so
-#    export LD_PRELOAD /system/lib/libboringssl-compat.so
-
 
 on fs
     wait /dev/block/platform/${ro.boot.bootdevice}
@@ -82,18 +72,11 @@ on early-boot
     chmod 0664 /sys/class/graphics/fb0/idle_notify
 
 on boot
-    chown bluetooth bluetooth /sys/module/hci_smd/parameters/hcismd_set
-    chmod 0660 /sys/module/hci_smd/parameters/hcismd_set
-
     # Create QMUX deamon socket area
-    mkdir /dev/socket/qmux_radio 0770 radio radio
-    chmod 2770 /dev/socket/qmux_radio
-    mkdir /dev/socket/qmux_audio 0770 media audio
-    chmod 2770 /dev/socket/qmux_audio
-    mkdir /dev/socket/qmux_bluetooth 0770 bluetooth bluetooth
-    chmod 2770 /dev/socket/qmux_bluetooth
-    mkdir /dev/socket/qmux_gps 0770 gps gps
-    chmod 2770 /dev/socket/qmux_gps
+    mkdir /dev/socket/qmux_radio 2770 radio radio
+    mkdir /dev/socket/qmux_audio 2770 media audio
+    mkdir /dev/socket/qmux_bluetooth 2770 bluetooth bluetooth
+    mkdir /dev/socket/qmux_gps 2770 gps gps
 
     # Create NETMGR daemon socket area
     mkdir /dev/socket/netmgr 0750 radio radio
@@ -112,7 +95,6 @@ on boot
     write /proc/sys/net/ipv6/conf/rmnet5/accept_ra 2
     write /proc/sys/net/ipv6/conf/rmnet6/accept_ra 2
     write /proc/sys/net/ipv6/conf/rmnet7/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_usb0/accept_ra 2
 
     # To prevent out of order acknowledgements from making
     # connection tracking to treat them as not belonging to
@@ -258,6 +240,18 @@ on post-fs-data
     mkdir /data/misc/location/mq 0770 gps gps
     mkdir /data/misc/location/xtwifi 0770 gps gps
 
+    # Create the directories used by the Wireless subsystem
+    mkdir /data/misc/wifi 0770 wifi wifi
+    mkdir /data/misc/wifi/sockets 0770 wifi wifi
+    mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
+    mkdir /data/vendor/wifi 0770 wifi wifi
+    mkdir /data/vendor/wifi/wpa 0770 wifi wifi
+    mkdir /data/vendor/wifi/wpa/sockets 0770 wifi wifi
+    mkdir /data/vendor/wifi/hostapd 0770 wifi wifi
+    mkdir /data/vendor/wifi/hostapd/ctrl 0770 wifi wifi
+    mkdir /data/misc/dhcp 0770 dhcp dhcp
+    chown dhcp dhcp /data/misc/dhcp
+
     # Create directory for hostapd
     mkdir /data/hostapd 0770 system wifi
 
@@ -290,20 +284,6 @@ on post-fs-data
     chmod 0644 /persist/sensors/sensors_settings
     chown system root /persist/sensors/sensors_settings
 
-    # Create the directories used by the Wireless subsystem
-    mkdir /data/misc/wifi 0770 wifi wifi
-    mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
-    mkdir /data/misc/wifi/sockets 0770 wifi wifi
-    mkdir /data/vendor/wifi 0771 wifi wifi
-    mkdir /data/vendor/wifi/wpa 0770 wifi wifi
-    mkdir /data/vendor/wifi/wpa/sockets 0770 wifi wifi
-    mkdir /data/vendor/wifi/wpa_supplicant 0770 wifi wifi
-    mkdir /data/vendor/wifi/hostapd 0770 wifi wifi
-    mkdir /data/vendor/wifi/hostapd/ctrl 0770 wifi wifi
-    mkdir /data/vendor/wifi/sockets 0770 wifi wifi
-    mkdir /data/misc/dhcp 0770 dhcp dhcp
-    chown dhcp dhcp /data/misc/dhcp
-
     setprop vold.post_fs_data_done 1
 
     # Vibrator amplitude
@@ -318,9 +298,9 @@ service irsc_util /vendor/bin/irsc_util "/vendor/etc/sec_config"
 service rmt_storage /vendor/bin/rmt_storage
     class core
     user root
-    shutdown critical
     group system wakelock
     writepid /dev/cpuset/system-background/tasks
+    shutdown critical
 
 service rfs_access /vendor/bin/rfs_access
     class core
@@ -412,11 +392,6 @@ service time_daemon /vendor/bin/time_daemon
     class late_start
     user root
     group root
-
-#service mpdecision /vendor/bin/mpdecision --avg_comp
-#    user root
-#    group root system
-#    disabled
 
 service thermal-engine /vendor/bin/thermal-engine
     class main
@@ -514,4 +489,3 @@ on property:sys.boot_completed=1
     # write /sys/module/lowmemorykiller/parameters/minfree "2048,4096,8192,16384,24576,32768"
 
     rm /data/system/default_values
-    # start mpdecision
