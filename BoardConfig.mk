@@ -139,9 +139,6 @@ TARGET_HAS_LEGACY_CAMERA_HAL1 := true
 TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
 
 TARGET_NEEDS_LEGACY_CAMERA_HAL1_DYN_NATIVE_HANDLE := true
-TARGET_PROCESS_SDK_VERSION_OVERRIDE := \
-    /system/bin/mediaserver=22 \
-    /system/vendor/bin/mm-qcamera-daemon=22
 
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
