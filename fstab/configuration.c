@@ -158,11 +158,12 @@ void set_storage_props(int usbmsc_present)
 	int rc = 0;
 
 	rc = property_get(STORAGE_CONFIG_PROP, value, "");
+	INFO("Got storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
 	if (rc && !strcmp(value, STORAGES_CONFIGURATION_DATAMEDIA)) { // if datamedia
-		INFO("Got datamedia storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
+		INFO("Datamedia storage configuration! \n");
 		isDatamedia = TRUE;
 	} else if (rc && !strcmp(value, STORAGES_CONFIGURATION_INVERTED)) { // if swapped
-		INFO("Got inverted storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
+		INFO("Inverted storage configuration! \n");
 		property_set("ro.vold.primary_physical", "1");
 	} else { 
 		if (rc == 0) {  // If the storages configuration property is unspecified
@@ -180,7 +181,7 @@ void set_storage_props(int usbmsc_present)
 			property_set(STORAGE_CONFIG_PROP, value);
 
 		} else {// if classic
-			INFO("Got classic storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
+			INFO("Classic storage configuration! \n");
 		}
 		property_set("ro.vold.primary_physical", "1");
 	}
