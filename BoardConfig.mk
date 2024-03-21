@@ -84,24 +84,20 @@ TARGET_QCOM_NO_FM_FIRMWARE := true
 BOARD_HAVE_QCOM_FM := true
 
 # Graphics
-TARGET_USES_C2D_COMPOSITION := true
-TARGET_USES_ION := true
-USE_OPENGL_RENDERER := true
+MAX_EGL_CACHE_KEY_SIZE := 12*1024
+MAX_EGL_CACHE_SIZE := 2048*1024
+
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
+
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 TARGET_SUPPORTS_WEARABLES := true
 
 TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS := 0x02000000
-
-# Shader cache config options
-# Maximum size of the GLES Shaders that can be cached for reuse.
-# Increase the size if shaders of size greater than 12KB are used.
-MAX_EGL_CACHE_KEY_SIZE := 12*1024
-
-# Maximum GLES shader cache size for each app to store the compiled shader
-# binaries. Decrease the size if RAM or Flash Storage size is a limitation
-# of the device.
-MAX_EGL_CACHE_SIZE := 2048*1024
+TARGET_CONTINUOUS_SPLASH_ENABLED := true
+TARGET_FORCE_HWC_FOR_VIRTUAL_DISPLAYS := true
+TARGET_USES_ION := true
+TARGET_USES_NEW_ION_API := true
+USE_OPENGL_RENDERER := true
 
 # Hardware tunables
 BOARD_HARDWARE_CLASS := $(DEVICE_PATH)/lineagehw/
