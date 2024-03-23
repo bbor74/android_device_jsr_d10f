@@ -366,11 +366,11 @@ static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_c
             switch (sdcc_config) {
                 case REGULAR:
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-			usbmsc_present = TRUE;
+			usbmsc_present = TRUE;INFO("usbmsc_present: CLASSIC: REGULAR: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
 					}
                     if (check_for_partition(SDCC_2, "usbmsc")) {
-						usbmsc_present = TRUE;
+						//usbmsc_present = TRUE;INFO("usbmsc_present: CLASSIC: REGULAR: SDCC_2 \n");
                         ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,encryptable=userdata");
 					}
                     else
@@ -378,17 +378,17 @@ static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_c
                    break;
                 case INVERTED:
                     if (check_for_partition(SDCC_2, "usbmsc")) {
-						usbmsc_present = TRUE;
+						usbmsc_present = TRUE;INFO("usbmsc_present: CLASSIC: INVERTED: SDCC_2 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
                     }
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-						usbmsc_present = TRUE;
+						//usbmsc_present = TRUE;INFO("usbmsc_present: CLASSIC: INVERTED: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable,encryptable=userdata");
                     }
                     break;
                 case ISOLATED:
 		    if (check_for_partition(SDCC_1, "usbmsc")) {
-			usbmsc_present = TRUE;
+			usbmsc_present = TRUE;INFO("usbmsc_present: CLASSIC: ISOLATED: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
                     }
                     break;
@@ -400,29 +400,29 @@ static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_c
             switch (sdcc_config) {
                 case REGULAR:
                     if (check_for_partition(SDCC_2, "usbmsc")) {
-                        usbmsc_present = TRUE;
+                   //     usbmsc_present = TRUE;INFO("usbmsc_present: INVERTED: REGULAR: SDCC_2 \n");
                         ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd");
                     }
                     else
                         ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:auto,noemulatedsd");
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-                    usbmsc_present = TRUE;
+                    usbmsc_present = TRUE;INFO("usbmsc_present: INVERTED: REGULAR: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable,encryptable=userdata");
                    }
                    break;
                 case INVERTED:
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-                    usbmsc_present = TRUE;
+                    //usbmsc_present = TRUE;INFO("usbmsc_present: INVERTED: INVERTED: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
                     }
                     if (check_for_partition(SDCC_2, "usbmsc")) {
-                    usbmsc_present = TRUE;
+                    usbmsc_present = TRUE;INFO("usbmsc_present: INVERTED: INVERTED: SDCC_2 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable,encryptable=userdata");
                     }
                     break;
                 case ISOLATED:
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-                    usbmsc_present = TRUE;
+                    usbmsc_present = TRUE;INFO("usbmsc_present: INVERTED: ISOLATED: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
                     }
                     break;
@@ -433,9 +433,12 @@ static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_c
         case STORAGE_CONFIGURATION_DATAMEDIA:
             switch (sdcc_config) {
                 case REGULAR:
+                    if (check_for_partition(SDCC_1, "usbmsc")) {
+                    usbmsc_present = TRUE;INFO("usbmsc_present: DATAMEDIA: REGULAR: SDCC_1 \n");
                     ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable,noemulatedsd,encryptable=userdata");
+                    }
                     if (check_for_partition(SDCC_2, "usbmsc")) {
-                    usbmsc_present = TRUE;
+                    //usbmsc_present = TRUE;INFO("usbmsc_present: DATAMEDIA: REGULAR: SDCC_2 \n");
                         ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard2:%d,encryptable=userdata");
                     }
                     else
@@ -443,17 +446,17 @@ static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_c
                    break;
                 case INVERTED:
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-                    usbmsc_present = TRUE;
+                    //usbmsc_present = TRUE;INFO("usbmsc_present: DATAMEDIA: INVERTED: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,nonremovable,noemulatedsd,encryptable=userdata");
                     }
                     if (check_for_partition(SDCC_2, "usbmsc")) {
-                    usbmsc_present = TRUE;
+                    usbmsc_present = TRUE;INFO("usbmsc_present: DATAMEDIA: INVERTED: SDCC_2 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard2:%d,nonremovable,encryptable=userdata");
                     }
                     break;
                 case ISOLATED:
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-                    usbmsc_present = TRUE;
+                    usbmsc_present = TRUE;INFO("usbmsc_present: DATAMEDIA: ISOLATED: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "voldmanaged=sdcard1:%d,noemulatedsd,nonremovable,encryptable=userdata");
                     }
                     break;
