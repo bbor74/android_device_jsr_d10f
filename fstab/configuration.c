@@ -157,6 +157,12 @@ void set_storage_props(int usbmsc_present)
 	int isDatamedia = FALSE;
 	int rc = 0;
 
+	if (usbmsc_present) {
+		property_set(USBMSC_PRESENT_PROP, "true");
+	} else {
+		property_set(USBMSC_PRESENT_PROP, "false");
+	}
+
 	rc = property_get(STORAGE_CONFIG_PROP, value, "");
 	if (rc && !strcmp(value, STORAGES_CONFIGURATION_DATAMEDIA)) { // if datamedia
 		INFO("Got datamedia storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
@@ -169,11 +175,10 @@ void set_storage_props(int usbmsc_present)
 			WARNING("Storages configuration is undefined!\n");
 				if (usbmsc_present) {
 					strncpy(value, STORAGES_CONFIGURATION_CLASSIC, PROP_VALUE_MAX);
-					property_set(USBMSC_PRESENT_PROP, "true");
+					property_set("ro.vold.primary_physical", "1");
 					WARNING("Trying classic storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
 				} else {
 					strncpy(value, STORAGES_CONFIGURATION_DATAMEDIA, PROP_VALUE_MAX);
-					property_set(USBMSC_PRESENT_PROP, "false");
 					isDatamedia = TRUE;
 					WARNING("Trying datamedia storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
 				}
@@ -181,8 +186,8 @@ void set_storage_props(int usbmsc_present)
 
 		} else {// if classic
 			INFO("Got classic storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
+			property_set("ro.vold.primary_physical", "1");
 		}
-		property_set("ro.vold.primary_physical", "1");
 	}
 
         off_t size;
