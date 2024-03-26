@@ -1,14 +1,18 @@
 #ifndef _HAVE_CONFIGURATION_H
 #define _HAVE_CONFIGURATION_H
 void set_storage_props(int usbmsc_present);
+void set_storages_config(const char *value);
+int get_storages_config(char *value);
 
 
 #define FALSE 0
 #define TRUE 1
 
-#define STORAGE_CONFIG_PROP "persist.storages.configuration"
+//#define STORAGE_CONFIG_PROP "persist.storages.configuration"
+#define STORAGE_CONFIG_FILE "storages.configuration"
 #define USBMSC_PRESENT_PROP "ro.usbmsc.present"
-#define PERSISTENT_PROPERTY_DIR  "/data/property"
+//#define PERSISTENT_PROPERTY_DIR  "/data/property"
+#define STORAGE_CONFIG_DIR  "/data/system"
 
 #define STORAGES_CONFIGURATION_CLASSIC   "0"
 #define STORAGES_CONFIGURATION_INVERTED  "1"

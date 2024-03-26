@@ -15,6 +15,61 @@
 
 #include <sys/stat.h>
 
+void set_storages_config(const char *value)
+{
+    char tempPath[PATH_MAX];
+    char path[PATH_MAX];
+    int fd;
+
+    snprintf(tempPath, sizeof(tempPath), "%s/.temp.XXXXXX", STORAGE_CONFIG_DIR);
+    fd = mkstemp(tempPath);
+    if (fd < 0) {
+        ERROR("Unable to write storages config to temp file %s: %s\n", tempPath, strerror(errno));
+        return;
+    }
+    write(fd, value, strlen(value));
+    fsync(fd);
+    close(fd);
+
+    snprintf(path, sizeof(path), "%s/%s", STORAGE_CONFIG_DIR, STORAGE_CONFIG_FILE);
+    if (rename(tempPath, path)) {
+        ERROR("Unable to rename storages config file %s to %s: %s\n", tempPath, path, strerror(errno));
+        unlink(tempPath);
+    }
+}
+
+int get_storages_config(char *value)
+{
+    char path[PATH_MAX];
+    snprintf(path, sizeof(path), "%s/%s", STORAGE_CONFIG_DIR, STORAGE_CONFIG_FILE);
+ /*    DIR* dir = opendir(STORAGE_CONFIG_DIR);
+    if (!dir) {
+        ERROR("Unable to open storages config directory \"%s\": %s\n",
+              STORAGE_CONFIG_DIR, strerror(errno));
+        return 0;
+    } */
+      //  INFO("%s: try open storages config file: %s \n", __func__, path);
+        int fd = open(path, O_RDONLY);
+        if (fd == -1) {
+            ERROR("Unable to open storages config file \"%s\": %s\n", path, strerror(errno));
+            value[0] = 0;
+            return 0;
+        }
+      //  INFO("%s: succecful open storages config file \n", __func__);
+
+        int length = read(fd, value, sizeof(value) - 1);
+        if (length >= 0) {
+            value[length] = 0;
+            INFO("%s: storages config: %s, %s)\n", __func__, path, value);
+        } else {
+            ERROR("Unable to read storages config file %s: %s\n", path, strerror(errno));
+            value[0] = 0;
+            length = 0;
+        }
+    close(fd);
+    return length;
+}
+
 char *mmap_xml_configuration(off_t *size) {
 	FILE *xml_config_filestream = fopen(STORAGE_XML_PATH, "r+");
 	if (xml_config_filestream == NULL) {
@@ -163,12 +218,13 @@ void set_storage_props(int usbmsc_present)
 		property_set(USBMSC_PRESENT_PROP, "false");
 	}
 
-	rc = property_get(STORAGE_CONFIG_PROP, value, "");
+//	rc = property_get(STORAGE_CONFIG_PROP, value, "");
+	rc = get_storages_config(value);
 	if (rc && !strcmp(value, STORAGES_CONFIGURATION_DATAMEDIA)) { // if datamedia
-		INFO("Got datamedia storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
+		INFO("Got datamedia storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
 		isDatamedia = TRUE;
 	} else if (rc && !strcmp(value, STORAGES_CONFIGURATION_INVERTED)) { // if swapped
-		INFO("Got inverted storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
+		INFO("Got inverted storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
 		property_set("ro.vold.primary_physical", "1");
 	} else { 
 		if (rc == 0) {  // If the storages configuration property is unspecified
@@ -176,16 +232,17 @@ void set_storage_props(int usbmsc_present)
 				if (usbmsc_present) {
 					strncpy(value, STORAGES_CONFIGURATION_CLASSIC, PROP_VALUE_MAX);
 					property_set("ro.vold.primary_physical", "1");
-					WARNING("Trying classic storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
+					WARNING("Trying classic storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
 				} else {
 					strncpy(value, STORAGES_CONFIGURATION_DATAMEDIA, PROP_VALUE_MAX);
 					isDatamedia = TRUE;
-					WARNING("Trying datamedia storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
+					WARNING("Trying datamedia storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
 				}
-			property_set(STORAGE_CONFIG_PROP, value);
+			//property_set(STORAGE_CONFIG_PROP, value);
+			set_storages_config(value);
 
 		} else {// if classic
-			INFO("Got classic storage configuration (" STORAGE_CONFIG_PROP " == %s)\n", value);
+			INFO("Got classic storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
 			property_set("ro.vold.primary_physical", "1");
 		}
 	}

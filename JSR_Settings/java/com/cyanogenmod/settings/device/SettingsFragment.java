@@ -14,6 +14,9 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FileOutputStream;
 import java.nio.charset.Charset;
 
@@ -26,6 +29,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 /*    private static final String BTN_FUNC_APP = "btn_func_app";
     private static final String BTN_FUNC_APP2 = "btn_func_app2"; */
     private static final String PERSISTENT_PROPERTY_CONFIGURATION_NAME = "persist.storages.configuration";
+    private static final String CONFIGURATION_DIR = "/data/system";
+    private static final String CONFIGURATION_FILE = "storages.configuration";
     private static final String USBMSC_PRESENT_PROPERTY_NAME = "ro.usbmsc.present";
     private static final String STORAGES_CONFIGURATION_CLASSIC = "0" ;
     private static final String STORAGES_CONFIGURATION_INVERTED = "1" ;
@@ -36,6 +41,40 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     private static final String SWT_VOICE_REC = "swt_voice_rec";
     private static final String SWT_AUDIO_REC = "swt_audio_rec";
 
+    private String GetStoragesConfiguration(String default_value) {
+        String configuration;
+        configuration = default_value;
+        File f = new File(CONFIGURATION_DIR,CONFIGURATION_FILE);
+        if (f.exists()) {
+           try {
+           FileReader fr = new FileReader(f);
+           int i = fr.read();
+           configuration = String.valueOf((char)i);
+           fr.close();
+           Log.d(TAG, "Storages configuration: " + configuration);
+           } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+           Log.e(TAG, "Storages configuration file not found");
+        }
+        return configuration;
+    }
+
+    private void SetStoragesConfiguration(String value) {
+        try {
+           File tf = File.createTempFile("storage",".tmp",new File(CONFIGURATION_DIR));
+           FileWriter fw = new FileWriter(tf);
+           fw.write(value,0,1);
+           fw.close();
+           tf.renameTo(new File(CONFIGURATION_DIR,CONFIGURATION_FILE));
+           Log.d(TAG, "Set storages configuration to: " + value);
+        } catch (Exception e) {
+                e.printStackTrace();
+        }
+    }
+
+
 /*    EditTextPreferenceEx btn_func_app;
     EditTextPreferenceEx btn_func_app2; */
     Preference btn_g_cal;
@@ -43,6 +82,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     SwitchPreference swt_call;
     SwitchPreference swt_voice_rec;
     SwitchPreference swt_audio_rec;
+
 
     private class SysfsValue {
         private String fileName;
@@ -95,12 +135,14 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             main_storage=(ListPreference)findPreference("main_storage");
             main_storage.setEntries(new String[]{getString(R.string.storage_datamedia), getString(R.string.storage_usbmsc), getString(R.string.storage_sdcard)});
             main_storage.setEntryValues(new String[]{STORAGES_CONFIGURATION_DATAMEDIA, STORAGES_CONFIGURATION_CLASSIC, STORAGES_CONFIGURATION_INVERTED});
-            configuration = SystemProperties.get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, STORAGES_CONFIGURATION_CLASSIC);
+            configuration = GetStoragesConfiguration(STORAGES_CONFIGURATION_CLASSIC);
+            /* configuration = SystemProperties.get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, STORAGES_CONFIGURATION_CLASSIC); */
         } else {
             main_storage=(ListPreference)findPreference("main_storage");
             main_storage.setEntries(new String[]{getString(R.string.storage_datamedia), getString(R.string.storage_sdcard)});
             main_storage.setEntryValues(new String[]{STORAGES_CONFIGURATION_DATAMEDIA, STORAGES_CONFIGURATION_INVERTED});
-            configuration = SystemProperties.get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, STORAGES_CONFIGURATION_DATAMEDIA);
+            configuration = GetStoragesConfiguration(STORAGES_CONFIGURATION_DATAMEDIA);
+            /* configuration = SystemProperties.get(PERSISTENT_PROPERTY_CONFIGURATION_NAME, STORAGES_CONFIGURATION_DATAMEDIA); */
             if (configuration == STORAGES_CONFIGURATION_CLASSIC) {
                 configuration = STORAGES_CONFIGURATION_DATAMEDIA;
             }
@@ -137,7 +179,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public boolean onPreferenceChange(Preference preference, Object newValue)
     {
         if (preference.getKey().equals("main_storage")) {
-            SystemProperties.set(PERSISTENT_PROPERTY_CONFIGURATION_NAME, (String)newValue);
+/*            SystemProperties.set(PERSISTENT_PROPERTY_CONFIGURATION_NAME, (String)newValue); */
+            SetStoragesConfiguration((String)newValue);
             Toast.makeText(getActivity(), R.string.reboot_needed, Toast.LENGTH_LONG).show();
         }
 /*        if (preference.getKey().equals(BTN_FUNC_APP)) {

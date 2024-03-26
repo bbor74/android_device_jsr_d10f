@@ -33,7 +33,7 @@
 int usbmsc_present = FALSE;
 
 /* Load STORAGE_CONFIG_PROP from PERSISTENT_PROPERTY_DIR
- * We need to get it earlier than vendor init to make working fstab */
+ * We need to get it earlier than vendor init to make working fstab
 static void load_storage_config_prop() {
     DIR* dir = opendir(PERSISTENT_PROPERTY_DIR);
     if (!dir) {
@@ -89,7 +89,7 @@ static void load_storage_config_prop() {
         }
         close(fd);
     }
-}
+}*/
 
 /* Check if partition exist on given sdcc
  * Return TRUE if exist, FALSE if not */
@@ -601,10 +601,11 @@ int process_fstab(const char *fstab_name, const int fstab_type, const int fstab_
         counter++;
     }
 
-    load_storage_config_prop();
+   // load_storage_config_prop();
     property_get("ro.boot.swap_sdcc", config, "");
     sdcc_config = atoi(config);
-    property_get(STORAGE_CONFIG_PROP, config, "");
+    //property_get(STORAGE_CONFIG_PROP, config, "");
+    get_storages_config(config);
     storage_config = atoi(config);
     INFO("storage_config=%d, sdcc_config=%d, '%s'\n", storage_config, sdcc_config, config);
 

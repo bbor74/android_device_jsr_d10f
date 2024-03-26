@@ -47,6 +47,7 @@ on fs
     mount_all fstab.d10f
 
     mkdir /data/property 0700 root root
+    mkdir /data/system 0775 system system
 
     exec u:r:update_engine:s0 root root -- /sbin/fstab /fstab.d10f regular update
     swapon_all fstab.d10f
@@ -262,7 +263,7 @@ on post-fs-data
     mkdir /data/time/ 0700 system system
 
     # Create directory used by sensor subsystem
-    mkdir /data/system 0775 system system
+    # mkdir /data/system 0775 system system
     mkdir /data/system/sensors
     chmod 775 /data/system/sensors
     write /data/system/sensors/settings 1
