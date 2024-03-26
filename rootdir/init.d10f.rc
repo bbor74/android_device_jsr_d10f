@@ -53,6 +53,7 @@ on fs
     swapon_all fstab.d10f
 
     chown system system /data/system/storages.configuration
+    chown system system /data/system/storage.xml
 
     restorecon_recursive /persist
 
