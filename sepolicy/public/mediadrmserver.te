@@ -1,2 +1,0 @@
-#============= mediadrmserver ============== execute
-allow mediadrmserver unlabeled:file { getattr open read };

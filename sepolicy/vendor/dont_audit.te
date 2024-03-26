@@ -1,3 +1,0 @@
-dontaudit system_server dalvikcache_data_file:file { execute write };
-dontaudit bdaddr self:socket ioctl;
-

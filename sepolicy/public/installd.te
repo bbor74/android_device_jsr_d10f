@@ -1,3 +1,0 @@
-#============= installd ==============
-allow installd dumpstate:fd use;
-allow installd dumpstate:fifo_file read;

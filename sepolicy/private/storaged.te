@@ -1,2 +1,0 @@
-#============= storaged ==============
-allow storaged dumpstate:fifo_file write;

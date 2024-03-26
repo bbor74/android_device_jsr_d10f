@@ -1,2 +1,0 @@
-#============= fsck ==============
-dontaudit fsck block_device:blk_file { ioctl open read write };
