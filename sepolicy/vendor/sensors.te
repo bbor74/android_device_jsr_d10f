@@ -1,0 +1,4 @@
+#============= sensors ==============
+allow sensors persist_misc_file:dir { getattr open read };
+allow sensors persist_misc_file:file { getattr open read write };
+

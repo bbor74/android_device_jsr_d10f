@@ -208,7 +208,7 @@ endif
 include device/qcom/sepolicy-legacy/sepolicy.mk
 
 # BOARD_PLAT_PUBLIC_SEPOLICY_DIR += device/jsr/d10f/sepolicy/public
-# BOARD_PLAT_PRIVATE_SEPOLICY_DIR += device/jsr/d10f/sepolicy/private
+BOARD_PLAT_PRIVATE_SEPOLICY_DIR += device/jsr/d10f/sepolicy/private
 BOARD_SEPOLICY_DIRS += device/jsr/d10f/sepolicy/vendor
 
 # Shims    /system/vendor/lib/hw/camera.msm8226.so|libboringssl-compat.so

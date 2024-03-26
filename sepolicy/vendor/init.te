@@ -1,0 +1,17 @@
+#============= init ==============
+allow init diag_device:chr_file write;
+allow init qmuxd:unix_stream_socket connectto;
+allow init qmuxd_socket:sock_file write;
+allow init self:socket { create ioctl read };
+allow init sysfs:file { open setattr write };
+allow init sysfs_devices_system_cpu:file write;
+allow init sysfs_lowmemorykiller:file { open write };
+allow init vendor_file:file execute_no_trans;
+
+#============= init ==============
+allow init proc:file { open write };
+allow init sysfs_mmc_host:file { open write };
+allow init sysfs_msm_perf:file { open write };
+allow init sysfs_msm_power:file { open write };
+allow init sysfs_wlan_fwpath:file setattr;
+
