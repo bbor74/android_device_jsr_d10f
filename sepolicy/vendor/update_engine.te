@@ -6,3 +6,6 @@ allow update_engine self:capability dac_override;
 allow update_engine system_data_file:dir { add_name remove_name write };
 allow update_engine system_data_file:file { getattr rename create open read write };
 allow update_engine vold_prop:property_service set;
+
+#============= update_engine ==============
+allow update_engine rootfs:file { entrypoint write };
