@@ -1,2 +1,5 @@
 #============= system_server ==============
 allow system_server dalvikcache_data_file:file execute;
+
+#============= system_server ==============
+allow system_server kernel:process setsched;
