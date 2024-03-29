@@ -99,8 +99,6 @@ NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 TARGET_SUPPORTS_WEARABLES := true
 
-TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS := 0x02000000
-
 # Shader cache config options
 # Maximum size of the GLES Shaders that can be cached for reuse.
 # Increase the size if shaders of size greater than 12KB are used.
