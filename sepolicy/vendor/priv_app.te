@@ -14,3 +14,8 @@ allow priv_app sysfs_android_usb:file { getattr open };
 allow priv_app bluetooth_prop:file { getattr open };
 allow priv_app init:unix_stream_socket connectto;
 
+#============= priv_app ==============
+allow priv_app bg_daemon_prop:file { getattr open };
+allow priv_app boot_animation_prop:file { getattr open };
+allow priv_app boot_mode_prop:file { getattr open };
+
