@@ -30,3 +30,9 @@ allow priv_app ctl_LKCore_prop:file { getattr open };
 allow priv_app ctl_bootanim_prop:file { getattr open };
 allow priv_app ctl_bugreport_prop:file { getattr open };
 
+#============= priv_app ==============
+allow priv_app ctl_console_prop:file { getattr open };
+allow priv_app ctl_default_prop:file { getattr open };
+allow priv_app ctl_dumpstate_prop:file { getattr open };
+allow priv_app ctl_fuse_prop:file { getattr open };
+
