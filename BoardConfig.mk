@@ -17,6 +17,9 @@
 
 DEVICE_PATH := device/jsr/d10f
 
+# Initial API Level of the Device
+PRODUCT_SHIPPING_API_LEVEL := 23
+
 # ANT+
 BOARD_ANT_WIRELESS_DEVICE := "qualcomm-smd"
 
