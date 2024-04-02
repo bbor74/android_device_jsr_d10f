@@ -3,5 +3,5 @@ allow system_app system_data_file:dir { add_name remove_name write };
 allow system_app system_data_file:file { open read write };
 
 #============= system_app ==============
-allow system_app proc_pagetypeinfo:file { getattr read };
+allow system_app proc_pagetypeinfo:file { getattr open read };
 
