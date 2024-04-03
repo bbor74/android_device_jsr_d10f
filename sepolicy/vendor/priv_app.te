@@ -47,3 +47,9 @@ allow priv_app ctl_mdnsd_prop:file { getattr open read };
 allow priv_app ctl_netmgrd_prop:file { getattr open };
 allow priv_app ctl_port-bridge_prop:file { getattr open };
 
+#============= priv_app ==============
+allow priv_app ctl_qmuxd_prop:file { getattr open };
+allow priv_app ctl_restart_prop:file { getattr open };
+allow priv_app ctl_rildaemon_prop:file { getattr open };
+allow priv_app ctl_sigstop_prop:file { getattr open };
+
