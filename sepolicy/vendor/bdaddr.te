@@ -1,0 +1,13 @@
+type bdaddr, domain;
+type bdaddr_exec, exec_type, file_type;
+
+init_daemon_domain(bdaddr)
+
+#============= bdaddr ==============
+allow bdaddr diag_device:chr_file { open read write };
+allow bdaddr qmuxd:unix_stream_socket connectto;
+allow bdaddr qmuxd_socket:dir { add_name write };
+allow bdaddr qmuxd_socket:sock_file { create write };
+allow bdaddr self:capability dac_override;
+allow bdaddr self:socket { create ioctl read };
+
