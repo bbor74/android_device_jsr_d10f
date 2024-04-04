@@ -53,3 +53,7 @@ allow priv_app ctl_restart_prop:file { getattr open };
 allow priv_app ctl_rildaemon_prop:file { getattr open };
 allow priv_app ctl_sigstop_prop:file { getattr open };
 
+#============= priv_app ==============
+allow priv_app ctl_start_prop:file { getattr open };
+allow priv_app ctl_stop_prop:file { getattr open };
+
