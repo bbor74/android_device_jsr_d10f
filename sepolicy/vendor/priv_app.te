@@ -57,3 +57,9 @@ allow priv_app ctl_sigstop_prop:file { getattr open };
 allow priv_app ctl_start_prop:file { getattr open };
 allow priv_app ctl_stop_prop:file { getattr open };
 
+#============= priv_app ==============
+allow priv_app ctl_vendor_imsrcsservice_prop:file { getattr open };
+allow priv_app ctl_vendor_wigigsvc_prop:file { getattr open };
+allow priv_app device_logging_prop:file { getattr open };
+allow priv_app diag_mdlog_prop:file { getattr open };
+
