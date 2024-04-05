@@ -1,0 +1,36 @@
+From 4de50cbbd632cbe987099e4b9eb5a15a97de25d5 Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Fri, 5 Apr 2024 14:53:23 +0400
+Subject: [PATCH] SystemUI: Fix non-protected Broadcast
+
+04-05 08:55:08.560723  1058  3177 E ActivityManager: Sending non-protected broadcast com.android.systemui.demo from system 2991:com.android.systemui/u0a34 pkg com.android.systemui
+04-05 08:55:08.560723  1058  3177 E ActivityManager: java.lang.Throwable
+04-05 08:55:08.560723  1058  3177 E ActivityManager: 	at com.android.server.am.ActivityManagerService.checkBroadcastFromSystem(ActivityManagerService.java:21397)
+04-05 08:55:08.560723  1058  3177 E ActivityManager: 	at com.android.server.am.ActivityManagerService.broadcastIntentLocked(ActivityManagerService.java:21908)
+04-05 08:55:08.560723  1058  3177 E ActivityManager: 	at com.android.server.am.ActivityManagerService.broadcastIntent(ActivityManagerService.java:22143)
+04-05 08:55:08.560723  1058  3177 E ActivityManager: 	at android.app.IActivityManager$Stub.onTransact$broadcastIntent$(IActivityManager.java:10176)
+04-05 08:55:08.560723  1058  3177 E ActivityManager: 	at android.app.IActivityManager$Stub.onTransact(IActivityManager.java:167)
+04-05 08:55:08.560723  1058  3177 E ActivityManager: 	at com.android.server.am.ActivityManagerService.onTransact(ActivityManagerService.java:3377)
+04-05 08:55:08.560723  1058  3177 E ActivityManager: 	at android.os.Binder.execTransact(Binder.java:731)
+
+Change-Id: I492e2e67ca307278142fa3f0ff111bc9658c411d
+---
+ packages/SystemUI/AndroidManifest.xml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/packages/SystemUI/AndroidManifest.xml b/packages/SystemUI/AndroidManifest.xml
+index 44eff665db9..9592daff20b 100644
+--- a/packages/SystemUI/AndroidManifest.xml
++++ b/packages/SystemUI/AndroidManifest.xml
+@@ -216,6 +216,8 @@
+     <protected-broadcast android:name="com.android.settingslib.action.REGISTER_SLICE_RECEIVER" />
+     <protected-broadcast android:name="com.android.settingslib.action.UNREGISTER_SLICE_RECEIVER" />
+ 
++    <protected-broadcast android:name="com.android.systemui.demo" />
++
+     <application
+         android:name=".SystemUIApplication"
+         android:persistent="true"
+-- 
+2.17.1
+
