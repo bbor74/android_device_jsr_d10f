@@ -321,4 +321,7 @@
     <integer name="config_num_physical_slots">2</integer>
 
     <bool name="config_showNavigationBar">true</bool>
+
+    <!-- Whether to allow process with media UID to access CameraServiceProxy -->
+    <bool name="config_allowMediaUidForCameraServiceProxy">true</bool>
 </resources>
