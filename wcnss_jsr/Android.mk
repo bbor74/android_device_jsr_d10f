@@ -20,7 +20,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 #LOCAL_SRC_FILES := wcnss_jsr_client.c
-LOCAL_SRC_FILES := libwcnss_qmi_ini.c
+LOCAL_SRC_FILES := libwcnss_qmi_rand.c
 
 LOCAL_C_INCLUDES += hardware/qcom/wlan/wcnss_service
 LOCAL_CFLAGS += -Wall
