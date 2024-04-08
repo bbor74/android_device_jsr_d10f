@@ -1,0 +1,4 @@
+#============= wcnss_service ==============
+allow wcnss_service persist_file:dir { add_name write };
+allow wcnss_service persist_file:file create;
+
