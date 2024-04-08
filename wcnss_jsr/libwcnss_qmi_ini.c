@@ -23,8 +23,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <string.h>
 
-#define WCNSS_INI "/system/etc/wifi/WCNSS_qcom_cfg.ini"
+#define WCNSS_INI "/system/vendor/etc/wifi/WCNSS_qcom_cfg.ini"
 
 int wcnss_init_qmi(void)
 {
