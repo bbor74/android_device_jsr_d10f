@@ -77,7 +77,6 @@ TARGET_LEGACY_HW_DISK_ENCRYPTION := true
 
 # Exclude serif fonts for saving system.img size.
 EXCLUDE_SERIF_FONTS := true
-SMALLER_FONT_FOOTPRINT := true
 
 # Filesystem
 BOARD_BOOTIMAGE_PARTITION_SIZE     := 16777216
