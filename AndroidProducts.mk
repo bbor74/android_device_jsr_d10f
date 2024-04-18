@@ -15,3 +15,8 @@
 
 PRODUCT_MAKEFILES := \
     $(LOCAL_DIR)/lineage_d10f.mk
+
+COMMON_LUNCH_CHOICES := \
+    lineage_d10f-user \
+    lineage_d10f-userdebug \
+    lineage_d10f-eng
