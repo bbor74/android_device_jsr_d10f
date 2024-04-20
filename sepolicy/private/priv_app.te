@@ -1,2 +1,0 @@
-allow priv_app isolated_app_tmpfs:file write;
-
