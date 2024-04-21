@@ -18,8 +18,7 @@
 #ifndef _BDROID_BUILDCFG_H
 #define _BDROID_BUILDCFG_H
 
-#include <cutils/properties.h>
-#include <string.h>
+#pragma push_macro("PROPERTY_VALUE_MAX")
 
 #define BTM_DEF_LOCAL_NAME   "JSR D10F"
 
@@ -27,8 +26,5 @@
 #define MAX_ACL_CONNECTIONS   7
 #define MAX_L2CAP_CHANNELS    16
 #define BT_CLEAN_TURN_ON_DISABLED TRUE
-#undef PROPERTY_VALUE_MAX
-/* Defined if the kernel does not have support for CLOCK_BOOTTIME_ALARM 
-#define KERNEL_MISSING_CLOCK_BOOTTIME_ALARM TRUE */
-
+#pragma pop_macro("PROPERTY_VALUE_MAX")
 #endif
