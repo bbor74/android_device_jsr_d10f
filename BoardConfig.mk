@@ -134,7 +134,7 @@ TARGET_RECOVERY_DEVICE_MODULES := libinit_d10f
 # Kernel
 TARGET_KERNEL_SOURCE := kernel/jsr/msm8226
 TARGET_KERNEL_CONFIG := jsr_d10f_defconfig
-BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.bootdevice=msm_sdcc.1 androidboot.hardware=d10f zcache.enabled=1 androidboot.selinux=permissive androidboot.android_dt_dir=/dtrd/
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.bootdevice=msm_sdcc.1 androidboot.hardware=d10f zcache.enabled=1 androidboot.selinux=permissive
 BOARD_KERNEL_IMAGE_NAME := zImage
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 2048

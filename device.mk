@@ -224,18 +224,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/init.recovery.d10f.rc:root/init.recovery.d10f.rc \
     $(LOCAL_PATH)/rootdir/ueventd.d10f.rc:root/ueventd.d10f.rc
 
-#DTRD
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/dtrd/compatible:root/dtrd/compatible \
-    $(LOCAL_PATH)/dtrd/fstab/compatible:root/dtrd/fstab/compatible \
-    $(LOCAL_PATH)/dtrd/fstab/system/compatible:root/dtrd/fstab/system/compatible \
-    $(LOCAL_PATH)/dtrd/fstab/system/dev:root/dtrd/fstab/system/dev \
-    $(LOCAL_PATH)/dtrd/fstab/system/fsmgr_flags:root/dtrd/fstab/system/fsmgr_flags \
-    $(LOCAL_PATH)/dtrd/fstab/system/mnt_flags:root/dtrd/fstab/system/mnt_flags \
-    $(LOCAL_PATH)/dtrd/fstab/system/mnt_point:root/dtrd/fstab/system/mnt_point \
-    $(LOCAL_PATH)/dtrd/fstab/system/status:root/dtrd/fstab/system/status \
-    $(LOCAL_PATH)/dtrd/fstab/system/type:root/dtrd/fstab/system/type
-
 # Seccomp
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/seccomp/mediacodec.policy:system/vendor/etc/seccomp_policy/mediacodec.policy \
