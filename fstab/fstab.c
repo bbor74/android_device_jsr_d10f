@@ -290,7 +290,7 @@ static int generate_regular_fstab(int fd, int type, int sdcc_config)
     ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check,encryptable=footer");
     ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "ext4", "noatime,nosuid,nodev,barrier=1,noauto_da_alloc", "wait,check,formattable,encryptable=footer");
     ret += add_fstab_entry(fd, type, SDCC_1, "persist",  "/persist",  "ext4", "nosuid,nodev,barrier=1", "wait");
-    ret += add_fstab_entry(fd, type, SDCC_1, "modem",    "/firmware", "vfat", "ro,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337,context=u:object_r:firmware_file:s0", "wait");
+    ret += add_fstab_entry(fd, type, SDCC_1, "modem",    "/firmware", "vfat", "ro,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337", "wait");
     ret += add_fstab_entry(fd, type, SDCC_1, "boot",     "/boot",     "emmc", "defaults", "defaults");
     ret += add_fstab_entry(fd, type, SDCC_1, "recovery", "/recovery", "emmc", "defaults", "defaults");
     ret += add_fstab_entry(fd, type, SDCC_1, "misc", "/misc", "emmc", "defaults", "defaults");
@@ -309,7 +309,7 @@ static int generate_recovery_fstab(int fd, int type, int sdcc_config)
     ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check,encryptable=footer");
     ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "ext4", "noatime,nosuid,nodev,barrier=1,noauto_da_alloc", "wait,check,formattable,encryptable=footer");
     ret += add_fstab_entry(fd, type, SDCC_1, "persist",  "/persist",  "ext4", "nosuid,nodev,barrier=1", "wait");
-    ret += add_fstab_entry(fd, type, SDCC_1, "modem",    "/firmware", "vfat", "rw,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337,context=u:object_r:firmware_file:s0", "wait"); // rw here is requied to avoid issues with TWRP!
+    ret += add_fstab_entry(fd, type, SDCC_1, "modem",    "/firmware", "vfat", "rw,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337", "wait"); // rw here is requied to avoid issues with TWRP!
     ret += add_fstab_entry(fd, type, SDCC_1, "boot",     "/boot",     "emmc", "defaults", "defaults");
     ret += add_fstab_entry(fd, type, SDCC_1, "recovery", "/recovery", "emmc", "defaults", "defaults");
     ret += add_fstab_entry(fd, type, SDCC_1, "misc", "/misc", "emmc", "defaults", "defaults");
