@@ -1,3 +1,5 @@
 #============= isolated_app ==============
 allow isolated_app priv_app_tmpfs:file write;
 
+#============= isolated_app ==============
+allow isolated_app app_data_file:dir getattr;

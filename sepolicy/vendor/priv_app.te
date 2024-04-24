@@ -63,3 +63,7 @@ allow priv_app ctl_vendor_wigigsvc_prop:file { getattr open };
 allow priv_app device_logging_prop:file { getattr open };
 allow priv_app diag_mdlog_prop:file { getattr open };
 
+#============= priv_app ==============
+allow priv_app dolby_prop:file { getattr open };
+allow priv_app dumpstate_options_prop:file { getattr open };
+allow priv_app firstboot_prop:file { getattr open };
