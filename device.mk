@@ -115,8 +115,8 @@ PRODUCT_PACKAGES += \
     libebtc
 
 # fstab
-PRODUCT_PACKAGES += \
-    fstab
+# PRODUCT_PACKAGES += \
+#     fstab
 
 # FM
 PRODUCT_PACKAGES += \
