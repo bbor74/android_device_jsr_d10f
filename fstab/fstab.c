@@ -285,9 +285,9 @@ static int generate_regular_fstab(int fd, int type, int sdcc_config)
     (void)sdcc_config;
     dprintf(fd, FSTAB_HEADER);
  //   ret += add_fstab_entry(fd, type, SDCC_1, "system",   "/system",   "ext4", "ro,barrier=1", "wait");
- //   ret += add_fstab_entry(fd, type, SDCC_1, "cache",    "/cache",    "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check");
+    ret += add_fstab_entry(fd, type, SDCC_1, "cache",    "/cache",    "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check");
     ret += add_fstab_entry(fd, type, SDCC_1, "cache",    "/cache",    "ext4", "noatime,nosuid,nodev,barrier=1", "wait,check,formattable");
- //   ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check,encryptable=footer");
+    ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "f2fs", "rw,nosuid,nodev,noatime,nodiratime,inline_xattr", "wait,check,encryptable=footer");
     ret += add_fstab_entry(fd, type, SDCC_1, "userdata", "/data",     "ext4", "noatime,nosuid,nodev,barrier=1,noauto_da_alloc", "wait,check,formattable,encryptable=footer");
     ret += add_fstab_entry(fd, type, SDCC_1, "persist",  "/persist",  "ext4", "nosuid,nodev,barrier=1", "wait");
     ret += add_fstab_entry(fd, type, SDCC_1, "modem",    "/firmware", "vfat", "ro,shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337,context=u:object_r:firmware_file:s0", "wait");
