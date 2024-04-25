@@ -2,3 +2,5 @@
 /system/vendor/bin/bdaddr_jsr                     u:object_r:bdaddr_exec:s0
 /system/vendor/bin/init\.d10f\.bt\.sh              u:object_r:qti_init_shell_exec:s0
 
+# rootfs
+/tombstones                     u:object_r:rootfs:s0
