@@ -74,6 +74,9 @@ persist.logd.logpersistd=logcatd
 # ro.product.locale=ru-RU 
 persist.sys.timezone=Europe/Moscow
 
+# Media
+debug.stagefright.ccodec=0
+
 # Reduce background apps limit
 ro.vendor.qti.sys.fw.bg_apps_limit=15
 ro.vendor.qti.sys.fw.use_trim_settings=true
