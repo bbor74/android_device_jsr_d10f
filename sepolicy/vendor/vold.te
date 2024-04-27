@@ -3,3 +3,7 @@ allow vold block_device:blk_file getattr;
 allow vold cache_block_device:blk_file getattr;
 allow vold persist_block_device:blk_file getattr;
 allow vold system_block_device:blk_file getattr;
+
+#============= vold ==============
+allow vold hal_bootctl_hwservice:hwservice_manager find;
+

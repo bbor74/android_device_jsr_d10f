@@ -1,0 +1,15 @@
+#============= crash_dump ==============
+allow crash_dump boottime_prop:file { getattr open };
+allow crash_dump camera_prop:file { getattr open };
+allow crash_dump device_config_activity_manager_native_boot_prop:file { getattr open };
+allow crash_dump device_config_runtime_native_boot_prop:file { getattr open };
+allow crash_dump device_config_runtime_native_prop:file { getattr open };
+allow crash_dump firstboot_prop:file { getattr open };
+allow crash_dump hwservicemanager_prop:file { getattr open };
+allow crash_dump opengles_prop:file { getattr open };
+allow crash_dump runtime_event_log_tags_file:file { getattr open };
+allow crash_dump vendor_mpctl_prop:file { getattr open };
+
+#============= crash_dump ==============
+allow crash_dump bootloader_boot_reason_prop:file { getattr open };
+allow crash_dump system_boot_reason_prop:file { getattr open };

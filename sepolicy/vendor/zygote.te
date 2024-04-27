@@ -1,2 +1,5 @@
 #============= zygote ==============
 allow zygote proc_cmdline:file { getattr open read };
+
+#============= zygote ==============
+allow zygote device:file { open write };
