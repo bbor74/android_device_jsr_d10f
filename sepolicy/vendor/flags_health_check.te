@@ -30,3 +30,10 @@ allow flags_health_check ctl_adbd_prop:file { getattr open };
 allow flags_health_check ctl_bootanim_prop:file { getattr open };
 allow flags_health_check ctl_gsid_prop:file { getattr open };
 allow flags_health_check ctl_interface_restart_prop:file { getattr open };
+
+#============= flags_health_check ==============
+allow flags_health_check ctl_mdnsd_prop:file { getattr open };
+allow flags_health_check ctl_netmgrd_prop:file { getattr open };
+allow flags_health_check ctl_port-bridge_prop:file { getattr open };
+allow flags_health_check ctl_qmuxd_prop:file { getattr open };
+allow flags_health_check ctl_restart_prop:file { getattr open };
