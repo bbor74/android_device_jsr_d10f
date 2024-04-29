@@ -1,0 +1,28 @@
+From 82dbdd76ccbbf4eac82e5f6a71d90b0ff4db138b Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Mon, 29 Apr 2024 09:17:47 +0400
+Subject: [PATCH] Snap: Grant android.permission.CAMERA_OPEN_CLOSE_LISTENER
+
+W ServiceManager: Permission failure: android.permission.CAMERA_OPEN_CLOSE_LISTENER from uid=10268 pid=5455
+
+Change-Id: Ia72ba6b32024c1555d9c9d82d918fe6e6644e70b
+Signed-off-by: adiatul16 <adiatul16@gmail.com>
+---
+ AndroidManifest.xml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+index 253491176..3c3edefa5 100755
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -13,6 +13,7 @@
+     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+     <uses-permission android:name="android.permission.CAMERA" />
++    <uses-permission android:name="android.permission.CAMERA_OPEN_CLOSE_LISTENER" />
+     <uses-permission android:name="android.permission.NFC" />
+     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+-- 
+2.17.1
+
