@@ -1,0 +1,55 @@
+From 1a8e6faba3bcb9eff7088083a27aa66ed3b685ce Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Mon, 29 Apr 2024 15:08:48 +0400
+Subject: [PATCH] gnss: properly terminate nmea-messages if they aren't already
+
+Some legacy vendor blobs don't properly terminate the messages.
+This fix shouldn't have any effect if the messages are already terminated properly.
+
+Change-Id: Iccb5ea75ba31f65ae1c7b12ec678c0e0600778c4
+
+--------- switch to crash
+04-29 12:32:59.918300  5444  5444 F DEBUG   : Timestamp: 2024-04-29 12:32:59+0300
+04-29 12:32:59.918387  5444  5444 F DEBUG   : pid: 355, tid: 3271, name: Loc_hal_worker  >>> /vendor/bin/hw/android.hardware.gnss@1.0-service.legacy <<<
+04-29 12:32:59.918474  5444  5444 F DEBUG   : uid: 1021
+04-29 12:32:59.918511  5444  5444 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+04-29 12:32:59.918583  5444  5444 F DEBUG   : Abort message: 'Check failed: data[size] == '\\0' '
+04-29 12:32:59.918683  5444  5444 F DEBUG   :     r0  00000000  r1  00000cc7  r2  00000006  r3  b5dffde0
+04-29 12:32:59.918787  5444  5444 F DEBUG   :     r4  b5dffdf4  r5  b5dffdd8  r6  00000163  r7  0000016b
+04-29 12:32:59.918834  5444  5444 F DEBUG   :     r8  b5dffdf0  r9  b5dffde0  r10 b5dffe10  r11 b5dffe00
+04-29 12:32:59.918963  5444  5444 F DEBUG   :     ip  00000cc7  sp  b5dffdb0  lr  b642ac67  pc  b642ac7a
+04-29 12:32:59.946553  5444  5444 F DEBUG   :
+04-29 12:32:59.946553  5444  5444 F DEBUG   : backtrace:
+04-29 12:32:59.947765  5444  5444 F DEBUG   :       #00 pc 0005ec7a  /apex/com.android.runtime/lib/bionic/libc.so (abort+166) (BuildId: f149b0238d7ba60a50125b343a5a473e)
+04-29 12:32:59.948067  5444  5444 F DEBUG   :       #01 pc 00007e2f  /system/lib/libbase.so (android::base::DefaultAborter(char const*)+6) (BuildId: f04bf05bf36c2bc4cd4f70d00124dabd)
+04-29 12:32:59.948390  5444  5444 F DEBUG   :       #02 pc 0000857d  /system/lib/libbase.so (android::base::LogMessage::~LogMessage()+412) (BuildId: f04bf05bf36c2bc4cd4f70d00124dabd)
+04-29 12:32:59.948679  5444  5444 F DEBUG   :       #03 pc 00038009  /system/lib/libhidlbase.so (android::hardware::hidl_string::setToExternal(char const*, unsigned int)+132) (BuildId: 15b00e6ecdac6ade3cfe27d0ceb04ad7)
+04-29 12:32:59.948997  5444  5444 F DEBUG   :       #04 pc 0000e37d  /system/vendor/lib/hw/android.hardware.gnss@1.0-impl.legacy.so (android::hardware::gnss::V1_0::implementation::Gnss::nmeaCb(long long, char const*, int)+48) (BuildId: 985623b60f6c9c1b988e8054c96158ba)
+04-29 12:32:59.949174  5444  5444 F DEBUG   :       #05 pc 000127df  /system/vendor/lib/libloc_eng.so (loc_eng_nmea_send(char*, int, loc_eng_data_s*)+242) (BuildId: 985077618348b4b5482e31cd0993e836)
+04-29 12:32:59.949431  5444  5444 F DEBUG   :       #06 pc 00012a57  /system/vendor/lib/libloc_eng.so (loc_eng_nmea_generate_pos(loc_eng_data_s*, UlpLocation const&, GpsLocationExtended const&, unsigned char)+318) (BuildId: 985077618348b4b5482e31cd0993e836)
+04-29 12:32:59.949562  5444  5444 F DEBUG   :       #07 pc 0000937d  /system/vendor/lib/libloc_eng.so (LocEngReportPosition::proc() const+176) (BuildId: 985077618348b4b5482e31cd0993e836)
+04-29 12:32:59.949690  5444  5444 F DEBUG   :       #08 pc 000040a9  /system/vendor/lib/libloc_core.so (loc_core::MsgTask::loopMain(void*)+76) (BuildId: cab4d9b11e296c2f46136a11a168f9e7)
+04-29 12:32:59.949798  5444  5444 F DEBUG   :       #09 pc 0000d019  /system/vendor/lib/hw/android.hardware.gnss@1.0-impl.legacy.so (threadFunc(void*)+6) (BuildId: 985623b60f6c9c1b988e8054c96158ba)
+04-29 12:32:59.949910  5444  5444 F DEBUG   :       #10 pc 000a6c67  /apex/com.android.runtime/lib/bionic/libc.so (__pthread_start(void*)+20) (BuildId: f149b0238d7ba60a50125b343a5a473e)
+04-29 12:32:59.950009  5444  5444 F DEBUG   :       #11 pc 00060161  /apex/com.android.runtime/lib/bionic/libc.so (__start_thread+30) (BuildId: f149b0238d7ba60a50125b343a5a473e)
+---
+ gnss/1.0-legacy/Gnss.cpp | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/gnss/1.0-legacy/Gnss.cpp b/gnss/1.0-legacy/Gnss.cpp
+index 5bc6d80..90d2d28 100644
+--- a/gnss/1.0-legacy/Gnss.cpp
++++ b/gnss/1.0-legacy/Gnss.cpp
+@@ -272,8 +272,7 @@ void Gnss::nmeaCb(GpsUtcTime timestamp, const char* nmea, int length) {
+         return;
+     }
+ 
+-    android::hardware::hidl_string nmeaString;
+-    nmeaString.setToExternal(nmea, length);
++    android::hardware::hidl_string nmeaString(nmea, length);
+     auto ret = sGnssCbIface->gnssNmeaCb(timestamp, nmeaString);
+     if (!ret.isOk()) {
+         ALOGE("%s: Unable to invoke callback", __func__);
+-- 
+2.17.1
+
