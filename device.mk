@@ -231,6 +231,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     sensors.msm8226
 
+# Shipping API
+PRODUCT_SHIPPING_API_LEVEL := 19
+
 # Storage
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.sys.sdcardfs=true
