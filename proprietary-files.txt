@@ -74,14 +74,14 @@ vendor/lib/libjpegehw.so
 vendor/lib/libmmcamera_hdr_gb_lib.so
 vendor/lib/libmmcamera_tintless_algo.so
 vendor/lib/libmmcamera_tintless_bg_pca_algo.so
-vendor/lib/libmmqjpeg_codec.so
+vendor/lib/libmmqjpeg_codec.so|8f245bb87b7f7986c5f34dc31f4b48ca9edc5348
 vendor/lib/libqomx_jpegdec.so
 vendor/lib/libqomx_jpegenc.so
 vendor/lib/libstlport.so
 
 # Camera (moto shamu)
 vendor/lib/libmmcamera_faceproc.so|ac49bcc1aa20ff9f2c118f6c233b658f93543202
-vendor/lib/libmmjpeg.so
+vendor/lib/libmmjpeg.so|44e479b511fe648de3aa792ca822b5d7dc2fc34a
 
 # Camera firmware
 etc/firmware/cpp_firmware_v1_1_1.fw:vendor/firmware/cpp_firmware_v1_1_1.fw
