@@ -37,3 +37,11 @@ allow flags_health_check ctl_netmgrd_prop:file { getattr open };
 allow flags_health_check ctl_port-bridge_prop:file { getattr open };
 allow flags_health_check ctl_qmuxd_prop:file { getattr open };
 allow flags_health_check ctl_restart_prop:file { getattr open };
+
+#============= flags_health_check ==============
+allow flags_health_check ctl_rildaemon_prop:file { getattr open };
+allow flags_health_check ctl_sigstop_prop:file { getattr open };
+allow flags_health_check ctl_start_prop:file { getattr open };
+allow flags_health_check ctl_stop_prop:file { getattr open };
+allow flags_health_check ctl_vendor_imsrcsservice_prop:file { getattr open };
+
