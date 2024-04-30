@@ -84,6 +84,10 @@ PRODUCT_PACKAGES += \
     libxml2 \
     Snap
 
+# Camera configurations
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/external_camera_config.xml:system/vendor/etc/external_camera_config.xml
+
 # Connectivity
 PRODUCT_PACKAGES += \
     libcnefeatureconfig
