@@ -9,6 +9,8 @@
 
 /dev/tspdrv               0660   system     system
 
+/dev/alarm                0664   system     radio
+
 # the DIAG device node is not world writable/readable.
 /dev/diag                 0666   system     oem_2950
 

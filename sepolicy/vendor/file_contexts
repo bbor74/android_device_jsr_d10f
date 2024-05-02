@@ -4,3 +4,5 @@
 
 # rootfs
 /tombstones                     u:object_r:rootfs:s0
+
+/dev/alarm		u:object_r:alarm_device:s0
