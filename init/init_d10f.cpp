@@ -70,6 +70,6 @@ void vendor_load_properties()
     property_override_dual("ro.product.device", "ro.vendor.product.device", "d10f");
     property_override_dual("ro.build.product","ro.vendor.build.product", "d10f");
 
-    property_override_dual("ro.build.description","ro.vendor.build.description", "lineage_d10f-userdebug 8.1.0 OPM7.181205.001 bad4f6dcc0 test-keys");
-    property_override_dual("ro.build.fingerprint", "ro.vendor.build.fingerprint", "JSR/lineage_d10f/d10f:8.1.0/OPM7.181205.001/bad4f6dcc0:userdebug/test-keys");
+ //   property_override_dual("ro.build.description","ro.vendor.build.description", "lineage_d10f-userdebug 8.1.0 OPM7.181205.001 bad4f6dcc0 test-keys");
+//    property_override_dual("ro.build.fingerprint", "ro.vendor.build.fingerprint", "JSR/lineage_d10f/d10f:8.1.0/OPM7.181205.001/bad4f6dcc0:userdebug/test-keys");
 }

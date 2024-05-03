@@ -32,5 +32,9 @@ PRODUCT_MANUFACTURER := JSR Tech
 
 PRODUCT_GMS_CLIENTID_BASE := android-google
 
+# Build fingerprint
+BUILD_FINGERPRINT="JSR/lineage_d10f/d10f:10/QQ3A.200805.001/161453:userdebug/test-keys"
+
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    PRODUCT_NAME=d10f
+    PRIVATE_BUILD_DESC="lineage_d10f-userdebug 10 QQ3A.200805.001 161453 test-keys" \
+    PRODUCT_NAME="d10f"
