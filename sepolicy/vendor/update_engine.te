@@ -9,3 +9,7 @@ allow update_engine vold_prop:property_service set;
 
 #============= update_engine ==============
 allow update_engine rootfs:file { entrypoint write };
+
+#============= update_engine ==============
+allow update_engine init_exec:lnk_file read;
+allow update_engine labeledfs:filesystem remount;
