@@ -13,3 +13,6 @@ allow update_engine rootfs:file { entrypoint write };
 #============= update_engine ==============
 allow update_engine init_exec:lnk_file read;
 allow update_engine labeledfs:filesystem remount;
+
+#============= update_engine ==============
+allow update_engine persist_file:file { getattr open read write };

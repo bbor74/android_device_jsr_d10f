@@ -15,3 +15,5 @@ allow init sysfs_msm_perf:file { open write };
 allow init sysfs_msm_power:file { open write };
 allow init sysfs_wlan_fwpath:file setattr;
 
+#============= init ==============
+allow init persist_block_device:lnk_file relabelto;
