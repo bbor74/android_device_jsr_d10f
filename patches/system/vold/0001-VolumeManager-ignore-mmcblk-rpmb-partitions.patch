@@ -1,0 +1,30 @@
+From fcfe0c907073356024a8399ef8a53a8378743696 Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Wed, 8 May 2024 09:57:11 +0400
+Subject: [PATCH] VolumeManager: ignore mmcblk*rpmb partitions
+
+Change-Id: I8cd5222bc55fcc01ea824bab7f14954f431ecaef
+---
+ VolumeManager.cpp | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/VolumeManager.cpp b/VolumeManager.cpp
+index 7573877..004c090 100644
+--- a/VolumeManager.cpp
++++ b/VolumeManager.cpp
+@@ -205,6 +205,12 @@ void VolumeManager::handleBlockEvent(NetlinkEvent* evt) {
+ 
+     if (devType != "disk") return;
+ 
++    std::string devName(evt->findParam("DEVNAME"));
++    if (devName == "mmcblk0rpmb" || devName == "mmcblk1rpmb") {
++        LOG(DEBUG) << "Ignoring MSM raw partition " << devName;
++        return;
++    }
++
+     int major = std::stoi(evt->findParam("MAJOR"));
+     int minor = std::stoi(evt->findParam("MINOR"));
+     dev_t device = makedev(major, minor);
+-- 
+2.17.1
+
