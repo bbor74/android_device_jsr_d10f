@@ -6,3 +6,6 @@
 /tombstones                     u:object_r:rootfs:s0
 
 /dev/alarm		u:object_r:alarm_device:s0
+
+# fstab
+/sbin/fstab                     u:object_r:fstab_exec:s0
