@@ -51,15 +51,16 @@ on fs
     # wait for vold
     wait /persist/fstab.wait 2
 
-    exec - system system -- /sbin/fstab /persist/fstab.d10f regular generate
+    exec - system system -- /system/bin/fstab /persist/fstab.d10f regular generate
     mount_all fstab.d10f --early
 
 on late-fs
     mkdir /data/property 0700 root root
     mkdir /data/system 0775 system system
 
-    exec - system system -- /sbin/fstab /persist/fstab.d10f regular update
+    exec - system system -- /system/bin/fstab /persist/fstab.d10f regular update
     mount_all fstab.d10f --late
+    chown system system /persist/fstab.d10f
     copy /persist/fstab.d10f /data/fstab.d10f
 
     chown system system /data/system/storages.configuration

@@ -12,6 +12,6 @@ allow fstab persist_file:file { getattr open read write };
 allow fstab property_socket:sock_file write;
 allow fstab self:capability dac_override;
 allow fstab system_data_file:dir { add_name remove_name write };
-allow fstab system_data_file:file { create open read rename write };
+allow fstab system_data_file:file { getattr create open read rename write };
 allow fstab vold_prop:property_service set;
 

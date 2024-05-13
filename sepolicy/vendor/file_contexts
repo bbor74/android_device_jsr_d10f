@@ -8,4 +8,4 @@
 /dev/alarm		u:object_r:alarm_device:s0
 
 # fstab
-/sbin/fstab                     u:object_r:fstab_exec:s0
+/system/bin/fstab                     u:object_r:fstab_exec:s0

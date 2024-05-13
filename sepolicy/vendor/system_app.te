@@ -5,3 +5,11 @@ allow system_app system_data_file:file { create rename open read write unlink };
 #============= system_app ==============
 allow system_app proc_pagetypeinfo:file { getattr open read };
 
+#============= system_app ==============
+allow system_app fstab_exec:file { execute execute_no_trans open read };
+allow system_app init_exec:lnk_file read;
+allow system_app kmsg_device:chr_file getattr;
+allow system_app labeledfs:filesystem remount;
+allow system_app persist_file:file { getattr open read write };
+allow system_app vold_prop:property_service set;
+

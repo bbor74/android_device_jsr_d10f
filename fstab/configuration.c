@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "log.h"
+//#include "log.h"
 #include "configuration.h"
 #include <dirent.h>
 #include <errno.h>
@@ -11,6 +11,7 @@
 #include <sys/statvfs.h>
 #include <sys/mman.h>
 #include <cutils/properties.h>
+//#include <cutils/log.h>
 #include <string.h>
 
 #include <sys/stat.h>
@@ -24,7 +25,7 @@ void set_storages_config(const char *value)
     snprintf(tempPath, sizeof(tempPath), "%s/.temp.XXXXXX", STORAGE_CONFIG_DIR);
     fd = mkstemp(tempPath);
     if (fd < 0) {
-        ERROR("Unable to write storages config to temp file %s: %s\n", tempPath, strerror(errno));
+        ALOGE("Unable to write storages config to temp file %s: %s\n", tempPath, strerror(errno));
         return;
     }
     write(fd, value, strlen(value));
@@ -33,7 +34,7 @@ void set_storages_config(const char *value)
 
     snprintf(path, sizeof(path), "%s/%s", STORAGE_CONFIG_DIR, STORAGE_CONFIG_FILE);
     if (rename(tempPath, path)) {
-        ERROR("Unable to rename storages config file %s to %s: %s\n", tempPath, path, strerror(errno));
+        ALOGE("Unable to rename storages config file %s to %s: %s\n", tempPath, path, strerror(errno));
         unlink(tempPath);
     }
 }
@@ -51,7 +52,7 @@ int get_storages_config(char *value)
       //  INFO("%s: try open storages config file: %s \n", __func__, path);
         int fd = open(path, O_RDONLY);
         if (fd == -1) {
-            ERROR("Unable to open storages config file \"%s\": %s\n", path, strerror(errno));
+            ALOGE("Unable to open storages config file \"%s\": %s\n", path, strerror(errno));
             value[0] = 0;
             return 0;
         }
@@ -60,9 +61,9 @@ int get_storages_config(char *value)
         int length = read(fd, value, sizeof(value) - 1);
         if (length >= 0) {
             value[length] = 0;
-            INFO("%s: storages config: %s, %s)\n", __func__, path, value);
+            ALOGI("%s: storages config: %s, %s)\n", __func__, path, value);
         } else {
-            ERROR("Unable to read storages config file %s: %s\n", path, strerror(errno));
+            ALOGE("Unable to read storages config file %s: %s\n", path, strerror(errno));
             value[0] = 0;
             length = 0;
         }
@@ -73,7 +74,7 @@ int get_storages_config(char *value)
 char *mmap_xml_configuration(off_t *size) {
 	FILE *xml_config_filestream = fopen(STORAGE_XML_PATH, "r+");
 	if (xml_config_filestream == NULL) {
-		ERROR("Unable to mmap storage configuration XML \"%s\" - storages may be inconsistent (errno: %d (%s))!\n",
+		ALOGE("Unable to mmap storage configuration XML \"%s\" - storages may be inconsistent (errno: %d (%s))!\n",
 		      STORAGE_XML_PATH, errno, strerror(errno));
 		return NULL;
 	}
@@ -84,7 +85,7 @@ char *mmap_xml_configuration(off_t *size) {
 
 	char *config = (char *) mmap(NULL, *size, PROT_READ|PROT_WRITE, MAP_PRIVATE, fileno(xml_config_filestream), 0);
 	if (config == MAP_FAILED) {
-		ERROR("Unable to mmap storage configuration XML \"%s\" - storages may be inconsistent (errno: %d (%s))!\n", STORAGE_XML_PATH, errno, strerror(errno));
+		ALOGE("Unable to mmap storage configuration XML \"%s\" - storages may be inconsistent (errno: %d (%s))!\n", STORAGE_XML_PATH, errno, strerror(errno));
 		return NULL;
 	}
 	fclose(xml_config_filestream); // mmaped data still available
@@ -95,7 +96,7 @@ static void print_xml(const char *xml_name)
 {
   FILE *mf = fopen(xml_name, "r");
   if (!mf) {
-    ERROR("%d: mf not opened: %s", __LINE__,strerror(errno));
+    ALOGE("%d: mf not opened: %s", __LINE__,strerror(errno));
     return;
   }
   while (1)
@@ -106,16 +107,16 @@ static void print_xml(const char *xml_name)
       {
          if ( feof (mf) != 0)
          {
-            INFO("INFO: End of xml\n");
+            ALOGI("INFO: End of xml\n");
             break;
          }
          else
          {
-            ERROR("ERROR: Error reading xml: %s\n", strerror(errno));
+            ALOGE("ERROR: Error reading xml: %s\n", strerror(errno));
             break;
          }
       }
-      INFO("%s\n", str);
+      ALOGI("%s\n", str);
    }
    fclose(mf);
 }
@@ -125,7 +126,7 @@ void update_xml_configuration(char *xml_config, off_t config_size, int isDatamed
 	version = strstr(xml_config, STORAGE_XML_HEADER);
 	volumes = strstr(xml_config, STORAGE_XML_VOLUMES_TOKEN);
 	if (version == NULL || volumes == NULL) {
-		WARNING("Storage config xml \"%s\" looks werid - erasing it\n", STORAGE_XML_PATH);
+		ALOGW("Storage config xml \"%s\" looks werid - erasing it\n", STORAGE_XML_PATH);
 		unlink(STORAGE_XML_PATH);
 		return;
 	}
@@ -137,7 +138,7 @@ void update_xml_configuration(char *xml_config, off_t config_size, int isDatamed
 	buffer_size=config_size + strlen(STORAGE_XML_PRIMARY_PHYSICAL_UUID_TOKEN); // needed if migrating from datamedia to classic
 	buffer = data = (char *) calloc(1, buffer_size);
 	if (buffer == NULL) {
-		WARNING("Out of memory while allocating %d bytes\n", buffer_size);
+		ALOGW("Out of memory while allocating %d bytes\n", buffer_size);
 		return;
 	}
 
@@ -153,12 +154,12 @@ void update_xml_configuration(char *xml_config, off_t config_size, int isDatamed
 			return; // nothing to do here!
 		}
 
-		WARNING("Storage config xml \"%s\" needs updating (looks like classic)!\n", STORAGE_XML_PATH);
+		ALOGW("Storage config xml \"%s\" needs updating (looks like classic)!\n", STORAGE_XML_PATH);
 		fields = sscanf(volumes,
 		                "<volumes version=\"%d\" primaryStorageUuid=\"%64[^\"]\" forceAdoptable=\"%64[^\"]\">\n%n",
 		                &iversion, primaryStorageUuid, forceAdoptable, &scanned_size);
 		if (fields != 3) {
-			WARNING("Storage config xml \"%s\" is werid - got %d fields (want 3)!\n", STORAGE_XML_PATH, fields);
+			ALOGW("Storage config xml \"%s\" is werid - got %d fields (want 3)!\n", STORAGE_XML_PATH, fields);
 			free (buffer);
 			return;
 		}
@@ -174,12 +175,12 @@ void update_xml_configuration(char *xml_config, off_t config_size, int isDatamed
 			return; // nothing to do here!
 		}
 
-		WARNING("Storage config xml \"%s\" needs updating (looks like datamedia)!\n", STORAGE_XML_PATH);
+		ALOGW("Storage config xml \"%s\" needs updating (looks like datamedia)!\n", STORAGE_XML_PATH);
 		fields = sscanf(volumes,
 		                "<volumes version=\"%d\" forceAdoptable=\"%64[^\"]\">\n%n",
 		                &iversion, forceAdoptable, &scanned_size);
 		if (fields != 2) {
-			WARNING("Storage config xml \"%s\" is werid - got %d fields (want 2)!\n", STORAGE_XML_PATH, fields);
+			ALOGW("Storage config xml \"%s\" is werid - got %d fields (want 2)!\n", STORAGE_XML_PATH, fields);
 			free (buffer);
 			return; // nothing to do here!
 		}
@@ -192,11 +193,11 @@ void update_xml_configuration(char *xml_config, off_t config_size, int isDatamed
 	rest_of_config=xml_config + strlen(STORAGE_XML_HEADER) + scanned_size;
 	strncpy(data, rest_of_config, buffer_free_bytes);
 //	INFO("Going to write '%s' into config %s\n", buffer, STORAGE_XML_PATH); // 1280-byte message too long for printk
-	INFO("Updating %s\n", STORAGE_XML_PATH);
+	ALOGI("Updating %s\n", STORAGE_XML_PATH);
 	munmap(xml_config, config_size);
 	FILE *storage_config = fopen(STORAGE_XML_PATH, "w");
 	if (storage_config == NULL) {
-		ERROR("Unable to open %s for writing (errno=%d: %s)\n", STORAGE_XML_PATH, errno, strerror(errno));
+		ALOGE("Unable to open %s for writing (errno=%d: %s)\n", STORAGE_XML_PATH, errno, strerror(errno));
 		free(buffer);
 		return;
 	}
@@ -221,28 +222,28 @@ void set_storage_props(int usbmsc_present)
 //	rc = property_get(STORAGE_CONFIG_PROP, value, "");
 	rc = get_storages_config(value);
 	if (rc && !strcmp(value, STORAGES_CONFIGURATION_DATAMEDIA)) { // if datamedia
-		INFO("Got datamedia storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
+		ALOGI("Got datamedia storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
 		isDatamedia = TRUE;
 	} else if (rc && !strcmp(value, STORAGES_CONFIGURATION_INVERTED)) { // if swapped
-		INFO("Got inverted storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
+		ALOGI("Got inverted storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
 		property_set("ro.vold.primary_physical", "1");
 	} else { 
 		if (rc == 0) {  // If the storages configuration property is unspecified
-			WARNING("Storages configuration is undefined!\n");
+			ALOGW("Storages configuration is undefined!\n");
 				if (usbmsc_present) {
 					strncpy(value, STORAGES_CONFIGURATION_CLASSIC, PROP_VALUE_MAX);
 					property_set("ro.vold.primary_physical", "1");
-					WARNING("Trying classic storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
+					ALOGW("Trying classic storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
 				} else {
 					strncpy(value, STORAGES_CONFIGURATION_DATAMEDIA, PROP_VALUE_MAX);
 					isDatamedia = TRUE;
-					WARNING("Trying datamedia storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
+					ALOGW("Trying datamedia storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
 				}
 			//property_set(STORAGE_CONFIG_PROP, value);
 			set_storages_config(value);
 
 		} else {// if classic
-			INFO("Got classic storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
+			ALOGI("Got classic storage configuration (" STORAGE_CONFIG_FILE " == %s)\n", value);
 			property_set("ro.vold.primary_physical", "1");
 		}
 	}
@@ -254,5 +255,5 @@ void set_storage_props(int usbmsc_present)
 		munmap(xml_config, size);
 	}
 
-	INFO("Storages configuration applied\n");
+	ALOGI("Storages configuration applied\n");
 }

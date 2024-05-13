@@ -25,7 +25,7 @@
 #include <sys/statvfs.h>
 
 #define LOG_TAG "fstab"
-#include <cutils/log.h>
+//#include <cutils/log.h>
 
 #include "fstab.h"
 #include "configuration.h"
@@ -37,7 +37,7 @@ int usbmsc_present = FALSE;
 static void load_storage_config_prop() {
     DIR* dir = opendir(PERSISTENT_PROPERTY_DIR);
     if (!dir) {
-        ERROR("Unable to open persistent property directory \"%s\": %s\n",
+        ALOGE("Unable to open persistent property directory \"%s\": %s\n",
               PERSISTENT_PROPERTY_DIR, strerror(errno));
         return;
     }
@@ -54,14 +54,14 @@ static void load_storage_config_prop() {
         // Open the file and read the property value.
         int fd = openat(dirfd(dir), entry->d_name, O_RDONLY | O_NOFOLLOW);
         if (fd == -1) {
-            ERROR("Unable to open persistent property file \"%s\": %s\n",
+            ALOGE("Unable to open persistent property file \"%s\": %s\n",
                   entry->d_name, strerror(errno));
             continue;
         }
 
         struct stat sb;
         if (fstat(fd, &sb) == -1) {
-            ERROR("fstat on property file \"%s\" failed: %s\n", entry->d_name, strerror(errno));
+            ALOGE("fstat on property file \"%s\" failed: %s\n", entry->d_name, strerror(errno));
             close(fd);
             continue;
         }
@@ -70,7 +70,7 @@ static void load_storage_config_prop() {
         // not be a hard link to any other file.
         if (((sb.st_mode & (S_IRWXG | S_IRWXO)) != 0) || (sb.st_uid != 0) || (sb.st_gid != 0) ||
                 (sb.st_nlink != 1)) {
-            WARNING("skipping insecure property file %s (uid=%u gid=%u nlink=%u mode=%o)\n",
+            ALOGW("skipping insecure property file %s (uid=%u gid=%u nlink=%u mode=%o)\n",
                   entry->d_name, (unsigned int)sb.st_uid, (unsigned int)sb.st_gid,
                   (unsigned int)sb.st_nlink, sb.st_mode);
             close(fd);
@@ -81,10 +81,10 @@ static void load_storage_config_prop() {
         int length = read(fd, value, sizeof(value) - 1);
         if (length >= 0) {
             value[length] = 0;
-            INFO("%s: property_set(%s, %s)\n", __func__, entry->d_name, value);
+            ALOGI("%s: property_set(%s, %s)\n", __func__, entry->d_name, value);
             property_set(entry->d_name, value);
         } else {
-            ERROR("Unable to read persistent property file %s: %s\n",
+            ALOGE("Unable to read persistent property file %s: %s\n",
                   entry->d_name, strerror(errno));
         }
         close(fd);
@@ -100,7 +100,7 @@ static int check_for_partition(int sdcc, const char *part_name)
         snprintf(full_part_name, PROP_VALUE_MAX, "/dev/block/%s", part_name);
     else
         snprintf(full_part_name, PROP_VALUE_MAX, "/dev/block/platform/msm_sdcc.%d/by-name/%s", sdcc, part_name);
-    INFO("%s: INFO: Checking for partition '%s'\n", __func__, full_part_name);
+    ALOGI("%s: INFO: Checking for partition '%s'\n", __func__, full_part_name);
 
     if (access(full_part_name, F_OK) == 0)
         return TRUE;
@@ -161,19 +161,19 @@ static char *lookup_for_partition(const char *part_name, int search_order) {
             break;
 
         default:
-            ERROR("%s: ERROR: invalid search order %d passed!", __func__, search_order);
+            ALOGE("%s: ERROR: invalid search order %d passed!", __func__, search_order);
             return NULL;
             break;
     }
 
     if (!partition_is_found) {
-        WARNING("%s: WARNING: partition for '%s' NOT FOUND!", __func__, part_name);
+        ALOGW("%s: WARNING: partition for '%s' NOT FOUND!", __func__, part_name);
         return NULL;
     }
 
     full_part_name = (char *)calloc(PROP_VALUE_MAX, sizeof(char));
     if (!full_part_name) {
-        ERROR("%s: ERROR: calloc() failed\n", __func__);
+        ALOGE("%s: ERROR: calloc() failed\n", __func__);
         return NULL;
     }
 
@@ -189,7 +189,7 @@ static char *lookup_for_partition(const char *part_name, int search_order) {
             break;
     }
 
-    INFO("%s: INFO: using partition '%s'", __func__, full_part_name);
+    ALOGI("%s: INFO: using partition '%s'", __func__, full_part_name);
     return full_part_name;
 }
 
@@ -202,7 +202,7 @@ static int get_partition_number(const char *part_name)
     char partition[PROP_VALUE_MAX] = {0};
     int sdcc = -1;
     if (sscanf(part_name, "/devices/msm_sdcc.%d/mmc_host*", &sdcc) == 1) {
-        INFO("%s: recursively detecting partition usbmsc on sdcc%d\n", __func__, sdcc);
+        ALOGI("%s: recursively detecting partition usbmsc on sdcc%d\n", __func__, sdcc);
         snprintf(raw_blockdev_name, PROP_VALUE_MAX, "/dev/block/platform/msm_sdcc.%d/by-name/usbmsc", sdcc);
         return get_partition_number(raw_blockdev_name);
     }
@@ -211,30 +211,30 @@ static int get_partition_number(const char *part_name)
       char *full_part_name = lookup_for_partition(partition, sdcc);
       if (full_part_name){
         if (readlink(full_part_name, raw_blockdev_name, PROP_VALUE_MAX) == -1) {
-          ERROR("%s: readlink() failed for %s (%s)\n", __func__, full_part_name, strerror(errno));
+          ALOGE("%s: readlink() failed for %s (%s)\n", __func__, full_part_name, strerror(errno));
           return -2;
         }
       } else {
-        WARNING("%s: lookup_for_partition() returned NULL for %s on sdcc %d\n", __func__, partition, sdcc);
+        ALOGW("%s: lookup_for_partition() returned NULL for %s on sdcc %d\n", __func__, partition, sdcc);
         return -3;
       }
 
-      INFO("%s: sdcc=%d (%s): %s\n", __func__, sdcc, full_part_name, raw_blockdev_name);
+      ALOGI("%s: sdcc=%d (%s): %s\n", __func__, sdcc, full_part_name, raw_blockdev_name);
 
       if (strlen(raw_blockdev_name)) {
         if (sscanf(raw_blockdev_name, "/dev/block/mmcblk%dp%d", &sdcc, &part_number) != 2) {
-          ERROR("%s: sscanf() failed: %d(%s)\n", __func__, errno, strerror(errno));
+          ALOGE("%s: sscanf() failed: %d(%s)\n", __func__, errno, strerror(errno));
           return -1;
         }
         sdcc += 1;
-        INFO("%s: part_number for %s on sdcc%d is %d\n", __func__, full_part_name, sdcc, part_number);
+        ALOGI("%s: part_number for %s on sdcc%d is %d\n", __func__, full_part_name, sdcc, part_number);
       }
 
       free(full_part_name);
       return part_number;
     }
     
-    WARNING("%s: Should not reach here!\n", __func__);
+    ALOGW("%s: Should not reach here!\n", __func__);
     return -4;
 }
 
@@ -254,7 +254,7 @@ static int add_fstab_entry(
     char *full_part_name = lookup_for_partition(part_name, search_order);
 
     if (!full_part_name) {
-        ERROR("%s: ERROR: partition '%s' NOT FOUND!", __func__, part_name);
+        ALOGE("%s: ERROR: partition '%s' NOT FOUND!", __func__, part_name);
         return -1;
     }
 
@@ -271,7 +271,7 @@ static int add_fstab_entry(
             ret = dprintf(fd, "%s %s %s %s %s\n", mnt_point, type, full_part_name, mnt_flags, fs_mgr_flags_fixed);
             break;
         default:
-            ERROR("%s: ERROR: invalid fstab type %d!", __func__, fstab_type);
+            ALOGE("%s: ERROR: invalid fstab type %d!", __func__, fstab_type);
             ret = -1;
             break;
     }
@@ -335,24 +335,24 @@ static int generate_twrp_fstab(int fd, int type, int sdcc_config)
     ret += add_fstab_entry(fd, type, SDCC_1, "fsc",      "/fsc",      "emmc", "flags=backup=1;subpartitionof=/efs1", "");
     ret += add_fstab_entry(fd, type, SDCC_1, "sdi",      "/sdi",      "emmc", "flags=backup=1;display=\"SDI\"", "");
     ret += add_fstab_entry(fd, type, SDCC_1, "misc",     "/misc",     "emmc", "", "");
-    INFO("%s: sdcc_config = %d\n", __func__, sdcc_config);
+    ALOGI("%s: sdcc_config = %d\n", __func__, sdcc_config);
     switch (sdcc_config) {
         case REGULAR:
-            INFO("%s: sdcc_config = regular, adding mmcblk0\n", __func__);
+            ALOGI("%s: sdcc_config = regular, adding mmcblk0\n", __func__);
             ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk0",     "/full", "emmc", "flags=backup=1;display=\"eMMC\"", "");
             ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk0rpmb", "/rpmb", "emmc", "flags=backup=1;subpartitionof=/full", "");
             break;
         case INVERTED:
-            INFO("%s: sdcc_config = inverted, adding mmcblk1\n", __func__);
+            ALOGI("%s: sdcc_config = inverted, adding mmcblk1\n", __func__);
             ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk1",     "/full", "emmc", "flags=backup=1;display=\"eMMC\"", "");
             ret += add_fstab_entry(fd, type, RAWDEV, "mmcblk1rpmb", "/rpmb", "emmc", "flags=backup=1;subpartitionof=/full", "");
             break;
         case ISOLATED:
-            INFO("%s: sdcc_config = isolated, not ading eMMC backup partition record\n", __func__);
+            ALOGI("%s: sdcc_config = isolated, not ading eMMC backup partition record\n", __func__);
             break;
 
         default:
-            INFO("%s: sdcc_config = default!!\n", __func__);
+            ALOGI("%s: sdcc_config = default!!\n", __func__);
             break;
     }
     return (ret < 0 ? 1 : 0);
@@ -362,17 +362,17 @@ static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_c
 {
     int ret = 0;
     (void)sdcc_config;
-    INFO("%s: storage_config=%d, sdcc_config=%d\n", __func__, storage_config, sdcc_config);
+    ALOGI("%s: storage_config=%d, sdcc_config=%d\n", __func__, storage_config, sdcc_config);
     switch (storage_config) {
         case STORAGE_CONFIGURATION_CLASSIC:
             switch (sdcc_config) {
                 case REGULAR:
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-			usbmsc_present = TRUE;INFO("usbmsc_present: CLASSIC: REGULAR: SDCC_1 \n");
+			usbmsc_present = TRUE;ALOGI("usbmsc_present: CLASSIC: REGULAR: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
 					}
                     if (check_for_partition(SDCC_2, "usbmsc")) {
-						//usbmsc_present = TRUE;INFO("usbmsc_present: CLASSIC: REGULAR: SDCC_2 \n");
+						//usbmsc_present = TRUE;ALOGI("usbmsc_present: CLASSIC: REGULAR: SDCC_2 \n");
                         ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard1:%d,encryptable=userdata");
 					}
                     else
@@ -380,17 +380,17 @@ static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_c
                    break;
                 case INVERTED:
                     if (check_for_partition(SDCC_2, "usbmsc")) {
-						usbmsc_present = TRUE;INFO("usbmsc_present: CLASSIC: INVERTED: SDCC_2 \n");
+						usbmsc_present = TRUE;ALOGI("usbmsc_present: CLASSIC: INVERTED: SDCC_2 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
                     }
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-						//usbmsc_present = TRUE;INFO("usbmsc_present: CLASSIC: INVERTED: SDCC_1 \n");
+						//usbmsc_present = TRUE;ALOGI("usbmsc_present: CLASSIC: INVERTED: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard1:%d,nonremovable,encryptable=userdata");
                     }
                     break;
                 case ISOLATED:
 		    if (check_for_partition(SDCC_1, "usbmsc")) {
-			usbmsc_present = TRUE;INFO("usbmsc_present: CLASSIC: ISOLATED: SDCC_1 \n");
+			usbmsc_present = TRUE;ALOGI("usbmsc_present: CLASSIC: ISOLATED: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
                     }
                     break;
@@ -402,29 +402,29 @@ static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_c
             switch (sdcc_config) {
                 case REGULAR:
                     if (check_for_partition(SDCC_2, "usbmsc")) {
-                   //     usbmsc_present = TRUE;INFO("usbmsc_present: INVERTED: REGULAR: SDCC_2 \n");
+                   //     usbmsc_present = TRUE;ALOGI("usbmsc_present: INVERTED: REGULAR: SDCC_2 \n");
                         ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard0:%d,noemulatedsd");
                     }
                     else
                         ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard0:auto,noemulatedsd");
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-                    usbmsc_present = TRUE;INFO("usbmsc_present: INVERTED: REGULAR: SDCC_1 \n");
+                    usbmsc_present = TRUE;ALOGI("usbmsc_present: INVERTED: REGULAR: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard1:%d,nonremovable,encryptable=userdata");
                    }
                    break;
                 case INVERTED:
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-                    //usbmsc_present = TRUE;INFO("usbmsc_present: INVERTED: INVERTED: SDCC_1 \n");
+                    //usbmsc_present = TRUE;ALOGI("usbmsc_present: INVERTED: INVERTED: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
                     }
                     if (check_for_partition(SDCC_2, "usbmsc")) {
-                    usbmsc_present = TRUE;INFO("usbmsc_present: INVERTED: INVERTED: SDCC_2 \n");
+                    usbmsc_present = TRUE;ALOGI("usbmsc_present: INVERTED: INVERTED: SDCC_2 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard1:%d,nonremovable,encryptable=userdata");
                     }
                     break;
                 case ISOLATED:
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-                    usbmsc_present = TRUE;INFO("usbmsc_present: INVERTED: ISOLATED: SDCC_1 \n");
+                    usbmsc_present = TRUE;ALOGI("usbmsc_present: INVERTED: ISOLATED: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard0:%d,noemulatedsd,nonremovable");
                     }
                     break;
@@ -436,11 +436,11 @@ static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_c
             switch (sdcc_config) {
                 case REGULAR:
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-                    usbmsc_present = TRUE;INFO("usbmsc_present: DATAMEDIA: REGULAR: SDCC_1 \n");
+                    usbmsc_present = TRUE;ALOGI("usbmsc_present: DATAMEDIA: REGULAR: SDCC_1 \n");
                     ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard1:%d,nonremovable,noemulatedsd,encryptable=userdata");
                     }
                     if (check_for_partition(SDCC_2, "usbmsc")) {
-                    //usbmsc_present = TRUE;INFO("usbmsc_present: DATAMEDIA: REGULAR: SDCC_2 \n");
+                    //usbmsc_present = TRUE;ALOGI("usbmsc_present: DATAMEDIA: REGULAR: SDCC_2 \n");
                         ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard2:%d,encryptable=userdata");
                     }
                     else
@@ -448,17 +448,17 @@ static int update_regular_fstab(int fd, int type, int storage_config, int sdcc_c
                    break;
                 case INVERTED:
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-                    //usbmsc_present = TRUE;INFO("usbmsc_present: DATAMEDIA: INVERTED: SDCC_1 \n");
+                    //usbmsc_present = TRUE;ALOGI("usbmsc_present: DATAMEDIA: INVERTED: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard1:%d,nonremovable,noemulatedsd,encryptable=userdata");
                     }
                     if (check_for_partition(SDCC_2, "usbmsc")) {
-                    usbmsc_present = TRUE;INFO("usbmsc_present: DATAMEDIA: INVERTED: SDCC_2 \n");
+                    usbmsc_present = TRUE;ALOGI("usbmsc_present: DATAMEDIA: INVERTED: SDCC_2 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.2/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard2:%d,nonremovable,encryptable=userdata");
                     }
                     break;
                 case ISOLATED:
                     if (check_for_partition(SDCC_1, "usbmsc")) {
-                    usbmsc_present = TRUE;INFO("usbmsc_present: DATAMEDIA: ISOLATED: SDCC_1 \n");
+                    usbmsc_present = TRUE;ALOGI("usbmsc_present: DATAMEDIA: ISOLATED: SDCC_1 \n");
 			ret += add_fstab_entry(fd, type, JUST_ADD_IT, "/devices/msm_sdcc.1/mmc_host*", "auto", "auto", "defaults", "latemount,voldmanaged=sdcard1:%d,noemulatedsd,nonremovable,encryptable=userdata");
                     }
                     break;
@@ -536,30 +536,30 @@ static int update_twrp_fstab(int fd, int type, int storage_config, int sdcc_conf
     return ret;
 }
 
-static void remount_rootfs(unsigned long *flags)
+/* static void remount_rootfs(unsigned long *flags)
 {
     unsigned long mount_flags=0;
     int error = 0;
     struct statvfs statvfs_buf;
     errno = 0;
     if (statvfs("/init", &statvfs_buf) != 0)
-        ERROR("statvfs() failed, errno: %d (%s)\n", errno, strerror(errno));
+        ALOGE("statvfs() failed, errno: %d (%s)\n", errno, strerror(errno));
     else
         mount_flags=statvfs_buf.f_flag;
-    INFO("Remounting / with flags=%lu\n", *flags);
+    ALOGI("Remounting / with flags=%lu\n", *flags);
     errno = 0;
     error = mount("rootfs", "/", "rootfs", MS_REMOUNT|*flags, NULL);
     if (error)
-        WARNING("WARNING: Remounting / with flags=%lu FAILED (%s), mount returned %d\n", *flags, strerror(errno), error);
+        ALOGW("WARNING: Remounting / with flags=%lu FAILED (%s), mount returned %d\n", *flags, strerror(errno), error);
     *flags=mount_flags;
     return;
-}
+} */
 
 static void print_fstab(const char *fstab_name)
 {
   FILE *mf = fopen(fstab_name, "r");
   if (!mf) {
-    ERROR("%d: mf not opened: %s", __LINE__,strerror(errno));
+    ALOGE("%d: mf not opened: %s", __LINE__,strerror(errno));
     return;
   }
   while (1)
@@ -570,16 +570,16 @@ static void print_fstab(const char *fstab_name)
       {
          if ( feof (mf) != 0)
          {
-            INFO("INFO: End of fstab\n");
+            ALOGI("INFO: End of fstab\n");
             break;
          }
          else
          {
-            ERROR("ERROR: Error reading fstab: %s\n", strerror(errno));
+            ALOGE("ERROR: Error reading fstab: %s\n", strerror(errno));
             break;
          }
       }
-      INFO("%s\n", str);
+      ALOGI("%s\n", str);
    }
    fclose(mf);
 }
@@ -588,17 +588,17 @@ int process_fstab(const char *fstab_name, const int fstab_type, const int fstab_
 {
     int counter = 0;
     char config[PROP_VALUE_MAX] = {0};
-    unsigned long flags = 0;
+ //   unsigned long flags = 0;
     int fd = -1, ret = 0;
     int storage_config = STORAGE_CONFIGURATION_CLASSIC;
     int sdcc_config    = REGULAR;
-    INFO("%s: entered with name=%s type=%d action=%d\n", __func__, fstab_name, fstab_type, fstab_action);
+    ALOGI("%s: entered with name=%s type=%d action=%d\n", __func__, fstab_name, fstab_type, fstab_action);
 
-    remount_rootfs(&flags);
+    //remount_rootfs(&flags);
 
     errno=0;
     while (access(COLDBOOT_DONE, F_OK) != 0) {
-        NOTICE("Waiting for coldboot marker '%s', counter=%d, errno=%s!\n", COLDBOOT_DONE, counter, strerror(errno));
+        ALOGI("Waiting for coldboot marker '%s', counter=%d, errno=%s!\n", COLDBOOT_DONE, counter, strerror(errno));
         usleep(100);
         counter++;
     }
@@ -609,23 +609,23 @@ int process_fstab(const char *fstab_name, const int fstab_type, const int fstab_
     //property_get(STORAGE_CONFIG_PROP, config, "");
     get_storages_config(config);
     storage_config = atoi(config);
-    INFO("storage_config=%d, sdcc_config=%d, '%s'\n", storage_config, sdcc_config, config);
+    ALOGI("storage_config=%d, sdcc_config=%d, '%s'\n", storage_config, sdcc_config, config);
 
     errno = 0;
     if (fstab_action == FSTAB_ACTION_GENERATE) {
-        INFO("Generating fstab '%s', type %d\n", fstab_name, fstab_type);
+        ALOGI("Generating fstab '%s', type %d\n", fstab_name, fstab_type);
         fd = open(fstab_name, O_WRONLY|O_CREAT|O_TRUNC|O_CLOEXEC, 0600);
     }
     else
     {
-        INFO("Updating fstab '%s', type %d\n", fstab_name, fstab_type);
+        ALOGI("Updating fstab '%s', type %d\n", fstab_name, fstab_type);
         fd = open(fstab_name, O_WRONLY|O_CLOEXEC, 0600);
         lseek(fd, 0l, SEEK_END);
     }
 
     if (fd >= 0) {
-        INFO("opened '%s' (fd=%d)\n", fstab_name, fd);
-        INFO("FSTAB before processing:\n");
+        ALOGI("opened '%s' (fd=%d)\n", fstab_name, fd);
+        ALOGI("FSTAB before processing:\n");
         print_fstab(fstab_name);
         switch (fstab_type) {
             case FSTAB_TYPE_REGULAR:
@@ -647,23 +647,24 @@ int process_fstab(const char *fstab_name, const int fstab_type, const int fstab_
                     ret = update_twrp_fstab(fd, fstab_type, storage_config, sdcc_config);
                 break;
             default:
-                ERROR("Error: Unknown fstab type (%d)\n", fstab_type);
+                ALOGE("Error: Unknown fstab type (%d)\n", fstab_type);
 
         }
-        INFO("FSTAB after processing:\n");
+        ALOGI("FSTAB after processing:\n");
         print_fstab(fstab_name);
         close(fd);
     } else {
-        ERROR("could not open '%s' (%s)\n", fstab_name, strerror(errno));
-        goto failure;
+        ALOGE("could not open '%s' (%s)\n", fstab_name, strerror(errno));
+        //goto failure;
+        return(-1);
     }
-    remount_rootfs(&flags);
+    //remount_rootfs(&flags);
     return(ret);
 
-    failure:
-        remount_rootfs(&flags);
-        android_reboot(ANDROID_RB_RESTART2, 0, "recovery");
-        while (1) { pause(); }  // never reached
+  //  failure:
+        //remount_rootfs(&flags);
+  //      android_reboot(ANDROID_RB_RESTART2, 0, "recovery");
+  //      while (1) { pause(); }  // never reached
 }
 
 int main(int nargs, char **args)
@@ -671,7 +672,7 @@ int main(int nargs, char **args)
     int fstab_type     = FSTAB_TYPE_REGULAR;
     int fstab_action   = FSTAB_ACTION_GENERATE;
     int ret = FALSE;
-    INFO("%s: entered with name=%s type=%s action=%s\n", __func__, args[1], args[2], args[3]);
+    ALOGI("%s: entered with name=%s type=%s action=%s\n", __func__, args[1], args[2], args[3]);
     if (nargs == 4 && args[1] && args[2] && args[3]) {
         const char *fstab_name = args[1];
         if (!strncmp(args[2],"regular", sizeof("regular")))
@@ -686,7 +687,7 @@ int main(int nargs, char **args)
             fstab_action = FSTAB_ACTION_UPDATE;
         ret = process_fstab(fstab_name, fstab_type, fstab_action);
     } else {
-        ERROR("%s: invalid arguments (nargs=%d, args[0]=%s, args[1]=%s, args[2]=%s, args[3]=%s\n", __func__, nargs, args[0], args[1], args[2], args[3]);
+        ALOGE("%s: invalid arguments (nargs=%d, args[0]=%s, args[1]=%s, args[2]=%s, args[3]=%s\n", __func__, nargs, args[0], args[1], args[2], args[3]);
     }
     if (fstab_action == FSTAB_ACTION_UPDATE) 
         set_storage_props(usbmsc_present);

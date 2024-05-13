@@ -182,6 +182,13 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 /*            SystemProperties.set(PERSISTENT_PROPERTY_CONFIGURATION_NAME, (String)newValue); */
             SetStoragesConfiguration((String)newValue);
             Toast.makeText(getActivity(), R.string.reboot_needed, Toast.LENGTH_LONG).show();
+            try {
+                  Process generateFstab = Runtime.getRuntime().exec("/system/bin/fstab /persist/fstab.d10f regular generate");
+                  generateFstab.waitFor();
+                  Process updateFstab = Runtime.getRuntime().exec("/system/bin/fstab /persist/fstab.d10f regular update");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 /*        if (preference.getKey().equals(BTN_FUNC_APP)) {
             Settings.System.putString(getActivity().getContentResolver(), preference.getKey(), (String)newValue);

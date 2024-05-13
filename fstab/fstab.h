@@ -16,7 +16,7 @@
 
 #ifndef _INIT_FSTAB_H
 #define _INIT_FSTAB_H
-#include "log.h"
+//#include "log.h"
 
 #define FSTAB_HEADER \
 "# Android fstab file.\n\
@@ -27,7 +27,7 @@
 
 // From system/core/init/util.h
 #define COLDBOOT_DONE "/dev/.coldboot_done"
-#define ERROR(x...)   init_klog_write(KLOG_ERROR_LEVEL, x)
+//#define ERROR(x...)   init_klog_write(KLOG_ERROR_LEVEL, x)
 enum fstab_types
 {
     FSTAB_TYPE_REGULAR = 0,

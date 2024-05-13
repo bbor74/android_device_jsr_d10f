@@ -4,6 +4,7 @@ void set_storage_props(int usbmsc_present);
 void set_storages_config(const char *value);
 int get_storages_config(char *value);
 
+#include <cutils/log.h>
 
 #define FALSE 0
 #define TRUE 1
