@@ -314,6 +314,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.control_privapp_permissions=log
 
+# LTE, GSM/WCDMA
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.telephony.get_imsi_from_sim=true
+
 # Debug
 # PRODUCT_DEFAULT_PROPERTY_OVERRIDES += 
 #    persist.logd.logpersistd=logcatd 
