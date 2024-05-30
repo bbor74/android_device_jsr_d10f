@@ -1,0 +1,43 @@
+From 0f25c16fbd8d1ffc42a3022e60ab9ee349f9ddfa Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Wed, 29 May 2024 13:18:00 +0400
+Subject: [PATCH] ConditionManager: Fix TimeoutException
+
+05-29 10:55:20.278758  3453  3453 W ConditionManager: Failed to get displayable state for card, likely timeout. Skipping
+05-29 10:55:20.278758  3453  3453 W ConditionManager: java.util.concurrent.TimeoutException
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at java.util.concurrent.FutureTask.get(FutureTask.java:206)
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at com.android.settings.homepage.contextualcards.conditional.ConditionManager.getDisplayableCards(ConditionManager.java:70)
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at com.android.settings.homepage.contextualcards.conditional.ConditionContextualCardController.onConditionsChanged(ConditionContextualCardController.java:108)
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at com.android.settings.homepage.contextualcards.conditional.ConditionManager.onConditionChanged(ConditionManager.java:135)
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at com.android.settings.homepage.contextualcards.conditional.CellularDataConditionController$Receiver.onReceive(CellularDataConditionController.java:111)
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at android.app.LoadedApk$ReceiverDispatcher$Args.lambda$getRunnable$0$LoadedApk$ReceiverDispatcher$Args(LoadedApk.java:1555)
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA.run(Unknown Source:2)
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at android.os.Handler.handleCallback(Handler.java:883)
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at android.os.Handler.dispatchMessage(Handler.java:100)
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at android.os.Looper.loop(Looper.java:214)
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at android.app.ActivityThread.main(ActivityThread.java:7356)
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at java.lang.reflect.Method.invoke(Native Method)
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:491)
+05-29 10:55:20.278758  3453  3453 W ConditionManager: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:940)
+
+Change-Id: I4974124867c3daff0e5526a025ed559f02848959
+---
+ .../homepage/contextualcards/conditional/ConditionManager.java  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/com/android/settings/homepage/contextualcards/conditional/ConditionManager.java b/src/com/android/settings/homepage/contextualcards/conditional/ConditionManager.java
+index 1beac9b87b..9aee83c1d8 100644
+--- a/src/com/android/settings/homepage/contextualcards/conditional/ConditionManager.java
++++ b/src/com/android/settings/homepage/contextualcards/conditional/ConditionManager.java
+@@ -39,7 +39,7 @@ public class ConditionManager {
+     @VisibleForTesting
+     final List<ConditionalCardController> mCardControllers;
+ 
+-    private static final long DISPLAYABLE_CHECKER_TIMEOUT_MS = 20;
++    private static final long DISPLAYABLE_CHECKER_TIMEOUT_MS = 200;
+ 
+     private final Context mAppContext;
+     private final ConditionListener mListener;
+-- 
+2.17.1
+
