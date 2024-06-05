@@ -390,7 +390,7 @@ on property:persist.radio.multisim.config=dsds
     setprop ro.telephony.default_network 0,1
 
 service qcamerasvr /vendor/bin/mm-qcamera-daemon
-    class late_start
+    class main
     user camera
     group camera system inet input graphics
 
