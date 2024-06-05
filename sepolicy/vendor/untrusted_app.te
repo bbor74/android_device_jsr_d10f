@@ -235,3 +235,7 @@ allow untrusted_app hal_memtrack_default:binder call;
 dontaudit untrusted_app hal_memtrack_hwservice:hwservice_manager find;
 allow untrusted_app input_device:chr_file getattr;
 
+#============= untrusted_app ==============
+allow untrusted_app logd_exec:file getattr;
+allow untrusted_app webview_zygote_exec:file getattr;
+

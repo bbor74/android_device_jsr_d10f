@@ -34,3 +34,7 @@ allow untrusted_app_25 tombstone_data_file:dir getattr;
 #============= untrusted_app_25 ==============
 allow untrusted_app_25 app_data_file:file unlink;
 
+#============= untrusted_app_25 ==============
+allow untrusted_app_25 recovery_block_device:blk_file getattr;
+allow untrusted_app_25 sd_device:blk_file getattr;
+
