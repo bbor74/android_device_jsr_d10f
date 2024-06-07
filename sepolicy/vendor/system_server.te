@@ -3,3 +3,6 @@ allow system_server dalvikcache_data_file:file execute;
 
 #============= system_server ==============
 allow system_server kernel:process setsched;
+
+#============= system_server ==============
+allow system_server app_zygote:process getpgid;

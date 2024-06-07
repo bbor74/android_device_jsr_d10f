@@ -69,4 +69,9 @@ allow priv_app bpf_progs_loaded_prop:file { getattr open };
 allow priv_app ctl_adbd_prop:file { getattr open };
 allow priv_app ctl_gsid_prop:file { getattr open };
 
+#============= priv_app ==============
+allow priv_app device_config_activity_manager_native_boot_prop:file { getattr open };
+allow priv_app device_config_boot_count_prop:file { getattr open };
+allow priv_app device_config_input_native_boot_prop:file { getattr open };
+
 
