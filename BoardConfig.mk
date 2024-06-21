@@ -234,10 +234,11 @@ include device/qcom/sepolicy-legacy/sepolicy.mk
 BOARD_PLAT_PRIVATE_SEPOLICY_DIR += device/jsr/d10f/sepolicy/private
 BOARD_SEPOLICY_DIRS += device/jsr/d10f/sepolicy/vendor
 
+#    /system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so 
+#    /system/lib/libcrypto.so|libboringssl-compat.so 
+
 # Shims    /system/vendor/lib/hw/camera.msm8226.so|libboringssl-compat.so
 TARGET_LD_SHIM_LIBS := \
-    /system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so \
-    /system/lib/libcrypto.so|libboringssl-compat.so \
     /system/vendor/bin/thermal-engine|libshims_thermal.so \
     /system/vendor/bin/mpdecision|libshims_atomic.so
 

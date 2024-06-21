@@ -78,9 +78,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.qualcomm.cabl=0
 
+  #  libboringssl-compat 
 # Camera    camera.msm8226
 PRODUCT_PACKAGES += \
-    libboringssl-compat \
     libxml2 \
     Snap
 
