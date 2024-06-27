@@ -100,6 +100,14 @@ ro.vendor.qti.sys.fw.trim_empty_percent=70
 #ro.vendor.qti.sys.fw.trim_cache_percent=15
 ro.vendor.qti.sys.fw.trim_enable_memory=1987444736
 
+# LMKD
+ro.lmk.critical_upgrade=true
+ro.lmk.downgrade_pressure=60
+ro.lmk.kill_heaviest_task=false
+ro.lmk.log_stats=true
+ro.lmk.upgrade_pressure=40
+ro.lmk.use_psi=false
+
 # Telephony
 rild.libpath=/vendor/lib/libril-qc-qmi-1.so
 rild.libargs=-d /dev/smd0
