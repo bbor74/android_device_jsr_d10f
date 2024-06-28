@@ -206,6 +206,10 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/vendor/etc/permissions/handheld_core_hardware.xml \
     $(LOCAL_PATH)/configs/privapp-permissions-d10f.xml:system/vendor/etc/permissions/privapp-permissions-d10f.xml
 
+# Protobuf
+PRODUCT_COPY_FILES += \
+    prebuilts/vndk/v28/arm/arch-arm-armv7-a-neon/shared/vndk-core/libprotobuf-cpp-lite.so:system/vendor/lib/libprotobuf-cpp-lite-v28.so
+
 # Power
 #PRODUCT_PACKAGES += 
 #    power.msm8226
