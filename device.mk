@@ -259,7 +259,8 @@ PRODUCT_COPY_FILES += \
 # Shims
 PRODUCT_PACKAGES += \
     libshims_thermal \
-    libshims_atomic
+    libshims_atomic \
+    libaudioclient_shim
 
 # USB ID
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
