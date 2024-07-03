@@ -27,8 +27,8 @@ LOCAL_MODULE_PATH  := $(TARGET_OUT_VENDOR)/etc/wifi
 include $(BUILD_PREBUILT)
 
 # Create symbolic links
-$(shell mkdir -p $(TARGET_OUT_VENDOR)/firmware/wlan/prima; \
+$(shell mkdir -p $(TARGET_OUT_ETC)/firmware/wlan/prima; \
 	ln -sf /data/vendor/wifi/WCNSS_qcom_cfg.ini \
-	$(TARGET_OUT_VENDOR)/firmware/wlan/prima/WCNSS_qcom_cfg.ini)
+	$(TARGET_OUT_ETC)/firmware/wlan/prima/WCNSS_qcom_cfg.ini)
 
 endif
