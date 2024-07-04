@@ -17,3 +17,10 @@ allow init sysfs_wlan_fwpath:file setattr;
 
 #============= init ==============
 allow init persist_block_device:lnk_file relabelto;
+
+#============= init ==============
+allow init hal_power_stats_hwservice:hwservice_manager { add find };
+allow init hidl_base_hwservice:hwservice_manager add;
+allow init hwservicemanager:binder { call transfer };
+allow init proc:file setattr;
+
