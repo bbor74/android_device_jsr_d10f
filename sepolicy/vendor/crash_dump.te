@@ -13,19 +13,3 @@ allow crash_dump vendor_mpctl_prop:file { getattr open };
 #============= crash_dump ==============
 allow crash_dump bootloader_boot_reason_prop:file { getattr open };
 allow crash_dump system_boot_reason_prop:file { getattr open };
-
-#============= crash_dump ==============
-allow crash_dump bluetooth_prop:file { getattr open };
-allow crash_dump device_config_reset_performed_prop:file { getattr open };
-allow crash_dump exported_camera_prop:file { getattr open };
-allow crash_dump exported_overlay_prop:file { getattr open };
-allow crash_dump gpu_device:chr_file { getattr open };
-allow crash_dump incremental_prop:file { getattr open };
-allow crash_dump keystore:process ptrace;
-allow crash_dump media_variant_prop:file { getattr open };
-allow crash_dump mock_ota_prop:file { getattr open };
-allow crash_dump safemode_prop:file { getattr open };
-allow crash_dump serialno_prop:file { getattr open };
-allow crash_dump system_jvmti_agent_prop:file { getattr open };
-allow crash_dump userspace_reboot_exported_prop:file { getattr open };
-
