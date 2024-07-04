@@ -13,3 +13,6 @@ allow vold persist_file:file { getattr open read };
 allowxperm vold vold_device:blk_file ioctl 0x1271;
 allowxperm vold vold_device:blk_file ioctl BLKROGET;
 
+#============= vold ==============
+allow vold sysfs_mmc_host:file write;
+
