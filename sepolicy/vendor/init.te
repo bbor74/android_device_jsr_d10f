@@ -9,7 +9,7 @@ allow init sysfs_lowmemorykiller:file { open write };
 allow init vendor_file:file execute_no_trans;
 
 #============= init ==============
-allow init proc:file { open write };
+allow init proc:file { setattr open write };
 allow init sysfs_mmc_host:file { open write };
 allow init sysfs_msm_perf:file { open write };
 allow init sysfs_msm_power:file { open write };
