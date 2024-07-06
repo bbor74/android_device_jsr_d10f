@@ -597,11 +597,11 @@ int process_fstab(const char *fstab_name, const int fstab_type, const int fstab_
     //remount_rootfs(&flags);
 
     errno=0;
-    while (access(COLDBOOT_DONE, F_OK) != 0) {
-        ALOGI("Waiting for coldboot marker '%s', counter=%d, errno=%s!\n", COLDBOOT_DONE, counter, strerror(errno));
-        usleep(100);
-        counter++;
-    }
+//    while (access(COLDBOOT_DONE, F_OK) != 0) {
+//        ALOGI("Waiting for coldboot marker '%s', counter=%d, errno=%s!\n", COLDBOOT_DONE, counter, strerror(errno));
+//        usleep(100);
+//        counter++;
+//    }
 
    // load_storage_config_prop();
     property_get("ro.boot.swap_sdcc", config, "");

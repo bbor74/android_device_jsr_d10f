@@ -26,7 +26,7 @@
 #<src> <mnt_point> <type> <mnt_flags and options> <fs_mgr_flags>\n"
 
 // From system/core/init/util.h
-#define COLDBOOT_DONE "/dev/.coldboot_done"
+//#define COLDBOOT_DONE "/dev/.coldboot_done"
 //#define ERROR(x...)   init_klog_write(KLOG_ERROR_LEVEL, x)
 enum fstab_types
 {
