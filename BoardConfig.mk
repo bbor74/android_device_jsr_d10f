@@ -261,6 +261,9 @@ TARGET_SYSTEM_PROP += device/jsr/d10f/system.prop
 # Extended Filesystem Support
 TARGET_EXFAT_DRIVER := sdfat
 
+# VNDK - Dedupe VNDK libraries with identical core variants.
+TARGET_VNDK_USE_CORE_VARIANT := true
+
 # Wifi
 BOARD_HAS_QCOM_WLAN := true
 BOARD_WLAN_DEVICE := qcwcn
