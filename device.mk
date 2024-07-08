@@ -163,6 +163,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
     media.stagefright.less-secure=true \
     persist.media.treble_omx=false
 
+# Network - Do not spin up a separate process for the network stack, use an in-process APK.
+PRODUCT_PACKAGES += \
+    InProcessNetworkStack \
+    com.android.tethering.inprocess
+
 # Custom Settings page
 PRODUCT_PACKAGES += \
     JSR_Settings
