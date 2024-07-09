@@ -1,0 +1,4 @@
+#============= charger ==============
+allow charger device:dir { open read };
+allow charger self:capability dac_override;
+allow charger sysfs:file { getattr open read };
