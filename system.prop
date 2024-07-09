@@ -128,6 +128,9 @@ ro.telephony.call_ring.multiple=false
 ro.telephony.ril.config=simactivation
 telephony.lteOnCdmaDevice=0
 
+# Traced
+persist.traced.enable=0
+
 # Hardware info
 ro.device.chipset=Qualcomm Snapdragon 400 MSM8228
 ro.device.cpu=1.4GHz quad-core Cortex-A7
