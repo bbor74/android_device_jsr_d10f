@@ -88,6 +88,8 @@ persist.logd.logpersistd=logcatd
 # ro.product.locale=ru-RU 
 persist.sys.timezone=Europe/Moscow
 
+ro.debuggable=0
+
 # Media
 debug.stagefright.ccodec=0
 debug.stagefright.omx_default_rank.sw-audio=1
