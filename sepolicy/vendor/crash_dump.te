@@ -26,3 +26,10 @@ allow crash_dump safemode_prop:file { getattr open };
 allow crash_dump serialno_prop:file { getattr open };
 allow crash_dump system_jvmti_agent_prop:file { getattr open };
 allow crash_dump userspace_reboot_exported_prop:file { getattr open };
+
+#============= crash_dump ==============
+allow crash_dump gpu_device:chr_file { getattr open };
+allow crash_dump privapp_data_file:file read;
+
+#============= crash_dump ==============
+allow crash_dump resourcecache_data_file:file read;
