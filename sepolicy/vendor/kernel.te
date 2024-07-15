@@ -1,0 +1,4 @@
+#============= kernel ==============
+allow kernel appdomain_tmpfs:file write;
+allow kernel untrusted_app:fd use;
+
