@@ -586,7 +586,7 @@ static void print_fstab(const char *fstab_name)
 
 int process_fstab(const char *fstab_name, const int fstab_type, const int fstab_action)
 {
-    int counter = 0;
+ //   int counter = 0;
     char config[PROP_VALUE_MAX] = {0};
  //   unsigned long flags = 0;
     int fd = -1, ret = 0;
