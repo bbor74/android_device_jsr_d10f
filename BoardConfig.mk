@@ -108,7 +108,7 @@ TARGET_USES_HWC2 := true
 TARGET_USES_ION := true
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 TARGET_DISABLE_POSTRENDER_CLEANUP := true
-TARGET_SUPPORTS_WEARABLES := true
+# TARGET_SUPPORTS_WEARABLES := true
 
 # Shader cache config options
 # Maximum size of the GLES Shaders that can be cached for reuse.
