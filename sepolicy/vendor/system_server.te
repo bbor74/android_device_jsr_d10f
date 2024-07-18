@@ -6,3 +6,6 @@ allow system_server kernel:process setsched;
 
 #============= system_server ==============
 allow system_server app_zygote:process getpgid;
+
+#============= system_server ==============
+allow system_server crash_dump:process getpgid;

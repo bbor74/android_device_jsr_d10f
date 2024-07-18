@@ -13,3 +13,6 @@ allow crash_dump vendor_mpctl_prop:file { getattr open };
 #============= crash_dump ==============
 allow crash_dump bootloader_boot_reason_prop:file { getattr open };
 allow crash_dump system_boot_reason_prop:file { getattr open };
+
+#============= crash_dump ==============
+allow crash_dump bluetooth_prop:file { getattr open };

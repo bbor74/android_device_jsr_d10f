@@ -104,3 +104,15 @@ allow priv_app llkd_prop:file { getattr open };
 allow priv_app location_prop:file { getattr open };
 allow priv_app logpersistd_logging_prop:file { getattr open };
 allow priv_app proc_version:file { getattr open };
+
+#============= priv_app ==============
+allow priv_app lowpan_prop:file { getattr open };
+allow priv_app lpdumpd_prop:file { getattr open };
+allow priv_app mdm_helper_prop:file { getattr open };
+allow priv_app mmc_prop:file { getattr open };
+
+#============= priv_app ==============
+allow priv_app mmi_prop:file { getattr open };
+allow priv_app mpdecision_prop:file { getattr open };
+allow priv_app msm_irqbalance_prop:file { getattr open };
+allow priv_app net_dns_prop:file { getattr open };

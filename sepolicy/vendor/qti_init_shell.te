@@ -5,3 +5,6 @@ allow qti_init_shell toolbox_exec:file { execute execute_no_trans getattr open r
 #============= qti_init_shell ==============
 allow qti_init_shell bluetooth_loader_exec:file { execute execute_no_trans getattr open read };
 
+#============= qti_init_shell ==============
+allow qti_init_shell bluetooth_data_file:file { open read };
+
