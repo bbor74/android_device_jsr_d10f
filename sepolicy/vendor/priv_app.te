@@ -116,3 +116,13 @@ allow priv_app mmi_prop:file { getattr open };
 allow priv_app mpdecision_prop:file { getattr open };
 allow priv_app msm_irqbalance_prop:file { getattr open };
 allow priv_app net_dns_prop:file { getattr open };
+
+#============= priv_app ==============
+allow priv_app msm_irqbl_sdm630_prop:file { getattr open };
+allow priv_app netd_prop:file { getattr open };
+allow priv_app netd_stable_secret_prop:file { getattr open };
+
+#============= priv_app ==============
+allow priv_app nfc_nq_prop:file { getattr open };
+allow priv_app opengles_prop:file { getattr open };
+allow priv_app per_mgr_state_prop:file { getattr open };
