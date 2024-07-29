@@ -358,6 +358,9 @@ service netmgrd /vendor/bin/netmgrd
     user root
     group root wifi wakelock radio inet system oem_2950
 
+on property:sys.shutdown.requested=*
+    stop netmgrd
+
 service sensors /vendor/bin/sensors.qcom
     class late_start
     user root
