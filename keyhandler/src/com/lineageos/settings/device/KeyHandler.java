@@ -1,4 +1,4 @@
-package org.lineageos.settings.device;
+package org.aosp.settings.device;
 
 import android.database.ContentObserver;
 import android.content.ComponentName;
@@ -71,7 +71,7 @@ public class KeyHandler implements DeviceKeyHandler
     mSettingsObserver = new SettingsObserver(mHandler);
     mSettingsObserver.observe();
     updateSettings();
-    Slog.i(TAG, "Init com.lineageos.keyhandler");
+    Slog.i(TAG, "Init com.aosp.keyhandler");
   }
 
   public KeyEvent handleKeyEvent(KeyEvent event)

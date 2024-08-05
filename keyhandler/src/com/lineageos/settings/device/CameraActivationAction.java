@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.device;
+package org.aosp.settings.device;
 
 import java.util.List;
 

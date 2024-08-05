@@ -20,12 +20,13 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, device/jsr/d10f/device.mk)
 $(call inherit-product-if-exists, vendor/jsr/d10f/d10f-vendor.mk)
 
-# Inherit some common LineageOS stuff
-$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+# Inherit some common PixelOS stuff
+TARGET_BOOT_ANIMATION_RES := 720
+$(call inherit-product, vendor/aosp/config/common_full_phone.mk)
 
 # Device identifier. This must come after all inclusions.
 PRODUCT_DEVICE := d10f
-PRODUCT_NAME := lineage_d10f
+PRODUCT_NAME := aosp_d10f
 PRODUCT_BRAND := JSR
 PRODUCT_MODEL := D10F
 PRODUCT_MANUFACTURER := JSR Tech

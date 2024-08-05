@@ -1,2 +1,0 @@
-#============= adbroot ==============
-allow adbroot device:file { open write };

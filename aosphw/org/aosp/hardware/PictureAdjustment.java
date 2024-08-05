@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.lineageos.hardware;
+package org.aosp.hardware;
 
 import android.annotation.TargetApi;
 import android.util.Log;
 import android.util.Range;
 
-import lineageos.hardware.HSIC;
-import org.lineageos.internal.util.FileUtils;
+import aosp.hardware.HSIC;
+import org.aosp.internal.util.FileUtils;
 
 /**
  * Picture adjustment support

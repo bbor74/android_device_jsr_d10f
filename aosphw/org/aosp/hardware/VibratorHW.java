@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.lineageos.hardware;
+package org.aosp.hardware;
 
-import org.lineageos.internal.util.FileUtils;
+import org.aosp.internal.util.FileUtils;
 
 public class VibratorHW {
     private static String AMP_PATH = "/sys/class/timed_output/vibrator/amp";

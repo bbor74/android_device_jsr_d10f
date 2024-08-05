@@ -14,9 +14,9 @@
 # limitations under the License. cm_d10f.mk
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/lineage_d10f.mk
+    $(LOCAL_DIR)/aosp_d10f.mk
 
 COMMON_LUNCH_CHOICES := \
-    lineage_d10f-user \
-    lineage_d10f-userdebug \
-    lineage_d10f-eng
+    aosp_d10f-user \
+    aosp_d10f-userdebug \
+    aosp_d10f-eng
