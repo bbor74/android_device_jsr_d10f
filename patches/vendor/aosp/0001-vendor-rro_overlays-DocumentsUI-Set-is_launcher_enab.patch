@@ -1,0 +1,25 @@
+From ed54ea3778e0ab5883f580edbca339d3ba5ff0e0 Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Mon, 12 Aug 2024 17:58:07 +0400
+Subject: [PATCH] vendor: rro_overlays: DocumentsUI: Set is_launcher_enabled
+ true
+
+---
+ rro_overlays/PixelDocumentsUIGoogleOverlay/res/values/bools.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rro_overlays/PixelDocumentsUIGoogleOverlay/res/values/bools.xml b/rro_overlays/PixelDocumentsUIGoogleOverlay/res/values/bools.xml
+index 87bd7f99..3f15ad6b 100644
+--- a/rro_overlays/PixelDocumentsUIGoogleOverlay/res/values/bools.xml
++++ b/rro_overlays/PixelDocumentsUIGoogleOverlay/res/values/bools.xml
+@@ -2,6 +2,6 @@
+ <resources>
+     <bool name="config_button_all_caps">false</bool>
+     <bool name="handle_view_downloads_intent">false</bool>
+-    <bool name="is_launcher_enabled">false</bool>
++    <bool name="is_launcher_enabled">true</bool>
+     <bool name="show_search_bar">true</bool>
+ </resources>
+-- 
+2.17.1
+
