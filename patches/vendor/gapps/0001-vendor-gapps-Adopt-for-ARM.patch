@@ -1,0 +1,76 @@
+From 2589875a54cefbeb77c21a745e6a653b804c1c0c Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Mon, 19 Aug 2024 17:07:53 +0400
+Subject: [PATCH] vendor: gapps: Adopt for ARM
+
+---
+ config.mk                                       |   3 ++-
+ product/blobs/product_blobs.mk                  |  12 ++++++------
+ product/packages/apps/GoogleCamera/Android.mk   |   2 +-
+ .../com.google.android.dialer.support.jar       | Bin 874 -> 874 bytes
+ 4 files changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/config.mk b/config.mk
+index e9c52b9..793a5fd 100644
+--- a/config.mk
++++ b/config.mk
+@@ -67,7 +67,8 @@ PRODUCT_PACKAGES += \
+     VZWAPNLib \
+     WebViewGoogle \
+     WebViewGoogle-Stub \
+-    talkback
++    talkback \
++    YouTubeMusicPrebuilt
+ 
+ # product/priv-app
+ PRODUCT_PACKAGES += \
+diff --git a/product/blobs/product_blobs.mk b/product/blobs/product_blobs.mk
+index 3638e6d..7d9981f 100644
+--- a/product/blobs/product_blobs.mk
++++ b/product/blobs/product_blobs.mk
+@@ -63,12 +63,12 @@ PRODUCT_COPY_FILES += \
+     vendor/gapps/product/blobs/etc/sysconfig/pixel_experience_2020.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/sysconfig/pixel_experience_2020.xml \
+     vendor/gapps/product/blobs/etc/sysconfig/preinstalled-packages-product-pixel-2017-and-newer.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/sysconfig/preinstalled-packages-product-pixel-2017-and-newer.xml
+ 
+-PRODUCT_COPY_FILES += \
+-    vendor/gapps/product/blobs/lib64/libakuaf.so:$(TARGET_COPY_OUT_PRODUCT)/lib64/libakuaf.so \
+-    vendor/gapps/product/blobs/lib64/libborders_scone_leveldb_jni.so:$(TARGET_COPY_OUT_PRODUCT)/lib64/libborders_scone_leveldb_jni.so \
+-    vendor/gapps/product/blobs/lib64/libgdx.so:$(TARGET_COPY_OUT_PRODUCT)/lib64/libgdx.so \
+-    vendor/gapps/product/blobs/lib64/libmotricity.so:$(TARGET_COPY_OUT_PRODUCT)/lib64/libmotricity.so \
+-    vendor/gapps/product/blobs/lib64/libsketchology_native.so:$(TARGET_COPY_OUT_PRODUCT)/lib64/libsketchology_native.so
++# PRODUCT_COPY_FILES += \
++#     vendor/gapps/product/blobs/lib64/libakuaf.so:$(TARGET_COPY_OUT_PRODUCT)/lib64/libakuaf.so \
++#     vendor/gapps/product/blobs/lib64/libborders_scone_leveldb_jni.so:$(TARGET_COPY_OUT_PRODUCT)/lib64/libborders_scone_leveldb_jni.so \
++#     vendor/gapps/product/blobs/lib64/libgdx.so:$(TARGET_COPY_OUT_PRODUCT)/lib64/libgdx.so \
++#     vendor/gapps/product/blobs/lib64/libmotricity.so:$(TARGET_COPY_OUT_PRODUCT)/lib64/libmotricity.so \
++#     vendor/gapps/product/blobs/lib64/libsketchology_native.so:$(TARGET_COPY_OUT_PRODUCT)/lib64/libsketchology_native.so
+ 
+ PRODUCT_COPY_FILES += \
+     vendor/gapps/product/blobs/lib/libdmengine.so:$(TARGET_COPY_OUT_PRODUCT)/lib/libdmengine.so \
+diff --git a/product/packages/apps/GoogleCamera/Android.mk b/product/packages/apps/GoogleCamera/Android.mk
+index 76d5d99..4ca2869 100644
+--- a/product/packages/apps/GoogleCamera/Android.mk
++++ b/product/packages/apps/GoogleCamera/Android.mk
+@@ -18,7 +18,7 @@
+ 
+ LOCAL_PATH := $(call my-dir)
+ 
+-ifneq ($(filter walleye taimen blueline crosshatch bonito sargo flame coral sunfish bramble redfin, $(TARGET_DEVICE)),)
++ifneq ($(filter d10f walleye taimen blueline crosshatch bonito sargo flame coral sunfish bramble redfin, $(TARGET_DEVICE)),)
+ 
+ include $(CLEAR_VARS)
+ LOCAL_MODULE := GoogleCamera
+diff --git a/product/packages/privileged_apps/GoogleDialer/com.google.android.dialer.support.jar b/product/packages/privileged_apps/GoogleDialer/com.google.android.dialer.support.jar
+index 85cd57446e35fe46a59ed302a5e04478d5c5bd56..0956063cb1f7e40acf610c3c4da93d7eec5e1e02 100644
+GIT binary patch
+delta 71
+zcmaFG_KHm?z?+#xgaHB+EzIw|{X0=eNy0qU$n(R>Kax8bL$-=YMsD(t+3+iSdv54P
+WpDB!thMONUaxk)h)J}fOR0{w#MH)H)
+
+delta 71
+zcmaFG_KHm?z?+#xgaHB+EkaqB_e~U1l1NDwGh4siS9+zLzW{f;x^2WI<Gn%gU28Y`
+VOkrd+-u#e}gOLTKcJf=MS^%aa6@vf(
+
+-- 
+2.17.1
+
