@@ -13,3 +13,6 @@ allow system_app labeledfs:filesystem remount;
 allow system_app persist_file:file { getattr open read write };
 allow system_app vold_prop:property_service set;
 
+#============= system_app ==============
+dontaudit system_app privapp_data_file:dir { getattr search };
+

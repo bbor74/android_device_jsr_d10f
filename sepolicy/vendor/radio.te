@@ -1,0 +1,2 @@
+#============= radio ==============
+allow radio gpuservice:binder call;

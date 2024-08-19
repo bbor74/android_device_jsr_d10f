@@ -29,7 +29,7 @@ allow crash_dump userspace_reboot_exported_prop:file { getattr open };
 
 #============= crash_dump ==============
 allow crash_dump gpu_device:chr_file { getattr open };
-allow crash_dump privapp_data_file:file read;
+allow crash_dump privapp_data_file:file { getattr open read };
 
 #============= crash_dump ==============
-allow crash_dump resourcecache_data_file:file read;
+allow crash_dump resourcecache_data_file:file { getattr open read };

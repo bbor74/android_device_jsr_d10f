@@ -1,2 +1,9 @@
 #============= installd ==============
 allow installd device:file { open write };
+
+#============= installd ==============
+allow installd system_data_file:dir relabelto;
+
+#============= installd ==============
+allow installd misc_logd_file:file getattr;
+

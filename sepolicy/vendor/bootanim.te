@@ -1,2 +1,5 @@
 #============= bootanim ==============
 allow bootanim userspace_reboot_exported_prop:file { getattr open read };
+
+#============= bootanim ==============
+allow bootanim system_data_file:dir read;
