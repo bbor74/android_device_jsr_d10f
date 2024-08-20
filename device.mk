@@ -245,9 +245,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/etc/init.d/80tcpfix:system/etc/init.d/80tcpfix
     
 # Thermal
-PRODUCT_PACKAGES += \
-    thermal.msm8226
-
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermal-engine-8226.conf:system/etc/thermal-engine-8226.conf
 
