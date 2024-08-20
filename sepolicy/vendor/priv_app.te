@@ -86,7 +86,7 @@ allow priv_app firstboot_prop:file { getattr open };
 allow priv_app fm_prop:file { getattr open };
 
 #============= priv_app ==============
-allow priv_app freq_prop:file { getattr open };
+allow priv_app freq_prop:file { getattr open read };
 allow priv_app fst_prop:file { getattr open };
 allow priv_app gamed_prop:file { getattr open };
 allow priv_app gsid_prop:file { getattr open };
@@ -126,3 +126,12 @@ allow priv_app netd_stable_secret_prop:file { getattr open };
 allow priv_app nfc_nq_prop:file { getattr open };
 allow priv_app opengles_prop:file { getattr open };
 allow priv_app per_mgr_state_prop:file { getattr open };
+
+#============= priv_app ==============
+allow priv_app overlay_prop:file { getattr open read };
+allow priv_app perfd_prop:file { getattr open };
+
+#============= priv_app ==============
+allow priv_app persistent_properties_ready_prop:file { getattr open };
+allow priv_app ppd_prop:file { getattr open };
+allow priv_app qcom_ims_prop:file { getattr open };
