@@ -104,9 +104,6 @@ BOARD_HARDWARE_CLASS := $(DEVICE_PATH)/lineagehw/
 DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
 DEVICE_MATRIX_FILE := $(DEVICE_PATH)/compatibility_matrix.xml
 
-# Headers
-TARGET_SPECIFIC_HEADER_PATH := $(DEVICE_PATH)/include
-
 # Init
 TARGET_INIT_VENDOR_LIB := libinit_d10f
 TARGET_RECOVERY_DEVICE_MODULES := libinit_d10f
