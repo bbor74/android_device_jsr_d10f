@@ -1,0 +1,45 @@
+From c421638bd686100e4e14d053fae9728fc5bff372 Mon Sep 17 00:00:00 2001
+From: davide <davidevinavil@gmail.com>
+Date: Thu, 9 Nov 2017 00:39:56 +0100
+Subject: [PATCH] libui: Fix header path
+
+This fix
+
+frameworks/native/libs/ui/include/ui/ANativeObjectBase.h:22:10: fatal error: 'libs/nativebase/include/nativebase.h' file not found
+frameworks/native/include/ui/GraphicBuffer.h:31:10: fatal error: 'nativebase/nativebase.h' file not found
+
+Change-Id: I735b4437b55b75017c59e745ae73a4a05e650967
+---
+ libs/ui/include/ui/ANativeObjectBase.h | 2 +-
+ libs/ui/include/ui/GraphicBuffer.h     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libs/ui/include/ui/ANativeObjectBase.h b/libs/ui/include/ui/ANativeObjectBase.h
+index e9d5d8d40..8b1691b26 100644
+--- a/libs/ui/include/ui/ANativeObjectBase.h
++++ b/libs/ui/include/ui/ANativeObjectBase.h
+@@ -19,7 +19,7 @@
+ 
+ #include <sys/types.h>
+ 
+-#include <nativebase/nativebase.h>
++#include "../../../nativebase/include/nativebase/nativebase.h"
+ 
+ 
+ /*****************************************************************************/
+diff --git a/libs/ui/include/ui/GraphicBuffer.h b/libs/ui/include/ui/GraphicBuffer.h
+index 95c2d2272..fcd2b9f60 100644
+--- a/libs/ui/include/ui/GraphicBuffer.h
++++ b/libs/ui/include/ui/GraphicBuffer.h
+@@ -28,7 +28,7 @@
+ #include <utils/Flattenable.h>
+ #include <utils/RefBase.h>
+ 
+-#include <nativebase/nativebase.h>
++#include "../../../nativebase/include/nativebase/nativebase.h"
+ 
+ #include <hardware/gralloc.h>
+ 
+-- 
+2.17.1
+
