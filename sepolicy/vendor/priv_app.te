@@ -44,7 +44,7 @@ allow priv_app ctl_interface_start_prop:file { getattr open };
 #============= priv_app ==============
 allow priv_app ctl_interface_stop_prop:file { getattr open };
 allow priv_app ctl_mdnsd_prop:file { getattr open read };
-allow priv_app ctl_netmgrd_prop:file { getattr open };
+allow priv_app ctl_netmgrd_prop:file { getattr open read };
 allow priv_app ctl_port-bridge_prop:file { getattr open };
 
 #============= priv_app ==============
@@ -135,3 +135,18 @@ allow priv_app perfd_prop:file { getattr open };
 allow priv_app persistent_properties_ready_prop:file { getattr open };
 allow priv_app ppd_prop:file { getattr open };
 allow priv_app qcom_ims_prop:file { getattr open };
+
+#============= priv_app ==============
+allow priv_app postprocessing_prop:file { getattr open };
+allow priv_app qdma_prop:file { getattr open };
+allow priv_app qemu_gles_prop:file { getattr open };
+allow priv_app qti_prop:file { getattr open };
+
+#============= priv_app ==============
+allow priv_app rmnet_mux_prop:file { getattr open };
+allow priv_app safemode_prop:file { getattr open };
+allow priv_app scr_enabled_prop:file { getattr open };
+
+#============= priv_app ==============
+allow priv_app sensors_prop:file { getattr open };
+
