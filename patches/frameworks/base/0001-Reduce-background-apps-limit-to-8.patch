@@ -1,0 +1,26 @@
+From 056552b97ea9a4839b8f2445031765742d698198 Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Mon, 2 Sep 2024 17:10:40 +0400
+Subject: [PATCH] Reduce background apps limit to 8
+
+Change-Id: Iad33ffc4317a4a49bb69aeb857a8658e7026ac5c
+---
+ .../java/com/android/server/am/ActivityManagerConstants.java    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/services/core/java/com/android/server/am/ActivityManagerConstants.java b/services/core/java/com/android/server/am/ActivityManagerConstants.java
+index 7fea5fc6481..db5fc494aaf 100644
+--- a/services/core/java/com/android/server/am/ActivityManagerConstants.java
++++ b/services/core/java/com/android/server/am/ActivityManagerConstants.java
+@@ -78,7 +78,7 @@ final class ActivityManagerConstants extends ContentObserver {
+     static final String KEY_MEMORY_INFO_THROTTLE_TIME = "memory_info_throttle_time";
+     static final String KEY_TOP_TO_FGS_GRACE_DURATION = "top_to_fgs_grace_duration";
+ 
+-    private static final int DEFAULT_MAX_CACHED_PROCESSES = 32;
++    private static final int DEFAULT_MAX_CACHED_PROCESSES = 8;
+     private static final long DEFAULT_BACKGROUND_SETTLE_TIME = 60*1000;
+     private static final long DEFAULT_FGSERVICE_MIN_SHOWN_TIME = 2*1000;
+     private static final long DEFAULT_FGSERVICE_MIN_REPORT_TIME = 3*1000;
+-- 
+2.17.1
+
