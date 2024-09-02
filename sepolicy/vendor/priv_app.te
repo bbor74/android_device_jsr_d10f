@@ -15,7 +15,7 @@ allow priv_app bluetooth_prop:file { getattr open };
 allow priv_app init:unix_stream_socket connectto;
 
 #============= priv_app ==============
-allow priv_app bg_daemon_prop:file { getattr open };
+allow priv_app bg_daemon_prop:file { getattr open read };
 allow priv_app boot_animation_prop:file { getattr open };
 allow priv_app boot_mode_prop:file { getattr open };
 
@@ -143,10 +143,12 @@ allow priv_app qemu_gles_prop:file { getattr open };
 allow priv_app qti_prop:file { getattr open };
 
 #============= priv_app ==============
-allow priv_app rmnet_mux_prop:file { getattr open };
-allow priv_app safemode_prop:file { getattr open };
-allow priv_app scr_enabled_prop:file { getattr open };
+dontaudit priv_app rmnet_mux_prop:file { getattr open };
+dontaudit priv_app safemode_prop:file { getattr open };
+dontaudit priv_app scr_enabled_prop:file { getattr open };
 
 #============= priv_app ==============
 allow priv_app sensors_prop:file { getattr open };
 
+#============= priv_app ==============
+allow priv_app sdm_idle_time_prop:file { getattr open };
