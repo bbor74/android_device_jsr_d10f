@@ -47,19 +47,6 @@ index 3638e6d..7d9981f 100644
  
  PRODUCT_COPY_FILES += \
      vendor/gapps/product/blobs/lib/libdmengine.so:$(TARGET_COPY_OUT_PRODUCT)/lib/libdmengine.so \
-diff --git a/product/packages/apps/GoogleCamera/Android.mk b/product/packages/apps/GoogleCamera/Android.mk
-index 76d5d99..4ca2869 100644
---- a/product/packages/apps/GoogleCamera/Android.mk
-+++ b/product/packages/apps/GoogleCamera/Android.mk
-@@ -18,7 +18,7 @@
- 
- LOCAL_PATH := $(call my-dir)
- 
--ifneq ($(filter walleye taimen blueline crosshatch bonito sargo flame coral sunfish bramble redfin, $(TARGET_DEVICE)),)
-+ifneq ($(filter d10f walleye taimen blueline crosshatch bonito sargo flame coral sunfish bramble redfin, $(TARGET_DEVICE)),)
- 
- include $(CLEAR_VARS)
- LOCAL_MODULE := GoogleCamera
 diff --git a/product/packages/privileged_apps/GoogleDialer/com.google.android.dialer.support.jar b/product/packages/privileged_apps/GoogleDialer/com.google.android.dialer.support.jar
 index 85cd57446e35fe46a59ed302a5e04478d5c5bd56..0956063cb1f7e40acf610c3c4da93d7eec5e1e02 100644
 GIT binary patch

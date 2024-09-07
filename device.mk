@@ -77,8 +77,7 @@ PRODUCT_PACKAGES += \
     Bugle \
     Gallery \
     LatinIMEGoogle \
-    GContacts \
-    GCamera
+    GContacts
 
 # Bluetooth
 PRODUCT_PACKAGES += \
