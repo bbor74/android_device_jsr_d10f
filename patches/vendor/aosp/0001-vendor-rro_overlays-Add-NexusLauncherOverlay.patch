@@ -1,0 +1,68 @@
+From 206ee52683150cce052e224772771a910a50fe34 Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Sat, 7 Sep 2024 20:30:04 +0400
+Subject: [PATCH] vendor: rro_overlays: Add NexusLauncherOverlay
+
+---
+ config/rro_overlays.mk                                   | 1 +
+ rro_overlays/NexusLauncherOverlay/Android.bp             | 6 ++++++
+ rro_overlays/NexusLauncherOverlay/AndroidManifest.xml    | 5 +++++
+ .../res/xml/default_workspace_5x5.xml                    | 9 +++++++++
+ 4 files changed, 21 insertions(+)
+ create mode 100644 rro_overlays/NexusLauncherOverlay/Android.bp
+ create mode 100644 rro_overlays/NexusLauncherOverlay/AndroidManifest.xml
+ create mode 100644 rro_overlays/NexusLauncherOverlay/res/xml/default_workspace_5x5.xml
+
+diff --git a/config/rro_overlays.mk b/config/rro_overlays.mk
+index e456661e..ff79f927 100644
+--- a/config/rro_overlays.mk
++++ b/config/rro_overlays.mk
+@@ -1,6 +1,7 @@
+ # RRO Overlays
+ PRODUCT_PACKAGES += \
+     PixelSetupWizardAodOverlay \
++    NexusLauncherOverlay \
+     FilesOverlay \
+     PixelDocumentsUIGoogleOverlay \
+     IconPackCircularPixelLauncherOverlay \
+diff --git a/rro_overlays/NexusLauncherOverlay/Android.bp b/rro_overlays/NexusLauncherOverlay/Android.bp
+new file mode 100644
+index 00000000..f0ae2b34
+--- /dev/null
++++ b/rro_overlays/NexusLauncherOverlay/Android.bp
+@@ -0,0 +1,6 @@
++runtime_resource_overlay {
++    name: "NexusLauncherOverlay",
++    certificate: "platform",
++    sdk_version: "current",
++    product_specific: true
++}
+diff --git a/rro_overlays/NexusLauncherOverlay/AndroidManifest.xml b/rro_overlays/NexusLauncherOverlay/AndroidManifest.xml
+new file mode 100644
+index 00000000..63613f29
+--- /dev/null
++++ b/rro_overlays/NexusLauncherOverlay/AndroidManifest.xml
+@@ -0,0 +1,5 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.google.android.apps.nexuslauncher.overlay">
++    <application android:label="NexusLauncherOverlay" android:hasCode="false"/>
++    <overlay android:targetPackage="com.google.android.apps.nexuslauncher" android:isStatic="true"/>
++</manifest>
+diff --git a/rro_overlays/NexusLauncherOverlay/res/xml/default_workspace_5x5.xml b/rro_overlays/NexusLauncherOverlay/res/xml/default_workspace_5x5.xml
+new file mode 100644
+index 00000000..1611a940
+--- /dev/null
++++ b/rro_overlays/NexusLauncherOverlay/res/xml/default_workspace_5x5.xml
+@@ -0,0 +1,9 @@
++<?xml version="1.0" encoding="utf-8"?>
++<favorites
++  xmlns:launcher="http://schemas.android.com/apk/res-auto/com.android.launcher3">
++    <favorite launcher:className="com.google.android.dialer.extensions.GoogleDialtactsActivity" launcher:container="-101" launcher:packageName="com.google.android.dialer" launcher:screen="0" launcher:x="0" launcher:y="0" />
++    <favorite launcher:className="com.google.android.apps.messaging.ui.ConversationListActivity" launcher:container="-101" launcher:packageName="com.google.android.apps.messaging" launcher:screen="1" launcher:x="1" launcher:y="0" />
++    <favorite launcher:className="com.android.contacts.activities.PeopleActivity" launcher:container="-101" launcher:packageName="com.google.android.contacts" launcher:screen="2" launcher:x="2" launcher:y="0" />
++    <favorite launcher:className="com.google.android.apps.chrome.Main" launcher:container="-101" launcher:packageName="com.android.chrome" launcher:screen="3" launcher:x="3" launcher:y="0" />
++    <favorite launcher:className="com.android.camera.CameraLauncher" launcher:container="-101" launcher:packageName="org.lineageos.snap" launcher:screen="4" launcher:x="4" launcher:y="0" />
++</favorites>
+-- 
+2.17.1
+
