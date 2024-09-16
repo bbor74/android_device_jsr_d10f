@@ -1,0 +1,43 @@
+From 1dee62901a932f8982f92239204f7322602b23e2 Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Mon, 16 Sep 2024 10:33:00 +0400
+Subject: [PATCH] Terminal: Add android.permission.DUMP
+
+executing the command "dumpsys activity settings" we get error:
+
+Permission Denial: can't dump ActivityManager from pid=27824, uid=10086 due to missing android.permission.DUMP permission
+
+Change-Id: I097f5a0fd2c8f3bfaa1a610c1e0a744041c28e26
+---
+ Android.bp          | 2 ++
+ AndroidManifest.xml | 3 +++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/Android.bp b/Android.bp
+index d806a4d..a5606e0 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -12,4 +12,6 @@ android_app {
+         enabled: false,
+     },
+     platform_apis: true,
++    certificate: "platform",
++    privileged: true,
+ }
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+index a9fb4e3..d3e9724 100644
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -20,6 +20,9 @@
+ 
+     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+ 
++    <uses-permission android:name="android.permission.DUMP" />
++    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"/>
++
+     <uses-feature android:name="android.software.leanback"
+         android:required="false" />
+ 
+-- 
+2.17.1
+
