@@ -1,2 +1,6 @@
 #============= storaged ==============
 allow storaged device:file { open write };
+
+#============= storaged ==============
+allow storaged untrusted_app_25:fd use;
+allow storaged untrusted_app_25:fifo_file write;

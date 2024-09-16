@@ -19,7 +19,9 @@ allow crash_dump bluetooth_prop:file { getattr open };
 
 #============= crash_dump ==============
 allow crash_dump gpu_device:chr_file { getattr open };
-allow crash_dump resourcecache_data_file:file { open read };
+allow crash_dump resourcecache_data_file:file { getattr open read };
 allow crash_dump untrusted_app:tcp_socket { read write };
 allow crash_dump untrusted_app:udp_socket { read write };
 
+#============= crash_dump ==============
+allow crash_dump app_data_file:file { read write };

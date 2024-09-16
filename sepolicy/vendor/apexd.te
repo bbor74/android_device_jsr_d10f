@@ -1,0 +1,2 @@
+#============= apexd ==============
+allow apexd untrusted_app_25:fifo_file write;

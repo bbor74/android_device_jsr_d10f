@@ -1,0 +1,2 @@
+#============= system_server ==============
+allow system_server untrusted_app_all_devpts:chr_file { read write };

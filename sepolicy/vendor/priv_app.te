@@ -1,5 +1,5 @@
 #============= priv_app ==============
-allow priv_app alarm_boot_prop:file { getattr open };
+allow priv_app alarm_boot_prop:file { getattr open read };
 allow priv_app alarm_handled_prop:file { getattr open };
 allow priv_app alarm_instance_prop:file { getattr open };
 allow priv_app bg_boot_complete_prop:file { getattr open };
@@ -22,7 +22,7 @@ allow priv_app boot_mode_prop:file { getattr open };
 #============= priv_app ==============
 allow priv_app bootloader_boot_reason_prop:file { getattr open };
 allow priv_app boottime_prop:file { getattr open };
-allow priv_app coresight_prop:file { getattr open };
+allow priv_app coresight_prop:file { getattr open read };
 allow priv_app crash_prop:file { getattr open };
 
 #============= priv_app ==============
@@ -38,7 +38,7 @@ allow priv_app ctl_fuse_prop:file { getattr open };
 
 #============= priv_app ==============
 allow priv_app ctl_hbtp_prop:file { getattr open };
-allow priv_app ctl_interface_restart_prop:file { getattr open };
+allow priv_app ctl_interface_restart_prop:file { getattr open read };
 allow priv_app ctl_interface_start_prop:file { getattr open };
 
 #============= priv_app ==============
@@ -143,7 +143,7 @@ allow priv_app qemu_gles_prop:file { getattr open };
 allow priv_app qti_prop:file { getattr open };
 
 #============= priv_app ==============
-dontaudit priv_app rmnet_mux_prop:file { getattr open };
+dontaudit priv_app rmnet_mux_prop:file { getattr open read };
 dontaudit priv_app safemode_prop:file { getattr open };
 dontaudit priv_app scr_enabled_prop:file { getattr open };
 
@@ -152,3 +152,14 @@ allow priv_app sensors_prop:file { getattr open };
 
 #============= priv_app ==============
 allow priv_app sdm_idle_time_prop:file { getattr open };
+
+#============= priv_app ==============
+allow priv_app serialno_prop:file { getattr open };
+allow priv_app spcomlib_prop:file { getattr open };
+allow priv_app sys_usb_configfs_prop:file { getattr open };
+
+#============= priv_app ==============
+allow priv_app sys_usb_controller_prop:file { getattr open };
+allow priv_app sys_usb_tethering_prop:file { getattr open };
+allow priv_app system_boot_reason_prop:file { getattr open };
+allow priv_app system_lmk_prop:file { getattr open };

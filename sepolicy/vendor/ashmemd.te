@@ -1,0 +1,3 @@
+#============= ashmemd ==============
+allow ashmemd untrusted_app_25:fd use;
+allow ashmemd untrusted_app_25:fifo_file write;

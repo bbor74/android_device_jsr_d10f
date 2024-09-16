@@ -1,0 +1,2 @@
+#============= statsd ==============
+allow statsd untrusted_app_25:fifo_file write;

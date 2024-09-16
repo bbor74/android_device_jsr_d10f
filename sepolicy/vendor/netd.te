@@ -1,2 +1,5 @@
 #============= netd ==============
 allow netd device:file { open write };
+
+#============= netd ==============
+allow netd untrusted_app:unix_stream_socket { getopt read write };
