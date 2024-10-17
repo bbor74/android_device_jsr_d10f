@@ -334,7 +334,7 @@ static int generate_twrp_fstab(int fd, int type, int sdcc_config)
     ret += add_fstab_entry(fd, type, SDCC_1, "fsg",      "/fsg",      "emmc", "flags=backup=1;subpartitionof=/efs1", "");
     ret += add_fstab_entry(fd, type, SDCC_1, "fsc",      "/fsc",      "emmc", "flags=backup=1;subpartitionof=/efs1", "");
     ret += add_fstab_entry(fd, type, SDCC_1, "sdi",      "/sdi",      "emmc", "flags=backup=1;display=\"SDI\"", "");
-    ret += add_fstab_entry(fd, type, SDCC_1, "misc",     "/misc",     "emmc", "", "");
+    ret += add_fstab_entry(fd, type, SDCC_1, "misc",     "/misc",     "emmc", "flags=backup=1;display=\"Misc\"", "");
     INFO("%s: sdcc_config = %d\n", __func__, sdcc_config);
     switch (sdcc_config) {
         case REGULAR:
