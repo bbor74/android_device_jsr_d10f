@@ -37,7 +37,7 @@ index 1beac9b87b..9aee83c1d8 100644
 +    private static final long DISPLAYABLE_CHECKER_TIMEOUT_MS = 200;
  
      private final Context mAppContext;
-     private final ConditionListener mListener;
+     private static Context mContext;
 -- 
 2.17.1
 

@@ -20,12 +20,12 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, device/jsr/d10f/device.mk)
 $(call inherit-product-if-exists, vendor/jsr/d10f/d10f-vendor.mk)
 
-# Inherit some common LineageOS stuff
-$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+# Inherit some common Resurrection Remix stuff
+$(call inherit-product, vendor/rr/config/common_full_phone.mk)
 
 # Device identifier. This must come after all inclusions.
 PRODUCT_DEVICE := d10f
-PRODUCT_NAME := lineage_d10f
+PRODUCT_NAME := rr_d10f
 PRODUCT_BRAND := JSR
 PRODUCT_MODEL := D10F
 PRODUCT_MANUFACTURER := JSR Tech
@@ -33,8 +33,8 @@ PRODUCT_MANUFACTURER := JSR Tech
 PRODUCT_GMS_CLIENTID_BASE := android-google
 
 # Build fingerprint
-BUILD_FINGERPRINT="JSR/lineage_d10f/d10f:10/QQ3A.200805.001/161453:userdebug/test-keys"
+BUILD_FINGERPRINT="JSR/rr_d10f/d10f:10/QQ3A.200805.001/161453:userdebug/test-keys"
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    PRIVATE_BUILD_DESC="lineage_d10f-userdebug 10 QQ3A.200805.001 161453 test-keys" \
+    PRIVATE_BUILD_DESC="rr_d10f-userdebug 10 QQ3A.200805.001 161453 test-keys" \
     PRODUCT_NAME="d10f"
