@@ -1,0 +1,28 @@
+From 5a686b2084bc513a7b99cc5431bdacb4ee0bceac Mon Sep 17 00:00:00 2001
+From: retiredtab-gerrit <you@example.com>
+Date: Fri, 9 Dec 2022 16:26:27 -0700
+Subject: [PATCH] camera: Fix build for S
+
+* hardware/lineage/interfaces/camera/device/1.0-legacy/CameraDevice.cpp:306:38:
+* error: use of undeclared identifier 'F_DUPFD_CLOEXEC' mHidlHandle->data[0] = fcntl(fd, F_DUPFD_CLOEXEC, 0);
+
+Change-Id: I9782119174a6ed61cbebfb9d9bcbd5d54a3afd0c
+---
+ camera/device/1.0-legacy/CameraDevice.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/camera/device/1.0-legacy/CameraDevice.cpp b/camera/device/1.0-legacy/CameraDevice.cpp
+index f324e45..dc13e36 100644
+--- a/camera/device/1.0-legacy/CameraDevice.cpp
++++ b/camera/device/1.0-legacy/CameraDevice.cpp
+@@ -20,6 +20,7 @@
+ #include <hidlmemory/mapping.h>
+ #include <log/log.h>
+ #include <utils/Trace.h>
++#include <fcntl.h>
+ 
+ #include <media/hardware/HardwareAPI.h> // For VideoNativeHandleMetadata
+ #include "CameraDevice_1_0.h"
+-- 
+2.17.1
+
