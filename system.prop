@@ -88,8 +88,6 @@ persist.logd.logpersistd=logcatd
 # ro.product.locale=ru-RU 
 persist.sys.timezone=Europe/Moscow
 
-ro.debuggable=0
-
 # Media
 debug.stagefright.ccodec=0
 debug.stagefright.omx_default_rank.sw-audio=1
@@ -129,9 +127,6 @@ persist.radio.rat_on=combine
 ro.telephony.call_ring.multiple=false
 ro.telephony.ril.config=simactivation
 telephony.lteOnCdmaDevice=0
-
-# Traced
-persist.traced.enable=0
 
 # Hardware info
 ro.device.chipset=Qualcomm Snapdragon 400 MSM8228
