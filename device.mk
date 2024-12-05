@@ -234,7 +234,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/rootdir/init.d10f.rc:root/init.d10f.rc \
     $(LOCAL_PATH)/rootdir/init.d10f.usb.rc:root/init.d10f.usb.rc \
     $(LOCAL_PATH)/rootdir/init.recovery.d10f.rc:root/init.recovery.d10f.rc \
-    $(LOCAL_PATH)/rootdir/ueventd.d10f.rc:root/ueventd.d10f.rc
+    $(LOCAL_PATH)/rootdir/ueventd.d10f.rc:system/vendor/etc/ueventd.rc
 
 # Seccomp
 PRODUCT_COPY_FILES += \
