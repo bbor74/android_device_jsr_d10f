@@ -1,0 +1,25 @@
+From 91579df12c5bda47f35786a65d6fbe41d14d8346 Mon Sep 17 00:00:00 2001
+From: VerNANDo57 <49901327+verNANDo57@users.noreply.github.com>
+Date: Fri, 18 Mar 2022 13:52:06 +0700
+Subject: [PATCH] droidstubs: now buildable on 8GB RAM Machines
+
+Change-Id: I90379be9e54736355f63dcd7a8d7b012d308626f
+---
+ java/droidstubs.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/java/droidstubs.go b/java/droidstubs.go
+index c756815c6..37cb4c8d9 100644
+--- a/java/droidstubs.go
++++ b/java/droidstubs.go
+@@ -415,6 +415,7 @@ func metalavaCmd(ctx android.ModuleContext, rule *android.RuleBuilder, javaVersi
+ 
+ 	cmd.BuiltTool("metalava").ImplicitTool(ctx.Config().HostJavaToolPath(ctx, "metalava.jar")).
+ 		Flag(config.JavacVmFlags).
++		Flag("-J-Xmx6114m").
+ 		Flag("-J--add-opens=java.base/java.util=ALL-UNNAMED").
+ 		FlagWithArg("-encoding ", "UTF-8").
+ 		FlagWithArg("-source ", javaVersion.String()).
+-- 
+2.17.1
+
