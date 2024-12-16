@@ -1,5 +1,4 @@
 #============= gmscore_app ==============
-allow gmscore_app adbd_prop:file { getattr open };
 allow gmscore_app alarm_boot_prop:file { getattr open };
 allow gmscore_app hal_memtrack_default:binder call;
 allow gmscore_app hal_memtrack_hwservice:hwservice_manager find;
