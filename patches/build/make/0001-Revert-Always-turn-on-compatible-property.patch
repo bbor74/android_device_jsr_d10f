@@ -1,0 +1,94 @@
+From f8954571c3724dcc2ec0169066e5a271e5e51e6e Mon Sep 17 00:00:00 2001
+From: Inseob Kim <inseob@google.com>
+Date: Wed, 18 Nov 2020 11:04:17 +0000
+Subject: [PATCH] Revert "Always turn on compatible property 2"
+
+This reverts commit 9994e96c7d5833c6619a5b089dcf288fcbe7ee97.
+
+Reason for revert: broken targets on the internal branch
+
+Change-Id: Ic440fb1ca6ae5774a1d51e8fe1f3724426511841
+---
+ core/config.mk       | 10 +++++++---
+ core/main.mk         |  6 +++++-
+ core/product.mk      |  6 ++++++
+ core/soong_config.mk |  1 +
+ 4 files changed, 19 insertions(+), 4 deletions(-)
+
+diff --git a/core/config.mk b/core/config.mk
+index 9f9a564f1..81fe012ef 100644
+--- a/core/config.mk
++++ b/core/config.mk
+@@ -611,9 +611,13 @@ HOST_JDK_TOOLS_JAR := $(ANDROID_JAVA8_HOME)/lib/tools.jar
+ APICHECK_COMMAND := $(JAVA) -Xmx4g -jar $(APICHECK) --no-banner --compatible-output=no
+ 
+ # Boolean variable determining if the allow list for compatible properties is enabled
+-PRODUCT_COMPATIBLE_PROPERTY := true
+-ifeq ($(PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE),false)
+-  $(error PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE is obsolete)
++PRODUCT_COMPATIBLE_PROPERTY := false
++ifneq ($(PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE),)
++  PRODUCT_COMPATIBLE_PROPERTY := $(PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE)
++else ifeq ($(PRODUCT_SHIPPING_API_LEVEL),)
++  #$(warning no product shipping level defined)
++else ifneq ($(call math_lt,27,$(PRODUCT_SHIPPING_API_LEVEL)),)
++  PRODUCT_COMPATIBLE_PROPERTY := true
+ endif
+ 
+ .KATI_READONLY := \
+diff --git a/core/main.mk b/core/main.mk
+index 23982198f..ee3161c94 100644
+--- a/core/main.mk
++++ b/core/main.mk
+@@ -207,7 +207,11 @@ $(KATI_obsolete_var PRODUCT_FULL_TREBLE,\
+ 
+ # Sets ro.actionable_compatible_property.enabled to know on runtime whether the
+ # allowed list of actionable compatible properties is enabled or not.
+-ADDITIONAL_SYSTEM_PROPERTIES += ro.actionable_compatible_property.enabled=true
++ifeq ($(PRODUCT_ACTIONABLE_COMPATIBLE_PROPERTY_DISABLE),true)
++ADDITIONAL_SYSTEM_PROPERTIES += ro.actionable_compatible_property.enabled=false
++else
++ADDITIONAL_SYSTEM_PROPERTIES += ro.actionable_compatible_property.enabled=${PRODUCT_COMPATIBLE_PROPERTY}
++endif
+ 
+ # Add the system server compiler filter if they are specified for the product.
+ ifneq (,$(PRODUCT_SYSTEM_SERVER_COMPILER_FILTER))
+diff --git a/core/product.mk b/core/product.mk
+index c4446f351..4da91148f 100644
+--- a/core/product.mk
++++ b/core/product.mk
+@@ -318,6 +318,9 @@ _product_list_vars += PRODUCT_CFI_EXCLUDE_PATHS
+ # Whether the Scudo hardened allocator is disabled platform-wide
+ _product_single_value_vars += PRODUCT_DISABLE_SCUDO
+ 
++# A flag to override PRODUCT_COMPATIBLE_PROPERTY
++_product_single_value_vars += PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE
++
+ # List of extra VNDK versions to be included
+ _product_list_vars += PRODUCT_EXTRA_VNDK_VERSIONS
+ 
+@@ -328,6 +331,9 @@ _product_single_value_vars += PRODUCT_COMPRESSED_APEX
+ # partitions uses PLATFORM_VNDK_VERSION.
+ _product_single_value_vars += PRODUCT_PRODUCT_VNDK_VERSION
+ 
++# Whether the list of allowed of actionable compatible properties should be disabled or not
++_product_single_value_vars += PRODUCT_ACTIONABLE_COMPATIBLE_PROPERTY_DISABLE
++
+ _product_single_value_vars += PRODUCT_ENFORCE_ARTIFACT_PATH_REQUIREMENTS
+ _product_single_value_vars += PRODUCT_ENFORCE_ARTIFACT_SYSTEM_CERTIFICATE_REQUIREMENT
+ _product_list_vars += PRODUCT_ARTIFACT_SYSTEM_CERTIFICATE_REQUIREMENT_ALLOW_LIST
+diff --git a/core/soong_config.mk b/core/soong_config.mk
+index b7380d370..a06892944 100644
+--- a/core/soong_config.mk
++++ b/core/soong_config.mk
+@@ -223,6 +223,7 @@ $(call add_json_list, ProductHiddenAPIStubsTest,         $(PRODUCT_HIDDENAPI_STU
+ 
+ $(call add_json_list, ProductPublicSepolicyDirs,         $(PRODUCT_PUBLIC_SEPOLICY_DIRS))
+ $(call add_json_list, ProductPrivateSepolicyDirs,        $(PRODUCT_PRIVATE_SEPOLICY_DIRS))
++$(call add_json_bool, ProductCompatibleProperty,         $(PRODUCT_COMPATIBLE_PROPERTY))
+ 
+ $(call add_json_list, TargetFSConfigGen,                 $(TARGET_FS_CONFIG_GEN))
+ 
+-- 
+2.17.1
+

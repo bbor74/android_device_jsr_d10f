@@ -1,0 +1,45 @@
+From 1dccc808a06c2947cfcef47245455aa1239de926 Mon Sep 17 00:00:00 2001
+From: Inseob Kim <inseob@google.com>
+Date: Wed, 18 Nov 2020 11:04:27 +0000
+Subject: [PATCH] Revert "Always turn on compatible property 2"
+
+This reverts commit f6d606ebea3334bdf00148639edcc8378c3b8861.
+
+Reason for revert: broken targets on the internal branch
+
+Change-Id: I948280e2072789a2ee20e7fe4844c667f58b5182
+---
+ android/config.go   | 4 ++++
+ android/variable.go | 1 +
+ 2 files changed, 5 insertions(+)
+
+diff --git a/android/config.go b/android/config.go
+index 48700fb21..089da579a 100644
+--- a/android/config.go
++++ b/android/config.go
+@@ -1359,6 +1359,10 @@ func (c *config) ProductPrivateSepolicyDirs() []string {
+ 	return c.productVariables.ProductPrivateSepolicyDirs
+ }
+ 
++func (c *config) ProductCompatibleProperty() bool {
++	return Bool(c.productVariables.ProductCompatibleProperty)
++}
++
+ func (c *config) MissingUsesLibraries() []string {
+ 	return c.productVariables.MissingUsesLibraries
+ }
+diff --git a/android/variable.go b/android/variable.go
+index f84ba82b3..020e7524e 100644
+--- a/android/variable.go
++++ b/android/variable.go
+@@ -369,6 +369,7 @@ type productVariables struct {
+ 
+ 	ProductPublicSepolicyDirs  []string `json:",omitempty"`
+ 	ProductPrivateSepolicyDirs []string `json:",omitempty"`
++	ProductCompatibleProperty  *bool    `json:",omitempty"`
+ 
+ 	ProductVndkVersion *string `json:",omitempty"`
+ 
+-- 
+2.17.1
+
