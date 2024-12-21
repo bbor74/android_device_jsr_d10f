@@ -1,0 +1,33 @@
+From d30a3efcfa62528a9cfd853abc17367d6d6a8e77 Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Tue, 10 Dec 2024 13:31:54 +0400
+Subject: [PATCH] Fix schedtune
+
+* fix error messages :
+libprocessgroup: Failed to open /dev/stune/top-app/tasks: No such file or directory
+libprocessgroup: Failed to open /dev/stune/foreground/tasks: No such file or directory
+
+Change-Id: I454eefede9da9be32e5af9f4bf707ad999cf2bab
+---
+ rootdir/init.rc | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/rootdir/init.rc b/rootdir/init.rc
+index 8a9642286..b40b5123c 100644
+--- a/rootdir/init.rc
++++ b/rootdir/init.rc
+@@ -132,6 +132,11 @@ on init
+     chown system system /dev/stune/background
+     chown system system /dev/stune/top-app
+     chown system system /dev/stune/rt
++    write /dev/stune/tasks 0
++    write /dev/stune/foreground/tasks 0
++    write /dev/stune/background/tasks 0
++    write /dev/stune/top-app/tasks 0
++    write /dev/stune/rt/tasks 0
+     chown system system /dev/stune/tasks
+     chown system system /dev/stune/foreground/tasks
+     chown system system /dev/stune/background/tasks
+-- 
+2.17.1
+
