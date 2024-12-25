@@ -1,0 +1,22 @@
+From c0d11bec730456096fbfda78c728f2d007393eb0 Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Wed, 25 Dec 2024 15:01:01 +0400
+Subject: [PATCH] Set rild as foreground
+
+Change-Id: I34e395e973ba7eaabda276b1a96cff75bcbbc712
+---
+ rild/rild.legacy.rc | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/rild/rild.legacy.rc b/rild/rild.legacy.rc
+index b27e1da..83e8469 100644
+--- a/rild/rild.legacy.rc
++++ b/rild/rild.legacy.rc
+@@ -3,3 +3,4 @@ service ril-daemon /vendor/bin/hw/rild
+     user radio
+     group radio cache inet misc audio log readproc wakelock
+     capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
++    writepid /dev/cpuset/foreground/tasks /dev/stune/foreground/tasks
+-- 
+2.17.1
+
