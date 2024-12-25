@@ -13,3 +13,5 @@ allow system_app labeledfs:filesystem remount;
 allow system_app persist_file:file { getattr open read write };
 allow system_app vold_prop:property_service set;
 
+#============= system_app ==============
+allow system_app device:file { open write };
