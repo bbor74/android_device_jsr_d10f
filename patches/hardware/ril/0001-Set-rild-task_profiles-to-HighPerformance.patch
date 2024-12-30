@@ -1,0 +1,22 @@
+From 2f4bccd66bc993d7743fdadc563ee1e37c252a16 Mon Sep 17 00:00:00 2001
+From: Boris Belyaev <bbor1974@gmail.com>
+Date: Wed, 25 Dec 2024 08:51:22 +0400
+Subject: [PATCH] Set rild task_profiles to HighPerformance
+
+Change-Id: I147f8c6879491e076f58666f80cf060a98f1a933
+---
+ rild/rild.legacy.rc | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/rild/rild.legacy.rc b/rild/rild.legacy.rc
+index b27e1da..c6cb000 100644
+--- a/rild/rild.legacy.rc
++++ b/rild/rild.legacy.rc
+@@ -3,3 +3,4 @@ service ril-daemon /vendor/bin/hw/rild
+     user radio
+     group radio cache inet misc audio log readproc wakelock
+     capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
++    task_profiles ProcessCapacityHigh HighPerformance
+-- 
+2.17.1
+
