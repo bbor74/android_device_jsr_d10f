@@ -1,0 +1,28 @@
+From 78bfc3e5368d2f3a0e84165b000ceca70c9f4afe Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Sun, 28 Aug 2016 14:14:10 -0400
+Subject: [PATCH] disable ART JIT and JIT profiling
+
+Signed-off-by: anupritaisno1 <www.anuprita804@gmail.com>
+---
+ target/product/runtime_libart.mk | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/target/product/runtime_libart.mk b/target/product/runtime_libart.mk
+index b511aa6b9..031e7b827 100644
+--- a/target/product/runtime_libart.mk
++++ b/target/product/runtime_libart.mk
+@@ -86,8 +86,8 @@ PRODUCT_PACKAGES += \
+ #
+ # The thermal cutoff value is currently set to THERMAL_STATUS_MODERATE.
+ PRODUCT_SYSTEM_PROPERTIES += \
+-    dalvik.vm.usejit=true \
+-    dalvik.vm.usejitprofiles=true \
++    dalvik.vm.usejit=false \
++    dalvik.vm.usejitprofiles=false \
+     dalvik.vm.dexopt.secondary=true \
+     dalvik.vm.dexopt.thermal-cutoff=2 \
+     dalvik.vm.appimageformat=lz4
+-- 
+2.17.1
+
