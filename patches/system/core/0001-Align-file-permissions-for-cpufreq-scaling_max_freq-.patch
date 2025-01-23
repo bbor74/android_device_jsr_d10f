@@ -1,0 +1,38 @@
+From f902e48eb2199a05d96badbebfdad9aea590e734 Mon Sep 17 00:00:00 2001
+From: Richard Chang <richardycc@google.com>
+Date: Wed, 4 May 2022 10:10:41 +0000
+Subject: [PATCH] Align file permissions for cpufreq scaling_max_freq node
+
+The ueventd.rc sets permissions to 0664 but init.rc sets cpu0 to
+0660. Since lots of processes already had read access for cpufreq nodes
+(refer to system/sepolicy/public/domain.te), align all cpus to 0644
+permissions.
+
+Bug: 230291215
+Test: Build
+Change-Id: I3c72d69590998f8da894fb02097212f834edd48c
+---
+ rootdir/init.rc | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/rootdir/init.rc b/rootdir/init.rc
+index 8a385595e..b0568b3a7 100644
+--- a/rootdir/init.rc
++++ b/rootdir/init.rc
+@@ -1116,9 +1116,11 @@ on boot
+     chown system system /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+     chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+ 
+-    # Assume SMP uses shared cpufreq policy for all CPUs
++    # Assume SMP uses shared cpufreq policy for all CPUs in the same cluster.
++    # Here is for initial cluster (cpu0...) which is not hot-plugged in most cases.
++    # The rest of hot-plugged clusters are covered by ueventd.rc.
+     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+-    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
++    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+ 
+     chown system system /sys/class/leds/vibrator/trigger
+     chown system system /sys/class/leds/vibrator/activate
+-- 
+2.17.1
+
