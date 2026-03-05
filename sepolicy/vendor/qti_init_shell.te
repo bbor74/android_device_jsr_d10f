@@ -8,3 +8,5 @@ allow qti_init_shell bluetooth_loader_exec:file { execute execute_no_trans getat
 #============= qti_init_shell ==============
 allow qti_init_shell bluetooth_data_file:file { open read };
 
+#============= qti_init_shell ==============
+allow qti_init_shell bluetooth_data_file:dir search;

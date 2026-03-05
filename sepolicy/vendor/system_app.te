@@ -13,3 +13,14 @@ allow system_app labeledfs:filesystem remount;
 allow system_app persist_file:file { getattr open read write };
 allow system_app vold_prop:property_service set;
 
+#============= system_app ==============
+allow system_app apex_service:service_manager find;
+allow system_app apexd:binder call;
+allow system_app installd:binder call;
+allow system_app netd:binder call;
+allow system_app sysfs_zram:dir search;
+allow system_app sysfs_zram:file { getattr open read };
+allow system_app system_suspend_control_service:service_manager find;
+allow system_app vold:binder call;
+allow system_app wificond:binder call;
+

@@ -6,3 +6,6 @@ allow mediaprovider cache_recovery_file:dir { open read };
 
 #============= mediaprovider ==============
 allow mediaprovider mnt_media_rw_file:dir getattr;
+
+#============= mediaprovider ==============
+allow mediaprovider ashmem_device:chr_file open;
