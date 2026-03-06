@@ -91,7 +91,7 @@ debug.stagefright.omx_default_rank.sw-audio=1
 debug.stagefright.omx_default_rank=0
 
 # Memory optimizations
-ro.vendor.qti.sys.fw.bg_apps_limit=15
+ro.vendor.qti.sys.fw.bg_apps_limit=8
 ro.vendor.qti.am.reschedule_service=true
 ro.vendor.qti.sys.fw.use_trim_settings=true
 ro.vendor.qti.sys.fw.bservice_enable=true
