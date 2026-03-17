@@ -1,0 +1,2 @@
+#============= logpersist ==============
+allow logpersist unlabeled:dir search;

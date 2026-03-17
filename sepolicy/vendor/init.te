@@ -17,3 +17,6 @@ allow init sysfs_wlan_fwpath:file setattr;
 
 #============= init ==============
 allow init persist_block_device:lnk_file relabelto;
+
+#============= init ==============
+allow init logpersist:file write;

@@ -15,3 +15,11 @@ allow fstab system_data_file:dir { add_name remove_name write };
 allow fstab system_data_file:file { getattr create open read rename write };
 allow fstab vold_prop:property_service set;
 
+#============= fstab ==============
+allow fstab persist_file:dir search;
+
+#============= fstab ==============
+allow fstab block_device:dir search;
+
+#============= fstab ==============
+allow fstab unlabeled:dir search;

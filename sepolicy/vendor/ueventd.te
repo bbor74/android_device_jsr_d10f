@@ -1,3 +1,6 @@
 #============= ueventd ==============
 allow ueventd self:capability sys_nice;
 allow ueventd vfat:file { getattr open read };
+
+#============= ueventd ==============
+allow ueventd vfat:dir search;
