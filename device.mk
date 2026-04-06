@@ -319,3 +319,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 #    persist.sys.timezone=Europe/Moscow
 #
 
+# Signing keys
+PRODUCT_DEFAULT_DEV_CERTIFICATE = vendor/jsr/signing/keys/releasekey
+
