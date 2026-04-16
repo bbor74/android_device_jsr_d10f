@@ -84,6 +84,8 @@ PRODUCT_PACKAGES += \
     libxml2 \
     Snap
 
+TARGET_APERTURE_OPTOUT := true
+
 # Camera configurations
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/external_camera_config.xml:system/vendor/etc/external_camera_config.xml
