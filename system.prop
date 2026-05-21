@@ -80,7 +80,7 @@ ro.qualcomm.sensors.vmd=true
 ro.qualcomm.sensors.gtap=true
 
 # Debug
-persist.logd.logpersistd=logcatd 
+# persist.logd.logpersistd=logcatd 
 # persist.sys.usb.config=mtp,adb
 # ro.product.locale=ru-RU 
 persist.sys.timezone=Europe/Moscow
