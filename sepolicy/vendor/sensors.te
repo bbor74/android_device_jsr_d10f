@@ -1,4 +1,4 @@
 #============= sensors ==============
-allow sensors persist_misc_file:dir { getattr open read search };
-allow sensors persist_misc_file:file { getattr open read write };
+allow sensors persist_misc_file:dir { getattr open read write search add_name };
+allow sensors persist_misc_file:file { getattr setattr create open read write };
 

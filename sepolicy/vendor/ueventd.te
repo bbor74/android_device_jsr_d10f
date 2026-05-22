@@ -4,3 +4,6 @@ allow ueventd vfat:file { getattr open read };
 
 #============= ueventd ==============
 allow ueventd vfat:dir search;
+
+#============= ueventd ==============
+allow ueventd unlabeled:dir search;
